@@ -3,7 +3,7 @@
   "short_name": "Wetter",
   "description": "Schlanke Wetter-App mit 5-Tage-Vorhersage, Pollenflug und Wassertemperaturen.",
   "lang": "de",
-  "id": "/Wetter_App/",
+  "id": "/",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
