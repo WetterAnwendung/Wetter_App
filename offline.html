@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<!-- Ersatzseite des Service Workers: erscheint nur, wenn keine Verbindung besteht und die App
+     noch nicht im Cache liegt. Kein Skript, keine externen Dateien. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2a3f7a">
+<meta name="color-scheme" content="dark">
+<title>Wetter – keine Verbindung</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    min-height: 100vh; min-height: 100dvh;
+    display: flex; align-items: center; justify-content: center;
+    padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+    background: #1d2c58; color: #eef2ff;
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    text-align: center;
+  }
+  main { max-width: 26rem; }
+  img { width: 72px; height: 72px; border-radius: 18px; }
+  h1 { font-size: 1.5rem; margin: 18px 0 8px; font-weight: 600; }
+  p { margin: 0 0 22px; color: #c9d3f2; }
+  a {
+    display: inline-block; padding: 12px 22px; border-radius: 999px;
+    background: #eef2ff; color: #1d2c58; font-weight: 600; text-decoration: none;
+  }
+  a:focus-visible { outline: 3px solid #9cc3ff; outline-offset: 3px; }
+</style>
+</head>
+<body>
+<main>
+  <img src="icon-192.png" alt="">
+  <h1>Keine Verbindung</h1>
+  <p>Die Wetter-App braucht für Vorhersagen eine Internetverbindung. Prüfe WLAN oder mobile Daten und versuche es dann erneut.</p>
+  <a href="./">Erneut versuchen</a>
+</main>
+</body>
+</html>

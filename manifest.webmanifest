@@ -3,15 +3,22 @@
   "short_name": "Wetter",
   "description": "Schlanke Wetter-App mit 5-Tage-Vorhersage, Pollenflug und Wassertemperaturen.",
   "lang": "de",
+  "dir": "ltr",
   "id": "/",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#1d2c58",
   "theme_color": "#2a3f7a",
+  "categories": ["weather"],
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    { "src": "screenshots/screenshot-narrow.png", "sizes": "1080x2160", "type": "image/png", "form_factor": "narrow", "label": "Aktuelles Wetter und Stundenvorhersage (Beispieldaten)" },
+    { "src": "screenshots/screenshot-wide.png", "sizes": "1920x1080", "type": "image/png", "form_factor": "wide", "label": "Wetter-App im Querformat (Beispieldaten)" }
   ]
 }

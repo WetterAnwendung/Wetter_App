@@ -1,0 +1,13 @@
+# Sicherheitsnetz: Dieses Repo wird über GitHub Pages öffentlich ausgeliefert.
+# Android-Pakete gehören in GitHub Releases, Schlüssel in den Passwortmanager – nie ins Repo.
+*.apk
+*.aab
+*.keystore
+*.jks
+signing-key-info.txt
+*.zip
+
+# Lokale Reste
+.DS_Store
+Thumbs.db
+__pycache__/
