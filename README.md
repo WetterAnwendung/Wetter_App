@@ -20,7 +20,7 @@ Wer die App schon von einer früheren Adresse installiert hatte, muss die alte V
 | `index.html` | Die App: Oberfläche, Logik, eingebettete Schrift, Sicherheitsregel (CSP) |
 | `sw.js` | Service Worker: speichert nur die App-Hülle für schnellen Start und Offline-Start |
 | `offline.html` | Hinweisseite, wenn keine Verbindung besteht und die App noch nicht gespeichert ist |
-| `manifest.webmanifest` | App-Name, Kennung, Startadresse, Symbole und Screenshots für die Installation |
+| `manifest.webmanifest` | App-Name, Kennung, Startadresse, Symbole und Screenshots für die Installation; `launch_handler`: ein erneuter Aufruf holt das offene Fenster nach vorn statt ein zweites zu öffnen |
 | `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `apple-touch-icon.png` | App-Symbole |
 | `screenshots/` | Bilder für den Installationsdialog (Hoch- und Querformat, Beispieldaten) |
 | `csp-hash.py` | Berechnet den Sicherheits-Hash des Skripts neu (siehe unten) |
