@@ -1,6 +1,6 @@
 # Wetter-App
 
-Schlanke, webbasierte Wetter-App mit 5-Tage-Vorhersage, Pollenflug, Wassertemperaturen und Pegelständen. Die ganze App steckt in einer einzigen HTML-Datei, ohne Bibliotheken, ohne Cookies und ohne Tracking. Sie lässt sich als App installieren (PWA) und startet dank Service Worker schnell, auch bei schlechtem Netz.
+Schlanke, webbasierte Wetter-App mit 5-Tage-Vorhersage, Tageshinweisen (Regenjacke, Sonnenschutz, Frost, Hitze, Böen, Lüften), Temperatur- und Regenverlauf, Luftqualität, Pollenflug, Wassertemperaturen und Pegelständen und bis zu fünf gemerkten Orten. Die ganze App steckt in einer einzigen HTML-Datei, ohne Bibliotheken, ohne Cookies und ohne Tracking. Sie lässt sich als App installieren (PWA) und startet dank Service Worker schnell, auch bei schlechtem Netz.
 
 **App öffnen:** https://wetteranwendung.github.io/
 **Repository:** https://github.com/WetterAnwendung/wetteranwendung.github.io
@@ -78,12 +78,12 @@ Die App lädt beim Öffnen nichts von fremden Servern. Erst bei einer Suche, bei
 |---|---|
 | `api.open-meteo.com` | Wettervorhersage |
 | `geocoding-api.open-meteo.com` | Ortssuche, Postleitzahlen |
-| `air-quality-api.open-meteo.com` | Pollenflug |
+| `air-quality-api.open-meteo.com` | Luftqualität und Pollenflug |
 | `marine-api.open-meteo.com` | Wassertemperatur am Meer |
 | `photon.komoot.io` | Ortsname zum Standort, Postleitzahlen |
 | `www.pegelonline.wsv.de` | Pegel und Wassertemperatur an Flüssen |
 
-GitHub Pages liefert die Seite aus und protokolliert dabei die IP-Adresse. Der Standort wird vor dem Absenden auf etwa 1 km gerundet. Gespeichert werden im Browser nur der zuletzt gewählte Ort (`localStorage`, Schlüssel `wetter:last`) und die App-Hülle im Cache des Service Workers. Den vollständigen Datenschutzhinweis zeigt die App über den ⓘ-Knopf.
+GitHub Pages liefert die Seite aus und protokolliert dabei die IP-Adresse. Der Standort wird vor dem Absenden auf etwa 1 km gerundet. Gespeichert werden im Browser nur der zuletzt gewählte Ort (`localStorage`, Schlüssel `wetter:last`), die gemerkten Orte (Schlüssel `wetter:favs`, höchstens 5) und die App-Hülle im Cache des Service Workers. Den vollständigen Datenschutzhinweis zeigt die App über den ⓘ-Knopf.
 
 ## Sicherheit
 

@@ -5,7 +5,7 @@
 <!-- Sicherheitsregel (CSP): nur das eigene Skript (per Hash), Daten nur von den genannten Diensten.
      WICHTIG: Wer das Skript unten ändert, muss den sha256-Hash neu berechnen, sonst startet die App nicht.
      Befehl: python3 csp-hash.py index.html -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-A4Hq/cvVAPcmPKdGCROxnKXXiYByvaVSlH8H7jAiLPc='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data:; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-nKQCvUpQN3LAbrRZr1KwvClzEYqoD4gQyGwzQseeDWw='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data:; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#2a3f7a">
@@ -241,6 +241,49 @@ dialog.info{position:fixed}
 .foot{margin-top:26px;text-align:center;font-size:.8rem;color:var(--soft);text-shadow:0 1px 8px rgba(0,0,0,.25)}
 .foot a{color:inherit}
 
+/* Gemerkte Orte */
+.favs{display:flex;gap:8px;overflow-x:auto;padding:12px 2px 2px;scrollbar-width:none}
+.favs::-webkit-scrollbar{display:none}
+.fav{flex:none;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.1);border-radius:999px;padding:7px 15px;cursor:pointer;font-size:.92rem;max-width:60vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fav:hover{background:rgba(255,255,255,.2)}
+.fav[aria-pressed=true]{background:#fff;color:#16305c;border-color:#fff;font-weight:600}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.star{flex:none;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);display:grid;place-items:center;cursor:pointer;margin-top:2px}
+.star:hover{background:rgba(255,255,255,.22)}
+.star svg{width:22px;height:22px}
+.star[aria-pressed=true]{background:#ffd34d;border-color:#ffd34d;color:#4a3500}
+/* Tageshinweise */
+.hints{list-style:none;display:grid;gap:8px}
+.hint{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;padding:10px 12px 10px 10px;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid var(--line)}
+.hi{width:44px;height:44px;border-radius:14px;display:grid;place-items:center}
+.hi svg{width:24px;height:24px}
+.hint b{display:block;font-weight:650}
+.hint span span,.hint div>span{display:block;color:var(--soft);font-size:.9rem}
+/* Verlauf */
+.panel h2.hrow{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.seg{display:inline-flex;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:3px;gap:2px}
+.seg button{border:0;background:none;border-radius:999px;padding:5px 14px;font-size:.85rem;cursor:pointer}
+.seg button[aria-pressed=true]{background:#fff;color:#16305c;font-weight:600}
+.readout{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;padding:0 4px 6px;min-height:2.2em;font-variant-numeric:tabular-nums}
+.readout b{font-size:1.3rem;font-weight:650}
+.readout span{color:var(--soft);font-size:.9rem}
+.chart{display:block;width:100%;height:auto;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.legend{display:flex;gap:16px;padding:6px 4px 0;font-size:.78rem;color:var(--soft)}
+.legend i{display:inline-block;width:14px;height:4px;border-radius:2px;vertical-align:middle;margin-right:6px}
+/* Luftqualität */
+.aqiTop{display:flex;align-items:baseline;gap:12px;padding:0 4px}
+.aqiNum{font-size:2.6rem;font-weight:300;letter-spacing:-.03em;line-height:1}
+.aqiLbl{font-size:1.1rem;font-weight:600}
+.gauge{position:relative;margin:14px 4px 6px;height:10px;border-radius:6px;
+  background:linear-gradient(90deg,#50f0e6 0 16.66%,#50ccaa 16.66% 33.33%,#f0e641 33.33% 50%,#ff5050 50% 66.66%,#960032 66.66% 83.33%,#7d2181 83.33%)}
+.gauge i{position:absolute;top:-5px;width:6px;height:20px;border-radius:3px;background:#fff;box-shadow:0 0 0 2px rgba(0,0,0,.35);transform:translateX(-3px)}
+.gscale{display:grid;grid-template-columns:repeat(6,1fr);padding:0 4px;font-size:.72rem;color:var(--soft)}
+.aqiAdvice{margin:12px 4px 4px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.1);font-size:.92rem}
+.pols{list-style:none;margin-top:8px}
+.pols li{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:center;padding:9px 4px;border-top:1px solid var(--line)}
+.pols .dot{width:12px;height:12px;border-radius:50%}
+.pols small{color:var(--soft)}
+
 /* Wetter-Icons */
 .wi{display:block;width:100%;height:auto;overflow:visible}
 .wi.sm{width:32px}
@@ -295,6 +338,7 @@ dialog.info{position:fixed}
     <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg>
   </button>
   </div>
+  <div class="favs" id="favs" role="group" aria-label="Gemerkte Orte" hidden></div>
   <div class="note" id="note" role="status" hidden></div>
 
   <div id="view" aria-live="polite"><p class="boot">Die App startet nicht. Wurde das Skript geändert, muss der Sicherheits-Hash im Kopf der Datei neu berechnet werden.</p></div>
@@ -312,34 +356,34 @@ dialog.info{position:fixed}
     <div class="notice"><p><strong>Nutzung ohne Gewähr.</strong> Die Wetter-App ist ein privates, kostenloses Hobbyprojekt ohne Werbung. Die Werte stammen aus Wettermodellen und Messstellen Dritter und können falsch oder veraltet sein. Für amtliche Unwetterwarnungen nutze den Deutschen Wetterdienst.</p></div>
 
     <h3>Was die App speichert</h3>
-    <p>Nur auf deinem Gerät, im Speicher des Browsers: den zuletzt gewählten Ort (Name, Postleitzahl, Koordinaten). Es gibt keine Konten, keine Cookies, kein Tracking, keine Werbung und keinen eigenen Server.</p>
+    <p>Nur auf deinem Gerät, im Speicher des Browsers: den zuletzt gewählten Ort sowie die Orte, die du mit dem Stern gemerkt hast (höchstens 5; jeweils Name, Postleitzahl, Koordinaten). Es gibt keine Konten, keine Cookies, kein Tracking, keine Werbung und keinen eigenen Server.</p>
     <p>Damit die App schnell und auch ohne Verbindung startet, legt sie außerdem eine Kopie ihrer eigenen Dateien (Oberfläche, Symbole, Hinweisseite für fehlende Verbindung) im Cache des Browsers ab. Wetterdaten, Orte und Suchbegriffe werden darin nicht gespeichert.</p>
-    <p>Die Android-Version der App ist nur eine Hülle um diese Webseite und läuft in Chrome. Für sie gilt alles hier Gesagte genauso.</p>
+    <p>Die Android-Version der App ist nur eine Hülle um diese Webseite und läuft in Chrome. Für sie gilt alles hier Gesagte genauso. Technisch bringt die Hülle die Berechtigungen „Standort“ und „Benachrichtigungen“ mit. Benachrichtigungen fragt die App nie an und sendet keine. Der Standort wird nur nach Tippen auf den Standort-Knopf abgefragt.</p>
 
     <h3>Wer welche Daten erhält</h3>
     <p>Damit die App etwas anzeigen kann, fragt dein Browser direkt bei diesen Stellen an. Jede sieht dabei deine IP-Adresse und den Inhalt der Anfrage:</p>
     <ul>
       <li><strong>GitHub</strong> (GitHub Inc., USA) liefert die Webversion aus und speichert nach eigener Angabe die IP-Adresse jedes Besuchers zu Sicherheitszwecken.</li>
-      <li><strong>Open-Meteo</strong> (OpenMeteo GmbH, Schweiz) liefert Wetter, Pollen, Meerestemperatur und Ortsvorschläge. Der Dienst erhält die Koordinaten des Orts bzw. deinen Suchbegriff und löscht seine Server-Protokolle nach eigener Angabe nach 90 Tagen.</li>
+      <li><strong>Open-Meteo</strong> (OpenMeteo GmbH, Schweiz) liefert Wetter, Pollen, Luftqualität, Meerestemperatur und Ortsvorschläge. Der Dienst erhält die Koordinaten des Orts bzw. deinen Suchbegriff und löscht seine Server-Protokolle nach eigener Angabe nach 90 Tagen.</li>
       <li><strong>Photon</strong> (komoot GmbH, Deutschland) liefert Ortsvorschläge und den Namen deines Standorts. Der Dienst erhält deinen Suchbegriff bzw. die gerundeten Koordinaten.</li>
       <li><strong>PEGELONLINE</strong> (Wasserstraßen- und Schifffahrtsverwaltung des Bundes) liefert Flusstemperaturen und erhält die Koordinaten des Orts.</li>
     </ul>
-    <p>Die App sendet keine Seitenadresse (Referer) mit und lädt keine Schriften, Skripte oder Bilder von fremden Servern.</p>
+    <p>Die App sendet keine Seitenadresse (Referer) mit und lädt keine Schriften, Skripte oder Bilder von fremden Servern. Tageshinweise (z. B. Regenjacke, Sonnenschutz) und Verlaufsdiagramm berechnet die App auf deinem Gerät aus diesen Daten, ohne weitere Anfragen.</p>
 
     <h3>Standort</h3>
-    <p>Nur wenn du auf den Standort-Knopf tippst, fragt die App deinen Standort über die Browser-Berechtigung ab, einmalig und nie im Hintergrund. Er wird vor dem Senden auf etwa 1 km gerundet. Browser merken sich die Freigabe für die ganze Internetadresse, unter der die App liegt, also auch für andere Seiten dort. Du kannst sie jederzeit in den Browser-Einstellungen entziehen.</p>
+    <p>Nur wenn du auf den Standort-Knopf tippst, fragt die App deinen Standort über die Browser-Berechtigung ab, einmalig und nie im Hintergrund. Er wird vor dem Senden auf etwa 1 km gerundet. Browser merken sich die Freigabe für die ganze Internetadresse, unter der die App liegt, also auch für andere Seiten dort. Du kannst sie jederzeit in den Browser-Einstellungen entziehen. In der Android-App fragt stattdessen Android nach und du entziehst sie unter Einstellungen › Apps › Wetter App › Berechtigungen.</p>
 
     <h3>Rechtsgrundlage und deine Rechte</h3>
     <p>Die Anfragen löst du selbst aus, um die gewünschten Wetterdaten zu erhalten (Art. 6 Abs. 1 lit. f DSGVO). Da die App selbst nichts auf einem Server speichert, liegen beim Anbieter der App keine Daten über dich vor. Gegenüber den genannten Diensten hast du die Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung und Widerspruch. Außerdem kannst du dich bei einer Datenschutz-Aufsichtsbehörde beschweren.</p>
 
     <h3>Daten löschen</h3>
-    <p>Der Knopf unten löscht den gespeicherten Ort. Alles Übrige, auch die zwischengespeicherten App-Dateien, entfernst du in den Browser-Einstellungen unter „Website-Einstellungen“ bzw. „Websitedaten löschen“ für diese Adresse.</p>
+    <p>Der Knopf unten löscht den gespeicherten Ort und alle gemerkten Orte. Alles Übrige, auch die zwischengespeicherten App-Dateien, entfernst du in den Browser-Einstellungen unter „Website-Einstellungen“ bzw. „Websitedaten löschen“ für diese Adresse.</p>
 
     <h3>Quellen und Lizenzen</h3>
-    <p>Wetter-, Pollen- und Meeresdaten: Open-Meteo.com (CC BY 4.0). Flusstemperaturen: WSV, PEGELONLINE (dl-de/by-2-0). Ortsdaten: © OpenStreetMap-Mitwirkende (ODbL) über Photon und GeoNames (CC BY 4.0) über Open-Meteo. Schrift: Bricolage Grotesque (SIL Open Font License 1.1).</p>
+    <p>Wetter-, Pollen-, Luftqualitäts- und Meeresdaten: Open-Meteo.com (CC BY 4.0). Flusstemperaturen: WSV, PEGELONLINE (dl-de/by-2-0). Ortsdaten: © OpenStreetMap-Mitwirkende (ODbL) über Photon und GeoNames (CC BY 4.0) über Open-Meteo. Schrift: Bricolage Grotesque (SIL Open Font License 1.1).</p>
 
     <div class="info-actions">
-      <button type="button" class="ghost danger" id="forget">Gespeicherten Ort löschen</button>
+      <button type="button" class="ghost danger" id="forget">Gespeicherte Orte löschen</button>
       <button type="button" class="ghost" id="infoClose">Schließen</button>
     </div>
   </div>
@@ -398,6 +442,52 @@ const store = {
   get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
   set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 };
+
+/* ---------- Gemerkte Orte ---------- */
+const FAV_KEY = 'wetter:favs', FAV_MAX = 5;
+const placeKey = p => p.title.toLowerCase() + '|' + p.lat.toFixed(2) + '|' + p.lon.toFixed(2);
+function cleanFavs(raw){
+  const out = [], seen = new Set();
+  if (Array.isArray(raw)) for (const r of raw){
+    const p = cleanPlace(r);
+    if (!p) continue;
+    const k = placeKey(p);
+    if (seen.has(k)) continue;
+    seen.add(k); out.push(p);
+    if (out.length >= FAV_MAX) break;
+  }
+  return out;
+}
+let favs = [], curPlace = null;
+const favBox = $('#favs');
+function renderFavs(){
+  if (!favs.length){ favBox.hidden = true; favBox.innerHTML = ''; return; }
+  favBox.hidden = false;
+  favBox.innerHTML = favs.map((p, i) =>
+    `<button type="button" class="fav" data-f="${i}" aria-pressed="${!!curPlace && placeKey(curPlace) === placeKey(p)}">${esc(p.title)}</button>`).join('');
+}
+function updateStar(){
+  const b = document.getElementById('star');
+  if (!b || !curPlace) return;
+  const on = favs.some(f => placeKey(f) === placeKey(curPlace));
+  b.setAttribute('aria-pressed', on);
+  b.setAttribute('aria-label', on ? 'Ort aus den gemerkten Orten entfernen' : 'Ort merken');
+  const path = b.querySelector('path');
+  if (path) path.setAttribute('fill', on ? 'currentColor' : 'none');
+}
+function toggleFav(){
+  if (!curPlace) return;
+  const k = placeKey(curPlace), i = favs.findIndex(f => placeKey(f) === k);
+  if (i >= 0) favs.splice(i, 1);
+  else if (favs.length >= FAV_MAX){ note(`Du kannst höchstens ${FAV_MAX} Orte merken. Entferne zuerst einen mit dem Stern.`); return; }
+  else favs.push(curPlace);
+  store.set(FAV_KEY, favs);
+  renderFavs(); updateStar();
+}
+favBox.addEventListener('click', e => {
+  const b = e.target.closest('[data-f]');
+  if (b && favs[+b.dataset.f]) choose(favs[+b.dataset.f]);
+});
 
 /* ---------- Wettercodes (WMO) ---------- */
 const WMO = {
@@ -589,29 +679,39 @@ clearBtn.addEventListener('click', () => {
 let noteTimer = null;
 function note(msg){
   noteEl.textContent = msg; noteEl.hidden = false;
-  clearTimeout(noteTimer); noteTimer = setTimeout(() => { noteEl.hidden = true; }, 6000);
+  clearTimeout(noteTimer); noteTimer = setTimeout(() => { noteEl.hidden = true; }, 10000);
+}
+const GEO_MSG = {
+  1: 'Der Standortzugriff wurde abgelehnt. Erlaube ihn in den Einstellungen (Android-App: Einstellungen › Apps › Wetter App › Berechtigungen › Standort; Browser: Website-Einstellungen) oder gib einen Ort ein.',
+  2: 'Der Standort ist gerade nicht verfügbar. Prüfe, ob der Standort deines Geräts eingeschaltet ist, oder gib eine Postleitzahl oder einen Ort ein.',
+  3: 'Die Standortbestimmung hat zu lange gedauert. Versuche es noch einmal (am besten im Freien oder am Fenster) oder gib einen Ort ein.'
+};
+async function onPosition(pos){
+  // Datensparsamkeit: auf 2 Nachkommastellen (ca. 1 km) runden, bevor irgendetwas das Gerät verlässt
+  const r2 = v => Math.round(v * 100) / 100;
+  const lat = r2(pos.coords.latitude), lon = r2(pos.coords.longitude);
+  let place = { title: 'Mein Standort', sub: 'Aktueller Standort', lat, lon, plz: '' };
+  try {
+    const j = await getJSON(`https://photon.komoot.io/reverse?lat=${lat}&lon=${lon}&lang=de`);
+    const pr = (j.features && j.features[0] && j.features[0].properties) || {};
+    const name = txt(pr.city, 100) || (pr.osm_key === 'place' ? txt(pr.name, 100) : '');
+    if (name) place = { title: name, sub: uniq(name, [txt(pr.state, 60), txt(pr.country, 60)]), lat, lon, plz: txt(pr.postcode, 12) };
+  } catch {}
+  spin.hidden = true; choose(place);
+}
+function askPosition(precise){
+  navigator.geolocation.getCurrentPosition(onPosition, err => {
+    const code = err && err.code;
+    // Nicht „abgelehnt“: einmal mit genauer Ortung wiederholen (hilft, wenn die grobe Ortung nichts liefert)
+    if (!precise && code !== 1) return askPosition(true);
+    spin.hidden = true;
+    note(GEO_MSG[code] || 'Der Standort konnte nicht ermittelt werden. Gib stattdessen eine Postleitzahl oder einen Ort ein.');
+  }, precise ? { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 } : { enableHighAccuracy: false, timeout: 12000, maximumAge: 600000 });
 }
 geoBtn.addEventListener('click', () => {
   if (!navigator.geolocation) return note('Dieses Gerät unterstützt keine Standortbestimmung. Gib stattdessen eine Postleitzahl oder einen Ort ein.');
   spin.hidden = false;
-  navigator.geolocation.getCurrentPosition(async pos => {
-    // Datensparsamkeit: auf 2 Nachkommastellen (ca. 1 km) runden, bevor irgendetwas das Gerät verlässt
-    const r2 = v => Math.round(v * 100) / 100;
-    const lat = r2(pos.coords.latitude), lon = r2(pos.coords.longitude);
-    let place = { title: 'Mein Standort', sub: 'Aktueller Standort', lat, lon, plz: '' };
-    try {
-      const j = await getJSON(`https://photon.komoot.io/reverse?lat=${lat}&lon=${lon}&lang=de`);
-      const pr = (j.features && j.features[0] && j.features[0].properties) || {};
-      const name = txt(pr.city, 100) || (pr.osm_key === 'place' ? txt(pr.name, 100) : '');
-      if (name) place = { title: name, sub: uniq(name, [txt(pr.state, 60), txt(pr.country, 60)]), lat, lon, plz: txt(pr.postcode, 12) };
-    } catch {}
-    spin.hidden = true; choose(place);
-  }, err => {
-    spin.hidden = true;
-    note(err && err.code === 1
-      ? 'Der Standortzugriff wurde abgelehnt. Erlaube ihn in den Browser- oder App-Einstellungen oder gib einen Ort ein.'
-      : 'Der Standort konnte nicht ermittelt werden. Gib stattdessen eine Postleitzahl oder einen Ort ein.');
-  }, { enableHighAccuracy: false, timeout: 12000, maximumAge: 600000 });
+  askPosition(false);
 });
 
 /* ---------- Wetter laden ---------- */
@@ -626,11 +726,12 @@ function choose(raw){
 }
 async function loadWeather(p){
   const my = ++loadSeq;
+  curPlace = p; renderFavs();
   view.innerHTML = `<div class="loading"><span class="spin big" aria-hidden="true"></span><p>Wetter für <b>${esc(p.title)}</b> wird geladen …</p></div>`;
   const url = 'https://api.open-meteo.com/v1/forecast'
     + `?latitude=${p.lat}&longitude=${p.lon}`
     + '&current=temperature_2m,apparent_temperature,relative_humidity_2m,is_day,weather_code,wind_speed_10m,wind_direction_10m'
-    + '&hourly=temperature_2m,weather_code,precipitation_probability,is_day'
+    + '&hourly=temperature_2m,weather_code,precipitation_probability,is_day,precipitation,wind_gusts_10m'
     + '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,sunrise,sunset,uv_index_max'
     + '&timezone=auto&forecast_days=5&wind_speed_unit=kmh';
   try {
@@ -703,8 +804,9 @@ function render(p, d, my){
   const dir = DIRS[Math.round(c.wind_direction_10m / 45) % 8] || '–';
   view.innerHTML = `<div class="reveal">
     <section class="hero" aria-label="Aktuelles Wetter in ${esc(p.title)}">
-      <h1 class="place">${esc(p.title)}</h1>
-      ${p.sub || p.plz ? `<p class="region">${esc([p.plz, p.sub].filter(Boolean).join(' · '))}</p>` : ''}
+      <div class="hero-top"><div><h1 class="place">${esc(p.title)}</h1>
+      ${p.sub || p.plz ? `<p class="region">${esc([p.plz, p.sub].filter(Boolean).join(' · '))}</p>` : ''}</div>
+        <button type="button" class="star" id="star" aria-pressed="false" aria-label="Ort merken"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.7 6.3.8-4.6 4.3 1.2 6.2L12 17l-5.6 3 1.2-6.2L3 9.5l6.3-.8z" fill="none"/></svg></button></div>
       <div class="hero-main"><div class="temp">${T(c.temperature_2m)}</div><div class="hero-icon">${icon(kind, isDay)}</div></div>
       <p class="cond">${esc(cond)}</p>
       <p class="hilo">Heute höchstens ${T(dl.temperature_2m_max[0])}, tiefstens ${T(dl.temperature_2m_min[0])}</p>
@@ -718,15 +820,28 @@ function render(p, d, my){
       <div class="tile"><small>Wind</small><b>${Math.round(c.wind_speed_10m)} km/h</b><span>aus ${dir}</span></div>
       <div class="tile"><small>UV-Index heute</small><b>${Math.round(dl.uv_index_max[0])}</b><span>${uvTxt(dl.uv_index_max[0])}</span></div>
     </div>
+    <section class="panel" aria-labelledby="h-hints"><h2 id="h-hints">Tageshinweise</h2><div id="hintsBody"><p class="soft">Wird berechnet …</p></div></section>
+    <section class="panel" aria-labelledby="h-trend"><h2 class="hrow" id="h-trend"><span>Verlauf</span>
+      <span class="seg" role="group" aria-label="Zeitraum"><button type="button" data-r="24" aria-pressed="true">24 h</button><button type="button" data-r="48" aria-pressed="false">48 h</button></span></h2>
+      <div class="readout" id="readout" aria-live="polite"></div><div id="trendChart"></div>
+      <div class="legend"><span><i style="background:#ffd166"></i>Temperatur</span><span><i style="background:#7CC4FF"></i>Niederschlag je Stunde</span></div></section>
+    <section class="panel" aria-labelledby="h-air"><h2 id="h-air">Luftqualität</h2><div id="airBody"><p class="soft">Wird geladen …</p></div></section>
     <section class="panel" aria-labelledby="h-pollen"><h2 id="h-pollen">Pollenflug</h2><div id="pollenBody"><p class="soft">Wird geladen …</p></div></section>
     <section class="panel" aria-labelledby="h-water"><h2 id="h-water">Wassertemperatur in der Nähe</h2><div id="waterBody"><p class="soft">Wird geladen …</p></div></section>
     </div>`;
+  fc = { d, s }; air = null; trendRange = trendRange === 48 ? 48 : 24;
+  renderHints(); updateStar();
+  setTrendRange(trendRange);
+  loadAir(p, my);
   pollen = null; pollenDay = 0;
   loadPollen(p, my);
   loadWater(p, my);
 }
 
 view.addEventListener('click', e => {
+  if (e.target.closest('#star')){ toggleFav(); return; }
+  const rb = e.target.closest('[data-r]');
+  if (rb){ setTrendRange(+rb.dataset.r); return; }
   const row = e.target.closest('.day-row');
   if (row){
     const li = row.closest('.day'), open = !li.classList.contains('open');
@@ -867,6 +982,244 @@ async function loadWater(p, my){
   <p class="fine">Flüsse: Messwerte der Bundeswasserstraßen (nur Deutschland). Meer: Modelldaten mit grobem Raster. Seen und kleine Gewässer werden nicht erfasst. Baden in Flüssen kann wegen Strömung und Schiffsverkehr gefährlich sein.</p>`;
 }
 
+/* ---------- Tageshinweise, Verlauf, Luftqualität ---------- */
+const num = v => (typeof v === 'number' && isFinite(v)) ? v : null;
+const pad2 = n => String(n).padStart(2, '0');
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+let fc = null, air = null, trend = null, trendRange = 24;   // air: null = lädt, false = keine Daten, 'err' = Fehler
+
+const IC = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const HI = {
+  rain: IC('<path d="M12 3a9 9 0 0 0-9 9h18a9 9 0 0 0-9-9z"/><path d="M12 12v6a2 2 0 0 0 4 0"/>'),
+  sun:  IC('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
+  temp: IC('<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/>'),
+  wind: IC('<path d="M3 9h11a3 3 0 1 0-3-3"/><path d="M3 15h15a3 3 0 1 1-3 3"/>'),
+  air:  IC('<path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6-1A4.5 4.5 0 0 1 17 18z"/>'),
+  win:  IC('<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 3v18M4 12h16"/>')
+};
+
+const EAQI = [[20,'gut','#50f0e6'],[40,'mäßig','#50ccaa'],[60,'ausreichend','#f0e641'],[80,'schlecht','#ff5050'],[100,'sehr schlecht','#960032'],[Infinity,'extrem schlecht','#7d2181']];
+const eaqi = v => EAQI.find(b => v < b[0]);
+const AQ_ADVICE = [
+  'Die Luft ist unbelastet. Alle Aktivitäten im Freien sind unproblematisch.',
+  'Gute bis mäßige Luft. Nur außergewöhnlich empfindliche Personen merken etwas.',
+  'Empfindliche Personen (Asthma, Herz-Kreislauf) sollten anstrengende Aktivitäten im Freien verkürzen.',
+  'Anstrengende Aktivitäten im Freien einschränken, besonders bei Atemwegs- oder Herzerkrankungen.',
+  'Aufenthalt im Freien möglichst kurz halten, anstrengende Aktivitäten vermeiden.',
+  'Aufenthalt im Freien möglichst vermeiden, Fenster geschlossen halten.'
+];
+
+function buildHints(d, s, aq){
+  const hr = d.hourly, dl = d.daily, c = d.current, out = [];
+  const n = Math.min(24, hr.time.length - s);
+  if (!(n >= 6)) return out;
+  const idx = Array.from({ length: n }, (_, k) => s + k), n12 = idx.slice(0, 12);
+  const today = String(c.time).slice(0, 10);
+  const hourAt = i => +hm(hr.time[i], 11, 13);
+  const dayAt = i => String(hr.time[i]).slice(0, 10) === today ? 'heute' : 'morgen';
+  const pr = i => num(hr.precipitation && hr.precipitation[i]) ?? 0;
+  const aqAt = i => (aq && aq.map) ? (aq.map.get(String(hr.time[i]).slice(0, 13)) ?? null) : null;
+
+  // Regenjacke: Menge UND Risiko (das Risiko allein sagt nichts über die Menge)
+  const ppAt = i => num(hr.precipitation_probability && hr.precipitation_probability[i]) ?? 0;
+  const sum12 = Math.round(n12.reduce((a, i) => a + pr(i), 0) * 100) / 100;
+  const firstWet = n12.find(i => pr(i) >= 0.3 && ppAt(i) >= 40);
+  if (firstWet != null || sum12 >= 1){
+    const first = firstWet ?? n12.find(i => pr(i) >= 0.1);
+    const peak = Math.max(0, ...n12.map(pr));
+    const when = first == null ? 'Etwas Regen möglich'
+      : first === s ? 'Es regnet bereits' : `Regen ${dayAt(first)} ab ${pad2(hourAt(first))} Uhr`;
+    out.push({ k:'rain', col:'#7cc4ff', t:'Regenjacke einpacken',
+      s: when + (peak >= 1 ? `, zeitweise kräftig (bis ${nf(peak)} mm pro Stunde)` : '')
+        + (sum12 >= 0.5 ? `, insgesamt rund ${nf(sum12)} mm in den nächsten 12 Stunden` : '') + '.' });
+  }
+  // Sonnenschutz (nur tagsüber): ab UV 3 empfohlen, ab 6 nötig, ab 8 Schatten zur Mittagszeit
+  if (c.is_day){
+    const u = num(dl.uv_index_max && dl.uv_index_max[0]);
+    if (u != null && u >= 3){
+      const r = Math.round(u);
+      out.push(u >= 8 ? { k:'sun', col:'#ffd34d', t:'Sonnenschutz nötig', s:`UV-Index ${r} (${uvTxt(u)}): 11–15 Uhr Schatten suchen, Sonnencreme, Hut.` }
+        : u >= 6 ? { k:'sun', col:'#ffd34d', t:'Sonnenschutz nötig', s:`UV-Index ${r} (${uvTxt(u)}): Mittagssonne meiden, Sonnencreme, Hut.` }
+        : { k:'sun', col:'#ffd34d', t:'Sonnenschutz empfohlen', s:`UV-Index ${r} (${uvTxt(u)}) zwischen 11 und 15 Uhr.` });
+    }
+  }
+  // Frost / Hitze (nächste 24 Stunden)
+  const ts = idx.map(i => num(hr.temperature_2m && hr.temperature_2m[i])).filter(v => v != null);
+  let tmax24 = null;
+  if (ts.length){
+    const lo = Math.min(...ts), hi = Math.max(...ts);
+    tmax24 = hi;
+    if (lo <= -10) out.push({ k:'temp', col:'#9fdcff', t:'Strenger Frost', s:`Tiefstwert ${Math.round(lo)}° in den nächsten 24 Stunden. Warm anziehen, auf Glätte achten, Pflanzen und Leitungen schützen.` });
+    else if (lo <= 0) out.push({ k:'temp', col:'#9fdcff', t:'Frostgefahr', s:`Tiefstwert ${Math.round(lo)}° in den nächsten 24 Stunden. Glätte und empfindliche Pflanzen beachten.` });
+    else if (hi >= 35) out.push({ k:'temp', col:'#ff7a59', t:'Extreme Hitze', s:`Bis ${Math.round(hi)}°. Anstrengung im Freien meiden, viel trinken, Schatten und kühle Räume nutzen.` });
+    else if (hi >= 30) out.push({ k:'temp', col:'#ff9f6b', t:'Hitze: viel trinken', s:`Bis ${Math.round(hi)}°. Schwere Aktivität in die Morgen- oder Abendstunden legen.` });
+  }
+  // Böen: ab 50 km/h starke Böen, ab 65 km/h Sturmböen (DWD-Stufen)
+  const g = Math.max(0, ...idx.map(i => num(hr.wind_gusts_10m && hr.wind_gusts_10m[i]) ?? 0));
+  if (g >= 65) out.push({ k:'wind', col:'#c3cedb', t:'Sturmböen', s:`Böen bis ${Math.round(g)} km/h. Aufenthalt unter Bäumen meiden, lose Gegenstände sichern.` });
+  else if (g >= 50) out.push({ k:'wind', col:'#c3cedb', t:'Starke Böen', s:`Böen bis ${Math.round(g)} km/h. Lose Gegenstände sichern, Vorsicht bei Fahrrad und Bäumen.` });
+  // Luftqualität (nächste 12 Stunden): ab 40 für empfindliche Personen, ab 60 für alle
+  const aqs = n12.map(aqAt).filter(v => v != null);
+  if (aqs.length){
+    const m = Math.max(...aqs);
+    if (m >= 60) out.push({ k:'air', col:'#ff6b6b', t:'Luft belastet', s:`Luftqualitätsindex bis ${Math.round(m)}. Anstrengung im Freien für alle einschränken.` });
+    else if (m >= 40) out.push({ k:'air', col:'#ffa94d', t:'Luftqualität nur ausreichend', s:`Index bis ${Math.round(m)}. Empfindliche Personen (Asthma, Herz-Kreislauf) sollten intensive Aktivitäten im Freien überdenken.` });
+  }
+  // Lüften: trocken (kein Regen, Risiko höchstens 40 %), saubere Luft (Index höchstens 40, falls vorhanden).
+  // Außenfeuchte spielt keine Rolle. Sommer (Tageshöchstwert ab 25 °C): nur 5–10 und 20–23 Uhr, sonst 7–22 Uhr.
+  const summer = tmax24 != null && tmax24 >= 25;
+  const ok = i => {
+    const pp = num(hr.precipitation_probability && hr.precipitation_probability[i]);
+    const a = aqAt(i), h = hourAt(i);
+    const hourOk = summer ? ((h >= 5 && h < 10) || (h >= 20 && h < 23)) : (h >= 7 && h <= 21);
+    return hourOk && pp != null && pp <= 40 && pr(i) < 0.1 && (a == null || a <= 40);
+  };
+  const runs = []; let cur = [];
+  for (const i of idx){ if (ok(i)) cur.push(i); else { if (cur.length) runs.push(cur); cur = []; } }
+  if (cur.length) runs.push(cur);
+  let best = null;
+  for (const r of runs){
+    const L = Math.min(3, r.length);
+    for (let a = 0; a + L <= r.length; a++){
+      const w = r.slice(a, a + L), sc = w.reduce((t, i) => t + ppAt(i), 0) / L;
+      if (!best || sc < best.sc) best = { w, sc };
+    }
+  }
+  const hasAir = !!(aq && aq.map);
+  if (best){
+    const a = best.w[0], z = best.w[best.w.length - 1];
+    const tip = summer ? 'Dann 10–20 Minuten lüften.' : 'Etwa 5 Minuten stoßlüften, 2–3 × am Tag.';
+    out.push({ k:'win', col:'#8be28f', t:'Gute Zeit zum Lüften',
+      s:`${dayAt(a) === 'heute' ? 'Heute' : 'Morgen'}, ${pad2(hourAt(a))}–${pad2((hourAt(z) + 1) % 24)} Uhr: trocken${hasAir ? ' und wenig Luftbelastung' : ''}. ${tip}` });
+  } else {
+    out.push({ k:'win', col:'#c3cedb', t:'Nur kurz stoßlüften', s:'In den nächsten 24 Stunden gibt es kaum trockene, saubere Stunden. Heute nur kurz stoßlüften (5 Minuten genügt).' });
+  }
+  return out;
+}
+function renderHints(){
+  const el = document.getElementById('hintsBody');
+  if (!el || !fc) return;
+  let list = [];
+  try { list = buildHints(fc.d, fc.s, air); } catch { list = []; }
+  el.innerHTML = list.length
+    ? `<ul class="hints">${list.map(h => `<li class="hint"><span class="hi" style="background:${h.col}33;color:${h.col}">${HI[h.k]}</span><div><b>${esc(h.t)}</b><span>${esc(h.s)}</span></div></li>`).join('')}</ul>
+       <p class="fine">Berechnet auf deinem Gerät aus den Wetter- und Luftdaten, ohne eigene Abfrage. Die Schwellen sind Richtwerte, keine medizinische Beratung.</p>`
+    : '<p class="soft">Gerade gibt es keine Hinweise.</p>';
+}
+
+/* Verlaufsdiagramm: reines SVG, Daten aus der Vorhersage */
+const wdShort = iso => { const [y, m, dd] = String(iso).slice(0, 10).split('-').map(Number); return new Date(y, m - 1, dd).toLocaleDateString('de-DE', { weekday: 'short' }).replace('.', ''); };
+function chartSVG(tr, hrTimes){
+  const { Tm, Pr, s, n } = tr, W = 360, H = 206, ml = 10, mr = 10, top = 26, tBot = 122, base = 172, step = (W - ml - mr) / (n - 1);
+  const X = i => ml + i * step;
+  const lo = Math.floor(Math.min(...Tm) - 1), hi = Math.ceil(Math.max(...Tm) + 1);
+  const Y = v => tBot - (v - lo) / (hi - lo) * (tBot - top);
+  const maxR = Math.max(2, ...Pr), RH = v => v / maxR * 34;
+  let bars = '', pts = [], axis = '', seps = `<text x="${ml}" y="${top - 12}" font-size="10.5" fill="rgba(255,255,255,.8)">${esc(wdShort(hrTimes[s]))}</text>`;
+  for (let i = 0; i < n; i++){
+    pts.push(`${X(i).toFixed(1)},${Y(Tm[i]).toFixed(1)}`);
+    if (Pr[i] > 0){ const h = Math.max(2, RH(Pr[i])); bars += `<rect x="${(X(i) - step * .36).toFixed(1)}" y="${(base - h).toFixed(1)}" width="${(step * .72).toFixed(1)}" height="${h.toFixed(1)}" rx="2" fill="#7CC4FF" opacity=".9"/>`; }
+    const h24 = +hm(hrTimes[s + i], 11, 13);
+    if (h24 % 6 === 0) axis += `<text x="${X(i).toFixed(1)}" y="${base + 20}" font-size="10.5" fill="rgba(255,255,255,.72)" text-anchor="middle">${pad2(h24)}</text>`;
+    if (h24 === 0 && i > 0) seps += `<line x1="${X(i).toFixed(1)}" y1="${top - 8}" x2="${X(i).toFixed(1)}" y2="${base}" stroke="rgba(255,255,255,.28)" stroke-dasharray="3 4"/><text x="${(X(i) + 5).toFixed(1)}" y="${top - 12}" font-size="10.5" fill="rgba(255,255,255,.8)">${esc(wdShort(hrTimes[s + i]))}</text>`;
+  }
+  const line = 'M' + pts.join('L'), area = `${line}L${X(n - 1).toFixed(1)},${tBot}L${X(0).toFixed(1)},${tBot}Z`;
+  const iMax = Tm.indexOf(Math.max(...Tm)), iMin = Tm.indexOf(Math.min(...Tm));
+  const lab = (i, up) => `<text x="${clamp(X(i), 18, W - 18).toFixed(1)}" y="${(Y(Tm[i]) + (up ? -8 : 17)).toFixed(1)}" font-size="11.5" font-weight="600" fill="#fff" text-anchor="middle">${Math.round(Tm[i])}°</text>`;
+  const grid = [0, .5, 1].map(f => `<line x1="${ml}" x2="${W - mr}" y1="${(top + f * (tBot - top)).toFixed(1)}" y2="${(top + f * (tBot - top)).toFixed(1)}" stroke="rgba(255,255,255,.1)"/>`).join('');
+  return `<svg class="chart" id="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Temperatur- und Niederschlagsverlauf der nächsten ${n} Stunden">
+    <defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd166" stop-opacity=".5"/><stop offset="1" stop-color="#ffd166" stop-opacity="0"/></linearGradient></defs>
+    ${grid}${seps}<path d="${area}" fill="url(#ag)"/>
+    <path d="${line}" fill="none" stroke="#ffd166" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+    ${bars}${lab(iMax, true)}${iMax !== iMin ? lab(iMin, false) : ''}
+    <line x1="${ml}" x2="${W - mr}" y1="${base}" y2="${base}" stroke="rgba(255,255,255,.25)"/>${axis}
+    <g id="scrub" hidden><line id="sl" y1="${top - 8}" y2="${base}" stroke="#fff" stroke-width="1.5"/><circle id="sc" r="5" fill="#fff" stroke="#ffd166" stroke-width="2"/></g>
+    <rect id="hit" x="0" y="0" width="${W}" height="${H}" fill="transparent"/></svg>`;
+}
+function setReadout(i){
+  const el = document.getElementById('readout');
+  if (!el) return;
+  if (!trend){ el.textContent = ''; return; }
+  const t = fc.d.hourly.time;
+  el.innerHTML = i == null
+    ? `<span>Tippe oder streiche über das Diagramm</span><span>Niederschlag gesamt ${nf(trend.Pr.reduce((a, b) => a + b, 0))} mm</span>`
+    : `<b>${T(trend.Tm[i])}</b><span>${esc(wdShort(t[trend.s + i]))} ${hm(t[trend.s + i], 11, 13)} Uhr</span><span>${nf(trend.Pr[i])} mm</span>${trend.Pp[i] != null ? `<span>Regenrisiko ${Math.round(trend.Pp[i])} %</span>` : ''}`;
+}
+function renderTrend(){
+  const el = document.getElementById('trendChart');
+  if (!el || !fc) return;
+  trend = null;
+  try {
+    const { d, s } = fc, hr = d.hourly, n = Math.min(trendRange, hr.time.length - s);
+    if (!(n >= 6)) throw 0;
+    const Tm = [], Pr = [], Pp = [];
+    for (let k = 0; k < n; k++){
+      const t = num(hr.temperature_2m[s + k]);
+      if (t == null) throw 0;
+      Tm.push(t); Pr.push(num(hr.precipitation && hr.precipitation[s + k]) ?? 0); Pp.push(num(hr.precipitation_probability && hr.precipitation_probability[s + k]));
+    }
+    trend = { Tm, Pr, Pp, s, n };
+    el.innerHTML = chartSVG(trend, hr.time);
+    bindTrend();
+  } catch { trend = null; el.innerHTML = '<p class="soft">Der Verlauf ist nicht verfügbar.</p>'; }
+  setReadout(null);
+}
+function bindTrend(){
+  const svg = document.getElementById('chart');
+  if (!svg || !trend) return;
+  const W = 360, ml = 10, mr = 10, step = (W - ml - mr) / (trend.n - 1);
+  const lo = Math.floor(Math.min(...trend.Tm) - 1), hi = Math.ceil(Math.max(...trend.Tm) + 1);
+  const show = ev => {
+    const r = svg.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width * W;
+    const i = clamp(Math.round((x - ml) / step), 0, trend.n - 1), cx = ml + i * step, cy = 122 - (trend.Tm[i] - lo) / (hi - lo) * (122 - 26);
+    document.getElementById('scrub').hidden = false;
+    const sl = document.getElementById('sl'), sc = document.getElementById('sc');
+    sl.setAttribute('x1', cx); sl.setAttribute('x2', cx); sc.setAttribute('cx', cx); sc.setAttribute('cy', cy);
+    setReadout(i);
+  };
+  svg.addEventListener('pointerdown', ev => { try { svg.setPointerCapture(ev.pointerId); } catch {} show(ev); });
+  svg.addEventListener('pointermove', ev => { if (ev.buttons || ev.pointerType === 'mouse') show(ev); });
+  svg.addEventListener('pointerleave', ev => { if (ev.pointerType === 'mouse'){ const g = document.getElementById('scrub'); if (g) g.hidden = true; setReadout(null); } });
+}
+function setTrendRange(r){
+  trendRange = r === 48 ? 48 : 24;
+  document.querySelectorAll('[data-r]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.r === trendRange)));
+  renderTrend();
+}
+
+/* Luftqualität (Europäischer Index, Open-Meteo/CAMS) */
+const AIR_ROWS = [['Feinstaub PM2,5','pm2_5'],['Feinstaub PM10','pm10'],['Stickstoffdioxid','nitrogen_dioxide'],['Ozon','ozone']];
+async function loadAir(p, my){
+  try {
+    const j = await getJSON('https://air-quality-api.open-meteo.com/v1/air-quality'
+      + `?latitude=${p.lat}&longitude=${p.lon}`
+      + '&current=european_aqi,european_aqi_pm2_5,european_aqi_pm10,european_aqi_nitrogen_dioxide,european_aqi_ozone,pm2_5,pm10,nitrogen_dioxide,ozone'
+      + '&hourly=european_aqi&timezone=auto&forecast_days=2');
+    if (my !== loadSeq) return;
+    const c = (j && j.current) || {}, h = (j && j.hourly) || {}, now = num(c.european_aqi);
+    if (now == null) air = false;
+    else {
+      const map = new Map();
+      (Array.isArray(h.time) ? h.time : []).forEach((t, i) => { const v = num(Array.isArray(h.european_aqi) ? h.european_aqi[i] : null); if (v != null) map.set(String(t).slice(0, 13), v); });
+      air = { now, map, rows: AIR_ROWS.map(([name, k]) => ({ name, v: num(c[k]), idx: num(c['european_aqi_' + k]) })).filter(r => r.v != null && r.idx != null) };
+    }
+  } catch { if (my !== loadSeq) return; air = 'err'; }
+  renderAir(); renderHints();
+}
+function renderAir(){
+  const el = document.getElementById('airBody');
+  if (!el || air === null) return;
+  if (air === 'err'){ el.innerHTML = '<p class="soft">Die Luftqualität konnte nicht geladen werden.</p>'; return; }
+  if (air === false){ el.innerHTML = '<p class="soft">Für diesen Ort liegen keine Luftqualitätsdaten vor. Sie gibt es nur für Europa.</p>'; return; }
+  const b = eaqi(air.now), bi = EAQI.indexOf(b), now = Math.round(air.now);
+  el.innerHTML = `<div class="aqiTop"><span class="aqiNum">${now}</span><span class="aqiLbl" style="color:${b[2]}">${b[1]}</span></div>
+    <div class="gauge" role="img" aria-label="Europäischer Luftqualitätsindex ${now}, ${b[1]}"><i style="left:${clamp(air.now / 120 * 100, 1, 99).toFixed(1)}%"></i></div>
+    <div class="gscale" aria-hidden="true"><span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100+</span></div>
+    <p class="aqiAdvice">${AQ_ADVICE[bi]}</p>
+    <ul class="pols">${air.rows.map(r => { const rb = eaqi(r.idx); return `<li><span class="dot" style="background:${rb[2]}"></span><span>${esc(r.name)}<br><small>${rb[1]}</small></span><b>${nf(r.v, 0)} µg/m³</b></li>`; }).join('')}</ul>
+    <p class="fine">Europäischer Luftqualitätsindex (EAQI), Modelldaten von Open-Meteo/CAMS, nur Europa. Der höchste Einzelwert bestimmt den Gesamtindex.</p>`;
+}
+
 function renderEmpty(){
   applySky('start', false);
   const cities = [
@@ -892,9 +1245,13 @@ document.getElementById('infoClose').addEventListener('click', () => info.close(
 document.getElementById('infoX').addEventListener('click', () => info.close());
 info.addEventListener('click', e => { if (e.target === info) info.close(); });
 document.getElementById('forget').addEventListener('click', e => {
-  try { localStorage.removeItem('wetter:last'); } catch {}
+  try { localStorage.removeItem('wetter:last'); localStorage.removeItem(FAV_KEY); } catch {}
+  favs = []; renderFavs(); updateStar();
   e.target.textContent = 'Gelöscht';
 });
+favs = cleanFavs(store.get(FAV_KEY));
+if (favs.length) store.set(FAV_KEY, favs); else { try { localStorage.removeItem(FAV_KEY); } catch {} }
+renderFavs();
 const last = cleanPlace(store.get('wetter:last'));
 if (last){
   store.set('wetter:last', last);
