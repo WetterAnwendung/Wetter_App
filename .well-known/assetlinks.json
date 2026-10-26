@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.wetteranwendung.wetter",
+      "sha256_cert_fingerprints": [
+        "BD:E6:07:F9:E0:3B:19:BB:DB:E2:85:A8:BE:95:FE:20:B0:0D:0A:BD:A6:4A:69:2C:73:87:41:37:E3:39:31:46"
+      ]
+    }
+  }
+]

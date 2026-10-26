@@ -25,6 +25,8 @@ Wer die App schon von einer früheren Adresse installiert hatte, muss die alte V
 | `screenshots/` | Bilder für den Installationsdialog (Hoch- und Querformat, Beispieldaten) |
 | `csp-hash.py` | Berechnet den Sicherheits-Hash des Skripts neu (siehe unten) |
 | `wetter-app.html` | Nur Weiterleitung auf `./` für alte Links auf den früheren Dateinamen |
+| `.well-known/assetlinks.json` | Digital Asset Links: bestätigt, dass die Android-App `io.github.wetteranwendung.wetter` zu dieser Seite gehört (Vollbild ohne Adressleiste). Enthält nur Paketname und SHA-256-Fingerabdruck des Signaturzertifikats, nichts Geheimes. Bei einem neuen Signaturschlüssel (z. B. Google Play App Signing) zusätzlichen Fingerabdruck ergänzen |
+| `.nojekyll` | Leere Datei: schaltet Jekyll bei GitHub Pages ab, sonst würde der Ordner `.well-known` (beginnt mit Punkt) nicht ausgeliefert |
 | `.gitignore` | Verhindert, dass APK, AAB, Keystore oder PWABuilder-ZIP versehentlich veröffentlicht werden |
 
 Alle Verweise in der App sind **relativ** (`manifest.webmanifest`, `sw.js`, `icon-192.png`, `./`). Einzige absolute Angaben: die Manifest-Kennung `"id": "/"` und der `canonical`-Link der Weiterleitungsseite.
