@@ -97,7 +97,6 @@ GitHub Pages liefert die Seite aus und protokolliert dabei die IP-Adresse. Der S
 
 ## Umzug
 
-- Bis 24.10.2026: `https://saschamartinmail-design.github.io/Wetter_App_Claude_V01/wetter-app.html`
 - 24.–25.10.2026: `https://wetteranwendung.github.io/Wetter_App/` (Repository `Wetter_App`)
 - Seit 25.10.2026: `https://wetteranwendung.github.io/` (Repository `wetteranwendung.github.io`, Manifest-Kennung `/`)
 
