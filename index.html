@@ -5,7 +5,7 @@
 <!-- Sicherheitsregel (CSP): nur das eigene Skript (per Hash), Daten nur von den genannten Diensten.
      WICHTIG: Wer das Skript unten ändert, muss den sha256-Hash neu berechnen, sonst startet die App nicht.
      Befehl: python3 csp-hash.py index.html -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-a4ubGUS4ZrS0+zh8Vljma3xpz7ZIm+Oc45NUGVSGrms='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data:; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-xa8DURSELIZ7w1svSv5dmXLd1Crn1eHshz2lOctq6/c='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data:; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#2a3f7a">
@@ -365,7 +365,7 @@ dialog.info{position:fixed}
   <div id="view" aria-live="polite"><p class="boot">Die App startet nicht. Wurde das Skript geändert, muss der Sicherheits-Hash im Kopf der Datei neu berechnet werden.</p></div>
 
   <p class="foot">Daten: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a> (CC BY 4.0), <a href="https://www.pegelonline.wsv.de/" target="_blank" rel="noopener">PEGELONLINE</a> (WSV, dl-de/by-2-0), Ortsdaten © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>-Mitwirkende und GeoNames.
-    <br><button type="button" class="linkbtn" id="infoLink">Datenschutz &amp; Info</button></p>
+    <br><a href="datenschutz.html">Datenschutzerklärung</a> · <button type="button" class="linkbtn" id="infoLink">Info</button></p>
 </main>
 <dialog class="info" id="info" aria-labelledby="infoTitle">
   <button type="button" class="info-x" id="infoX" aria-label="Schließen">
@@ -375,6 +375,9 @@ dialog.info{position:fixed}
     <div class="eyebrow">Über die App</div>
     <h2 id="infoTitle">Wetter</h2>
     <div class="notice"><p><strong>Nutzung ohne Gewähr.</strong> Die Wetter-App ist ein privates, kostenloses Hobbyprojekt ohne Werbung. Die Werte stammen aus Wettermodellen und Messstellen Dritter und können falsch oder veraltet sein. Für amtliche Unwetterwarnungen nutze den Deutschen Wetterdienst.</p></div>
+
+    <h3>Verantwortlich</h3>
+    <p>Sascha Martin (privat), E-Mail: <a href="mailto:Faceman33@web.de">Faceman33@web.de</a>. Die vollständige <a href="datenschutz.html">Datenschutzerklärung</a> steht auch als eigene Seite bereit.</p>
 
     <h3>Was die App speichert</h3>
     <p>Nur auf deinem Gerät, im Speicher des Browsers: den zuletzt gewählten Ort sowie die Orte, die du mit dem Stern gemerkt hast (höchstens 5; jeweils Name, Postleitzahl, Koordinaten). Es gibt keine Konten, keine Cookies, kein Tracking, keine Werbung und keinen eigenen Server.</p>
@@ -392,7 +395,7 @@ dialog.info{position:fixed}
     <p>Die App sendet keine Seitenadresse (Referer) mit und lädt keine Schriften, Skripte oder Bilder von fremden Servern. Tageshinweise (z. B. Regenjacke, Sonnenschutz) und Verlaufsdiagramm berechnet die App auf deinem Gerät aus diesen Daten, ohne weitere Anfragen.</p>
 
     <h3>Standort</h3>
-    <p>Nur wenn du auf den Standort-Knopf tippst, fragt die App deinen Standort über die Browser-Berechtigung ab, einmalig und nie im Hintergrund. Er wird vor dem Senden auf etwa 1 km gerundet. Browser merken sich die Freigabe für die ganze Internetadresse, unter der die App liegt, also auch für andere Seiten dort. Du kannst sie jederzeit in den Browser-Einstellungen entziehen. In der Android-App fragt stattdessen Android nach und du entziehst sie unter Einstellungen › Apps › Wetter App › Berechtigungen.</p>
+    <p>Nur wenn du auf den Standort-Knopf tippst, fragt die App deinen Standort über die Browser-Berechtigung ab, einmalig und nie im Hintergrund. Er wird vor dem Senden auf etwa 2 km gerundet. Browser merken sich die Freigabe für die ganze Internetadresse, unter der die App liegt, also auch für andere Seiten dort. Du kannst sie jederzeit in den Browser-Einstellungen entziehen. In der Android-App fragt stattdessen Android nach und du entziehst sie unter Einstellungen › Apps › Wetter App › Berechtigungen.</p>
 
     <h3>Rechtsgrundlage und deine Rechte</h3>
     <p>Die Anfragen löst du selbst aus, um die gewünschten Wetterdaten zu erhalten (Art. 6 Abs. 1 lit. f DSGVO). Da die App selbst nichts auf einem Server speichert, liegen beim Anbieter der App keine Daten über dich vor. Gegenüber den genannten Diensten hast du die Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung und Widerspruch. Außerdem kannst du dich bei einer Datenschutz-Aufsichtsbehörde beschweren.</p>
@@ -708,9 +711,10 @@ const GEO_MSG = {
   3: 'Die Standortbestimmung hat zu lange gedauert. Versuche es noch einmal (am besten im Freien oder am Fenster) oder gib einen Ort ein.'
 };
 async function onPosition(pos){
-  // Datensparsamkeit: auf 2 Nachkommastellen (ca. 1 km) runden, bevor irgendetwas das Gerät verlässt
-  const r2 = v => Math.round(v * 100) / 100;
-  const lat = r2(pos.coords.latitude), lon = r2(pos.coords.longitude);
+  // Datensparsamkeit: auf ein Raster von 0,02° × 0,03° (ca. 2 km) runden, bevor irgendetwas das Gerät verlässt.
+  // Eine Rasterzelle ist in Europa bis ca. 65° N mindestens 3 km² groß (= „ungefährer Standort“ nach Google Play).
+  const snap = (v, step) => Number((Math.round(v / step) * step).toFixed(2));
+  const lat = snap(pos.coords.latitude, 0.02), lon = snap(pos.coords.longitude, 0.03);
   let place = { title: 'Mein Standort', sub: 'Aktueller Standort', lat, lon, plz: '' };
   try {
     const j = await getJSON(`https://photon.komoot.io/reverse?lat=${lat}&lon=${lon}&lang=de`);

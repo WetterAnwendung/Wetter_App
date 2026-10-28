@@ -20,6 +20,7 @@ Wer die App schon von einer früheren Adresse installiert hatte, muss die alte V
 | `index.html` | Die App: Oberfläche, Logik, eingebettete Schrift, Sicherheitsregel (CSP) |
 | `sw.js` | Service Worker: speichert nur die App-Hülle für schnellen Start und Offline-Start |
 | `offline.html` | Hinweisseite, wenn keine Verbindung besteht und die App noch nicht gespeichert ist |
+| `datenschutz.html` | Datenschutzerklärung als feste Seite ohne Skript (öffentliche Adresse für Google Play) |
 | `manifest.webmanifest` | App-Name, Kennung, Startadresse, Symbole und Screenshots für die Installation; `launch_handler`: ein erneuter Aufruf holt das offene Fenster nach vorn statt ein zweites zu öffnen |
 | `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `apple-touch-icon.png` | App-Symbole |
 | `screenshots/` | Bilder für den Installationsdialog (Hoch- und Querformat, Beispieldaten) |
@@ -83,7 +84,7 @@ Die App lädt beim Öffnen nichts von fremden Servern. Erst bei einer Suche, bei
 | `photon.komoot.io` | Ortsname zum Standort, Postleitzahlen |
 | `www.pegelonline.wsv.de` | Pegel und Wassertemperatur an Flüssen |
 
-GitHub Pages liefert die Seite aus und protokolliert dabei die IP-Adresse. Der Standort wird vor dem Absenden auf etwa 1 km gerundet. Gespeichert werden im Browser nur der zuletzt gewählte Ort (`localStorage`, Schlüssel `wetter:last`), die gemerkten Orte (Schlüssel `wetter:favs`, höchstens 5) und die App-Hülle im Cache des Service Workers. Den vollständigen Datenschutzhinweis zeigt die App über den ⓘ-Knopf.
+GitHub Pages liefert die Seite aus und protokolliert dabei die IP-Adresse. Der Standort wird vor dem Absenden auf etwa 2 km gerundet (Raster 0,02° × 0,03°). Gespeichert werden im Browser nur der zuletzt gewählte Ort (`localStorage`, Schlüssel `wetter:last`), die gemerkten Orte (Schlüssel `wetter:favs`, höchstens 5) und die App-Hülle im Cache des Service Workers. Den Datenschutzhinweis zeigt die App über den ⓘ-Knopf; die vollständige Datenschutzerklärung liegt als eigene Seite ohne Skript unter `datenschutz.html` (öffentliche Adresse für Google Play).
 
 ## Sicherheit
 
