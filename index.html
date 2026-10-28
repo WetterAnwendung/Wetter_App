@@ -5,7 +5,7 @@
 <!-- Sicherheitsregel (CSP): nur das eigene Skript (per Hash), Daten nur von den genannten Diensten.
      WICHTIG: Wer das Skript unten ändert, muss den sha256-Hash neu berechnen, sonst startet die App nicht.
      Befehl: python3 csp-hash.py index.html -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-nKQCvUpQN3LAbrRZr1KwvClzEYqoD4gQyGwzQseeDWw='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data:; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-a4ubGUS4ZrS0+zh8Vljma3xpz7ZIm+Oc45NUGVSGrms='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data:; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#2a3f7a">
@@ -313,6 +313,27 @@ dialog.info{position:fixed}
   .wi.sm *,.day-row .wi *{animation:none!important}
 }
 @media (prefers-reduced-motion:reduce){body{transition:none}.dd{transition:none}}
+
+/* Sprungleiste und Himmel */
+.jump{position:sticky;top:8px;z-index:15;display:flex;gap:6px;overflow-x:auto;margin-top:14px;padding:6px;border-radius:999px;
+  background:rgba(8,20,48,.9);border:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);scrollbar-width:none;justify-content:space-between}
+.jump::-webkit-scrollbar{display:none}
+.jump button{flex:none;border:1px solid transparent;background:transparent;border-radius:999px;padding:7px 11px;font-size:.9rem;font-weight:500;cursor:pointer;color:var(--soft)}
+.jump button[aria-current="true"]{background:#fff;color:#1d2c58;font-weight:700}
+[data-sec]{scroll-margin-top:72px}
+.skyArt{border-radius:18px;overflow:hidden;margin:0 0 12px;line-height:0}
+.skyArt svg{display:block;width:100%;height:auto}
+.skyHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:0 4px}
+.skyWhen{font-size:1.15rem;font-weight:700}.skyDir{color:var(--soft);font-size:.9rem}
+.skyVerdict{text-align:right;line-height:1.05;flex:none;white-space:nowrap}.skyVerdict b{display:block;font-size:2rem;font-weight:800;letter-spacing:-.02em}.skyVerdict small{color:var(--soft);font-size:.82rem}
+.sk-kaum{color:#c4cfdf}.sk-maessig{color:#ffd9a0}.sk-toll{color:#ffb26b}.sk-super{color:#ff8a98}
+.skyLead{margin:10px 4px 6px;color:var(--ink)}
+.skyBars{display:grid;gap:7px;margin:10px 4px 0}
+.skyBar{display:grid;grid-template-columns:minmax(110px,150px) 1fr 44px;align-items:center;gap:8px;font-size:.85rem;color:var(--soft)}
+.skyBar span:last-child{text-align:right}
+.skyTrack{height:8px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+.skyTrack i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#ffd34d,#ff7a8a)}
+.skyNotes{margin:10px 4px 0 22px;color:var(--soft);font-size:.86rem}.skyNotes li{margin:2px 0}
 </style>
 </head>
 <body data-sky="start">
@@ -364,7 +385,7 @@ dialog.info{position:fixed}
     <p>Damit die App etwas anzeigen kann, fragt dein Browser direkt bei diesen Stellen an. Jede sieht dabei deine IP-Adresse und den Inhalt der Anfrage:</p>
     <ul>
       <li><strong>GitHub</strong> (GitHub Inc., USA) liefert die Webversion aus und speichert nach eigener Angabe die IP-Adresse jedes Besuchers zu Sicherheitszwecken.</li>
-      <li><strong>Open-Meteo</strong> (OpenMeteo GmbH, Schweiz) liefert Wetter, Pollen, Luftqualität, Meerestemperatur und Ortsvorschläge. Der Dienst erhält die Koordinaten des Orts bzw. deinen Suchbegriff und löscht seine Server-Protokolle nach eigener Angabe nach 90 Tagen.</li>
+      <li><strong>Open-Meteo</strong> (OpenMeteo GmbH, Schweiz) liefert Wetter, Pollen, Luftqualität, Meerestemperatur und Ortsvorschläge. Der Dienst erhält die Koordinaten des Orts bzw. deinen Suchbegriff; für die Einschätzung des Sonnenuntergangs zusätzlich die Koordinaten zweier Punkte in Richtung der untergehenden Sonne (etwa 80 und 200 km entfernt, auf 0,1° gerundet) und löscht seine Server-Protokolle nach eigener Angabe nach 90 Tagen.</li>
       <li><strong>Photon</strong> (komoot GmbH, Deutschland) liefert Ortsvorschläge und den Namen deines Standorts. Der Dienst erhält deinen Suchbegriff bzw. die gerundeten Koordinaten.</li>
       <li><strong>PEGELONLINE</strong> (Wasserstraßen- und Schifffahrtsverwaltung des Bundes) liefert Flusstemperaturen und erhält die Koordinaten des Orts.</li>
     </ul>
@@ -731,7 +752,7 @@ async function loadWeather(p){
   const url = 'https://api.open-meteo.com/v1/forecast'
     + `?latitude=${p.lat}&longitude=${p.lon}`
     + '&current=temperature_2m,apparent_temperature,relative_humidity_2m,is_day,weather_code,wind_speed_10m,wind_direction_10m'
-    + '&hourly=temperature_2m,weather_code,precipitation_probability,is_day,precipitation,wind_gusts_10m'
+    + '&hourly=temperature_2m,weather_code,precipitation_probability,is_day,precipitation,wind_gusts_10m,relative_humidity_2m,cloud_cover_low,cloud_cover_mid,cloud_cover_high,visibility'
     + '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,sunrise,sunset,uv_index_max'
     + '&timezone=auto&forecast_days=5&wind_speed_unit=kmh';
   try {
@@ -803,7 +824,7 @@ function render(p, d, my){
 
   const dir = DIRS[Math.round(c.wind_direction_10m / 45) % 8] || '–';
   view.innerHTML = `<div class="reveal">
-    <section class="hero" aria-label="Aktuelles Wetter in ${esc(p.title)}">
+    <section class="hero" data-sec="wetter" aria-label="Aktuelles Wetter in ${esc(p.title)}">
       <div class="hero-top"><div><h1 class="place">${esc(p.title)}</h1>
       ${p.sub || p.plz ? `<p class="region">${esc([p.plz, p.sub].filter(Boolean).join(' · '))}</p>` : ''}</div>
         <button type="button" class="star" id="star" aria-pressed="false" aria-label="Ort merken"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.7 6.3.8-4.6 4.3 1.2 6.2L12 17l-5.6 3 1.2-6.2L3 9.5l6.3-.8z" fill="none"/></svg></button></div>
@@ -812,6 +833,7 @@ function render(p, d, my){
       <p class="hilo">Heute höchstens ${T(dl.temperature_2m_max[0])}, tiefstens ${T(dl.temperature_2m_min[0])}</p>
       <p class="stamp">Ortszeit ${hm(c.time)} Uhr</p>
     </section>
+    <nav class="jump" aria-label="Zu Abschnitt springen"><button type="button" data-go="wetter" aria-current="true">Wetter</button><button type="button" data-go="himmel">Himmel</button><button type="button" data-go="luft">Luft</button><button type="button" data-go="pollen">Pollen</button><button type="button" data-go="wasser">Wasser</button></nav>
     <section class="panel"><h2>Nächste 24 Stunden</h2><div class="hourly" tabindex="0" role="region" aria-label="Stündliche Vorhersage">${hours}</div></section>
     <section class="panel"><h2>Vorhersage für 5 Tage</h2><ul class="days">${days}</ul></section>
     <div class="tiles">
@@ -825,13 +847,16 @@ function render(p, d, my){
       <span class="seg" role="group" aria-label="Zeitraum"><button type="button" data-r="24" aria-pressed="true">24 h</button><button type="button" data-r="48" aria-pressed="false">48 h</button></span></h2>
       <div class="readout" id="readout" aria-live="polite"></div><div id="trendChart"></div>
       <div class="legend"><span><i style="background:#ffd166"></i>Temperatur</span><span><i style="background:#7CC4FF"></i>Niederschlag je Stunde</span></div></section>
-    <section class="panel" aria-labelledby="h-air"><h2 id="h-air">Luftqualität</h2><div id="airBody"><p class="soft">Wird geladen …</p></div></section>
-    <section class="panel" aria-labelledby="h-pollen"><h2 id="h-pollen">Pollenflug</h2><div id="pollenBody"><p class="soft">Wird geladen …</p></div></section>
-    <section class="panel" aria-labelledby="h-water"><h2 id="h-water">Wassertemperatur in der Nähe</h2><div id="waterBody"><p class="soft">Wird geladen …</p></div></section>
+    <section class="panel" data-sec="himmel" aria-labelledby="h-sky"><h2 id="h-sky">Sonnenuntergang</h2><div id="skyBody"><p class="soft">Wird berechnet …</p></div></section>
+    <section class="panel" data-sec="luft" aria-labelledby="h-air"><h2 id="h-air">Luftqualität</h2><div id="airBody"><p class="soft">Wird geladen …</p></div></section>
+    <section class="panel" data-sec="pollen" aria-labelledby="h-pollen"><h2 id="h-pollen">Pollenflug</h2><div id="pollenBody"><p class="soft">Wird geladen …</p></div></section>
+    <section class="panel" data-sec="wasser" aria-labelledby="h-water"><h2 id="h-water">Wassertemperatur in der Nähe</h2><div id="waterBody"><p class="soft">Wird geladen …</p></div></section>
     </div>`;
-  fc = { d, s }; air = null; trendRange = trendRange === 48 ? 48 : 24;
+  fc = { d, s }; air = null; sky = null; trendRange = trendRange === 48 ? 48 : 24;
   renderHints(); updateStar();
   setTrendRange(trendRange);
+  skySetup(p, d, my);
+  setupJump();
   loadAir(p, my);
   pollen = null; pollenDay = 0;
   loadPollen(p, my);
@@ -839,6 +864,13 @@ function render(p, d, my){
 }
 
 view.addEventListener('click', e => {
+  const go = e.target.closest('[data-go]');
+  if (go){
+    const t = view.querySelector(`[data-sec="${go.dataset.go}"]`), sm = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    if (go.dataset.go === 'wetter') window.scrollTo({ top: 0, behavior: sm });
+    else if (t) t.scrollIntoView({ behavior: sm, block: 'start' });
+    return;
+  }
   if (e.target.closest('#star')){ toggleFav(); return; }
   const rb = e.target.closest('[data-r]');
   if (rb){ setTrendRange(+rb.dataset.r); return; }
@@ -1133,7 +1165,7 @@ function chartSVG(tr, hrTimes){
     <path d="${line}" fill="none" stroke="#ffd166" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
     ${bars}${lab(iMax, true)}${iMax !== iMin ? lab(iMin, false) : ''}
     <line x1="${ml}" x2="${W - mr}" y1="${base}" y2="${base}" stroke="rgba(255,255,255,.25)"/>${axis}
-    <g id="scrub" hidden><line id="sl" y1="${top - 8}" y2="${base}" stroke="#fff" stroke-width="1.5"/><circle id="sc" r="5" fill="#fff" stroke="#ffd166" stroke-width="2"/></g>
+    <g id="scrub" hidden pointer-events="none"><rect id="sb" y="${top - 8}" width="${step.toFixed(1)}" height="${base - top + 8}" rx="6" fill="rgba(255,255,255,.07)"/><line id="sl" y1="${top - 8}" y2="${base}" stroke="rgba(255,255,255,.4)" stroke-width="1.2" stroke-linecap="round"/><circle id="sh" r="11" fill="#ffd166" opacity=".3"/><circle id="sc" r="5.5" fill="#fff" stroke="#ffd166" stroke-width="2.4"/><circle id="sa" r="2.5" cy="${base}" fill="rgba(255,255,255,.7)"/><g id="st"><rect id="stb" y="1" height="21" rx="10.5" fill="rgba(8,20,48,.92)" stroke="rgba(255,255,255,.55)"/><text id="stt" y="15.2" font-size="11.5" font-weight="650" fill="#fff" text-anchor="middle"></text></g></g>
     <rect id="hit" x="0" y="0" width="${W}" height="${H}" fill="transparent"/></svg>`;
 }
 function setReadout(i){
@@ -1172,14 +1204,20 @@ function bindTrend(){
   const show = ev => {
     const r = svg.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width * W;
     const i = clamp(Math.round((x - ml) / step), 0, trend.n - 1), cx = ml + i * step, cy = 122 - (trend.Tm[i] - lo) / (hi - lo) * (122 - 26);
-    document.getElementById('scrub').hidden = false;
+    document.getElementById('scrub').removeAttribute('hidden');   // SVG-Elemente haben keine .hidden-Eigenschaft
     const sl = document.getElementById('sl'), sc = document.getElementById('sc');
     sl.setAttribute('x1', cx); sl.setAttribute('x2', cx); sc.setAttribute('cx', cx); sc.setAttribute('cy', cy);
+    const sh = document.getElementById('sh'), sa = document.getElementById('sa'), sb = document.getElementById('sb'), stt = document.getElementById('stt'), stb = document.getElementById('stb');
+    sh.setAttribute('cx', cx); sh.setAttribute('cy', cy); sa.setAttribute('cx', cx); sb.setAttribute('x', cx - step / 2);
+    const tt = fc.d.hourly.time[trend.s + i], label = `${wdShort(tt)} ${hm(tt, 11, 13)} Uhr · ${T(trend.Tm[i])}${trend.Pr[i] > 0 ? ' · ' + nf(trend.Pr[i]) + ' mm' : ''}`, w = label.length * 6.3 + 20;
+    const tx = clamp(cx, w / 2 + 2, W - w / 2 - 2);
+    stt.textContent = label; stt.setAttribute('x', tx); stb.setAttribute('x', tx - w / 2); stb.setAttribute('width', w);
     setReadout(i);
   };
   svg.addEventListener('pointerdown', ev => { try { svg.setPointerCapture(ev.pointerId); } catch {} show(ev); });
   svg.addEventListener('pointermove', ev => { if (ev.buttons || ev.pointerType === 'mouse') show(ev); });
-  svg.addEventListener('pointerleave', ev => { if (ev.pointerType === 'mouse'){ const g = document.getElementById('scrub'); if (g) g.hidden = true; setReadout(null); } });
+  svg.addEventListener('pointercancel', () => {});
+  svg.addEventListener('pointerleave', ev => { if (ev.pointerType === 'mouse'){ const g = document.getElementById('scrub'); if (g) g.setAttribute('hidden', ''); setReadout(null); } });
 }
 function setTrendRange(r){
   trendRange = r === 48 ? 48 : 24;
@@ -1194,17 +1232,18 @@ async function loadAir(p, my){
     const j = await getJSON('https://air-quality-api.open-meteo.com/v1/air-quality'
       + `?latitude=${p.lat}&longitude=${p.lon}`
       + '&current=european_aqi,european_aqi_pm2_5,european_aqi_pm10,european_aqi_nitrogen_dioxide,european_aqi_ozone,pm2_5,pm10,nitrogen_dioxide,ozone'
-      + '&hourly=european_aqi&timezone=auto&forecast_days=2');
+      + '&hourly=european_aqi,aerosol_optical_depth,dust&timezone=auto&forecast_days=2');
     if (my !== loadSeq) return;
     const c = (j && j.current) || {}, h = (j && j.hourly) || {}, now = num(c.european_aqi);
     if (now == null) air = false;
     else {
       const map = new Map();
       (Array.isArray(h.time) ? h.time : []).forEach((t, i) => { const v = num(Array.isArray(h.european_aqi) ? h.european_aqi[i] : null); if (v != null) map.set(String(t).slice(0, 13), v); });
-      air = { now, map, rows: AIR_ROWS.map(([name, k]) => ({ name, v: num(c[k]), idx: num(c['european_aqi_' + k]) })).filter(r => r.v != null && r.idx != null) };
+      const hmap = k => { const m = new Map(); (Array.isArray(h.time) ? h.time : []).forEach((t, i) => { const v = num(Array.isArray(h[k]) ? h[k][i] : null); if (v != null) m.set(String(t).slice(0, 13), v); }); return m; };
+      air = { now, map, aod: hmap('aerosol_optical_depth'), dust: hmap('dust'), rows: AIR_ROWS.map(([name, k]) => ({ name, v: num(c[k]), idx: num(c['european_aqi_' + k]) })).filter(r => r.v != null && r.idx != null) };
     }
   } catch { if (my !== loadSeq) return; air = 'err'; }
-  renderAir(); renderHints();
+  renderAir(); renderHints(); renderSky();
 }
 function renderAir(){
   const el = document.getElementById('airBody');
@@ -1218,6 +1257,162 @@ function renderAir(){
     <p class="aqiAdvice">${AQ_ADVICE[bi]}</p>
     <ul class="pols">${air.rows.map(r => { const rb = eaqi(r.idx); return `<li><span class="dot" style="background:${rb[2]}"></span><span>${esc(r.name)}<br><small>${rb[1]}</small></span><b>${nf(r.v, 0)} µg/m³</b></li>`; }).join('')}</ul>
     <p class="fine">Europäischer Luftqualitätsindex (EAQI), Modelldaten von Open-Meteo/CAMS, nur Europa. Der höchste Einzelwert bestimmt den Gesamtindex.</p>`;
+}
+
+/* ---------- Himmel: Sonnenuntergangs-Qualität (lokal berechnet) ---------- */
+let sky = null;   // null = lädt, false = nicht verfügbar, sonst Ergebnis
+const sDeg = r => r * 180 / Math.PI;
+function sunAzimuth(lat, lon, y, m, d){      // Azimut (° von Nord) des Sonnenuntergangs, NOAA-Näherung
+  const jd = (() => { if (m <= 2){ y -= 1; m += 12; } const A = Math.floor(y / 100), B = 2 - A + Math.floor(A / 4); return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5; })();
+  const T = (jd + .5 - 2451545) / 36525;
+  const L0 = (280.46646 + T * (36000.76983 + T * .0003032)) % 360, M = 357.52911 + T * (35999.05029 - .0001537 * T);
+  const C = Math.sin(rad(M)) * (1.914602 - T * (.004817 + .000014 * T)) + Math.sin(rad(2 * M)) * (.019993 - .000101 * T) + Math.sin(rad(3 * M)) * .000289;
+  const lam = L0 + C - .00569 - .00478 * Math.sin(rad(125.04 - 1934.136 * T));
+  const eps = 23 + (26 + (21.448 - T * (46.815 + T * (.00059 - T * .001813))) / 60) / 60 + .00256 * Math.cos(rad(125.04 - 1934.136 * T));
+  const dec = sDeg(Math.asin(Math.sin(rad(eps)) * Math.sin(rad(lam))));
+  const cosAz = (Math.sin(rad(dec)) - Math.sin(rad(lat)) * Math.sin(rad(-.833))) / (Math.cos(rad(lat)) * Math.cos(rad(-.833)));
+  return 360 - sDeg(Math.acos(clamp(cosAz, -1, 1)));
+}
+const SK_DIRS = ['Nord','Nordnordost','Nordost','Ostnordost','Ost','Ostsüdost','Südost','Südsüdost','Süd','Südsüdwest','Südwest','Westsüdwest','West','Westnordwest','Nordwest','Nordnordwest'];
+function skyPoint(lat, lon, az, km){        // Punkt in Richtung az im Abstand km, auf 0,1° gerundet
+  const dr = km / 6371, a = rad(az), p1 = rad(lat), l1 = rad(lon);
+  const p2 = Math.asin(Math.sin(p1) * Math.cos(dr) + Math.cos(p1) * Math.sin(dr) * Math.cos(a));
+  const l2 = l1 + Math.atan2(Math.sin(a) * Math.sin(dr) * Math.cos(p1), Math.cos(dr) - Math.sin(p1) * Math.sin(p2));
+  return { lat: Math.round(sDeg(p2) * 10) / 10, lon: Math.round((((sDeg(l2) + 540) % 360) - 180) * 10) / 10 };
+}
+const skyRefl = (m, h) => 100 * (1 - (1 - h / 100) * (1 - .8 * m / 100));
+const skyCanvas = c => c <= 0 ? .3 : c < 45 ? .3 + .7 * c / 45 : c <= 60 ? 1 : 1 - .65 * (c - 60) / 40;
+const skyBlock = low => Math.max(.08, 1 - .9 * Math.min(1, low / 75));
+const skyHum = h => h <= 60 ? 1 : 1 - .2 * Math.min(1, (h - 60) / 35);
+const SK_WORD = s => s < 20 ? ['kaum Farben', 'kaum'] : s < 45 ? ['mäßig', 'maessig'] : s < 70 ? ['toll', 'toll'] : ['super', 'super'];
+
+function skySetup(p, d, my){
+  const c = d.current, dl = d.daily, hr = d.hourly;
+  try {
+    const k = (dl.sunset && dl.sunset[0] && String(dl.sunset[0]) > String(c.time)) ? 0 : 1, ss = dl.sunset && dl.sunset[k];
+    if (!ss) { sky = false; renderSky(); return; }
+    const [y, mo, da] = String(ss).slice(0, 10).split('-').map(Number);
+    const az = sunAzimuth(p.lat, p.lon, y, mo, da);
+    const rounded = new Date(String(ss).slice(0, 16) + ':00Z'); rounded.setUTCMinutes(rounded.getUTCMinutes() + 30);
+    const hk = rounded.toISOString().slice(0, 13);                      // Stunde des Sonnenuntergangs (gerundet)
+    const i = hr.time.findIndex(t => String(t).slice(0, 13) === hk);
+    const g = a => (i >= 0 && Array.isArray(a)) ? num(a[i]) : null;
+    const o0 = { l: g(hr.cloud_cover_low), m: g(hr.cloud_cover_mid), h: g(hr.cloud_cover_high) };
+    if (o0.l == null || o0.m == null || o0.h == null) { sky = false; renderSky(); return; }
+    sky = { pending: true, ss: String(ss), when: k === 0 ? 'heute' : 'morgen', az, hk, o0, hum: g(hr.relative_humidity_2m), vis: g(hr.visibility), rain: g(hr.precipitation) || 0, remote: null };
+    renderSky();
+    const a = skyPoint(p.lat, p.lon, az, 80), b = skyPoint(p.lat, p.lon, az, 200);
+    getJSON('https://api.open-meteo.com/v1/forecast'
+      + `?latitude=${a.lat},${b.lat}&longitude=${a.lon},${b.lon}`
+      + '&hourly=cloud_cover_low,cloud_cover_mid,cloud_cover_high&timezone=auto&forecast_days=2')
+      .then(j => {
+        if (my !== loadSeq || !sky) return;
+        const pts = (Array.isArray(j) ? j : []).map(r => {
+          const h = r && r.hourly, ix = h && Array.isArray(h.time) ? h.time.findIndex(t => String(t).slice(0, 13) === hk) : -1;
+          const v = key => (ix >= 0 && Array.isArray(h[key])) ? num(h[key][ix]) : null;
+          const q = { l: v('cloud_cover_low'), m: v('cloud_cover_mid'), h: v('cloud_cover_high') };
+          return (q.l == null || q.m == null || q.h == null) ? null : q;
+        });
+        sky.remote = pts.length === 2 && pts[0] && pts[1] ? pts : null;
+      }).catch(() => {}).finally(() => { if (my !== loadSeq || !sky) return; sky.pending = false; renderSky(); });
+  } catch { sky = false; renderSky(); }
+}
+
+function skyCompute(S, aq){
+  const q0 = S.o0, R = S.remote, hasR = !!R;
+  const r0 = skyRefl(q0.m, q0.h), r1 = hasR ? skyRefl(R[0].m, R[0].h) : r0, r2 = hasR ? skyRefl(R[1].m, R[1].h) : r0;
+  const cv = hasR ? .25 * r0 + .4 * r1 + .35 * r2 : r0, f = skyCanvas(cv);
+  const lowEff = hasR ? .45 * q0.l + .55 * R[0].l : q0.l, g = skyBlock(lowEff);
+  const h = S.hum == null ? 1 : skyHum(S.hum), r = S.rain >= .3 ? .25 : 1;
+  let base = 90 * f * g * h * r;
+  let aod = null, dust = null;
+  if (aq && aq.aod) { aod = aq.aod.get(S.hk); dust = aq.dust ? aq.dust.get(S.hk) : null; if (aod === undefined) aod = null; if (dust === undefined) dust = null; }
+  const af = aod == null ? 1 : aod <= .05 ? .95 : aod <= .3 ? 1.05 : aod <= .6 ? 1.05 - .15 * (aod - .3) / .3 : .7;
+  const vf = S.vis == null ? 1 : S.vis < 5000 ? .7 : S.vis < 10000 ? .85 : 1;
+  const qa = hasR ? R[0] : q0, after = qa.h >= 30 && qa.l < 30 && r === 1;
+  const score = clamp(base * af * vf + (after ? 4 : 0), 0, 100);
+  return { score, f, g, air: Math.min(1, af * vf * h), after, cv, lowEff, aod, dust, hasR, q: hasR ? R[0] : q0, haze: (aod != null && aod > .5) || (S.hum != null && S.hum > 85), rain: S.rain >= .3, vis: S.vis };
+}
+function skyMix(a, b, t){ return a.map((v, i) => Math.round(v + (b[i] - v) * t)); }
+const skyRgb = c => `rgb(${c[0]},${c[1]},${c[2]})`;
+function skyRng(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function skySVG(score, R){
+  const mix = skyMix, rgb = skyRgb, t = clamp(score / 100, 0, 1), rnd = skyRng(Math.round(R.q.l * 7 + R.q.m * 13 + R.q.h * 17 + 5)), id = 'sk';
+  const top = mix([34, 52, 98], [38, 36, 96], t), up = mix([96, 118, 160], [150, 80, 130], t), mid = mix([170, 176, 192], [236, 110, 110], t), low = mix([214, 204, 188], [255, 168, 70], t);
+  const q = R.q, bl = clamp(q.l / 70, 0, 1) * .85, glow = (.25 + .75 * (1 - bl)) * (.55 + .45 * t), hz2 = R.haze ? mix(low, [190, 150, 130], .5) : low;
+  let hi = '', md = '', lw = '';
+  for (let i = 0, n = Math.round(q.h / 100 * 18); i < n; i++){ const x = 15 + rnd() * 290, y = 12 + rnd() * 46, w = 40 + rnd() * 70, h = 2 + rnd() * 3.5, r = (rnd() - .5) * 8;
+    hi += `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${w.toFixed(1)}" ry="${(h * 1.8).toFixed(1)}" transform="rotate(${r.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})" fill="url(#${id}hi)" opacity="${(.5 + .4 * rnd()).toFixed(2)}"/>`; }
+  for (let i = 0, n = Math.round(q.m / 100 * 6); i < n; i++){ const cx = 20 + rnd() * 280, cy = 58 + rnd() * 36, m = 6 + Math.floor(rnd() * 5);
+    for (let j = 0; j < m; j++){ const x = cx + (j - m / 2) * (11 + rnd() * 5), y = cy + (rnd() - .5) * 6, rx = 12 + rnd() * 12, ry = 4.5 + rnd() * 4;
+      md += `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="url(#${id}md)" opacity="${(.7 + .25 * rnd()).toFixed(2)}"/>`; } }
+  for (let i = 0, n = Math.round(q.l / 100 * 14); i < n; i++){ const x = 5 + rnd() * 310, y = 108 + rnd() * 14, rx = 30 + rnd() * 34, ry = 9 + rnd() * 9;
+    lw += `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="url(#${id}lo)" opacity="${(.8 + .2 * rnd()).toFixed(2)}"/>`; }
+  let rays = '';
+  if (glow > .5) for (let i = 0; i < 7; i++){ const a = -90 + (i - 3) * 13 + (rnd() - .5) * 4; rays += `<path d="M160 128 L${(160 + 260 * Math.cos(rad(a - 2.2))).toFixed(1)} ${(128 + 260 * Math.sin(rad(a - 2.2))).toFixed(1)} L${(160 + 260 * Math.cos(rad(a + 2.2))).toFixed(1)} ${(128 + 260 * Math.sin(rad(a + 2.2))).toFixed(1)}Z" fill="#ffd9a0" opacity="${(.07 * glow).toFixed(3)}"/>`; }
+  let stars = ''; if (t < .5) for (let i = 0; i < 14; i++) stars += `<circle cx="${(rnd() * 320).toFixed(0)}" cy="${(rnd() * 40).toFixed(0)}" r="${(.4 + rnd() * .6).toFixed(1)}" fill="#fff" opacity="${(.25 + .3 * rnd()).toFixed(2)}"/>`;
+  const gr = (n, a, b, c, e) => `<radialGradient id="${id}${n}" cx="160" cy="138" r="230" gradientUnits="userSpaceOnUse" gradientTransform="translate(160 138) scale(1.5 1) translate(-160 -138)"><stop offset="0" stop-color="${rgb(a)}"/><stop offset=".28" stop-color="${rgb(b)}"/><stop offset=".62" stop-color="${rgb(c)}"/><stop offset="1" stop-color="${rgb(e)}"/></radialGradient>`;
+  const fl = (n, bf, oc, sd, dp, bs, tx, th) => `<filter id="${id}${n}" x="-25%" y="-80%" width="150%" height="260%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="${bf}" numOctaves="${oc}" seed="${sd}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${dp}" result="d"/><feGaussianBlur in="d" stdDeviation="${bs}" result="sh"/><feTurbulence type="fractalNoise" baseFrequency="${tx}" numOctaves="4" seed="${sd + 11}" result="t"/><feColorMatrix in="t" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 ${th[0]} ${th[1]}" result="ta"/><feComposite in="sh" in2="ta" operator="in" result="out"/><feGaussianBlur in="out" stdDeviation="0.6"/></filter>`;
+  return `<svg viewBox="0 0 320 160" role="img" aria-label="Skizze des Abendhimmels, Einschätzung ${SK_WORD(score)[0]}"><defs>
+    <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${rgb(top)}"/><stop offset=".32" stop-color="${rgb(up)}"/><stop offset=".68" stop-color="${rgb(mid)}"/><stop offset=".9" stop-color="${rgb(hz2)}"/><stop offset="1" stop-color="${rgb(low)}"/></linearGradient>
+    <radialGradient id="${id}sun" cx="160" cy="128" r="120" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff2c8" stop-opacity="${(.95 * glow).toFixed(2)}"/><stop offset=".18" stop-color="#ffb866" stop-opacity="${(.7 * glow).toFixed(2)}"/><stop offset=".55" stop-color="#ff6e6e" stop-opacity="${(.28 * glow).toFixed(2)}"/><stop offset="1" stop-color="#ff6e6e" stop-opacity="0"/></radialGradient>
+    ${gr('hi', mix([255,232,200],[255,215,150],t), mix([250,225,225],[255,150,130],t), mix([226,222,238],[232,124,150],t), mix([170,175,205],[150,92,150],t))}
+    ${gr('md', mix([255,228,196],[255,196,120],t), mix([240,214,214],[255,126,110],t), mix([190,190,214],[200,98,128],t), mix([120,128,164],[110,66,118],t))}
+    ${gr('lo', mix([200,196,196],[255,150,70],t), mix([140,142,160],[190,84,84],t), mix([100,106,130],[110,60,96],t), mix([70,76,100],[62,42,84],t))}
+    ${fl('f1', '.012 .06', 3, 3, 22, 2.2, '.008 .09', [2.4, -.55])}${fl('f2', '.03 .09', 4, 8, 14, 1.6, '.03 .07', [2.2, -.4])}${fl('f3', '.02 .05', 5, 5, 26, 3.2, '.025 .05', [2.6, -.05])}
+    <filter id="${id}b"><feGaussianBlur stdDeviation="9"/></filter></defs>
+    <rect width="320" height="160" fill="url(#${id}g)"/>${stars}
+    <rect width="320" height="160" fill="url(#${id}sun)"/>${rays}
+    <g filter="url(#${id}f1)">${hi}</g>
+    <circle cx="160" cy="130" r="${(9 + 5 * glow).toFixed(1)}" fill="#fff0c0" opacity="${(.9 * (1 - bl)).toFixed(2)}"/>
+    <g filter="url(#${id}f2)">${md}</g>
+    <rect width="320" height="160" fill="url(#${id}sun)" style="mix-blend-mode:screen" opacity="${(.35 * glow).toFixed(2)}"/>
+    <g filter="url(#${id}f3)">${lw}</g>
+    ${R.haze ? `<rect y="100" width="320" height="40" fill="${rgb(hz2)}" opacity=".35" filter="url(#${id}b)"/>` : ''}
+    <path d="M0 140 Q40 131 90 137 T180 135 T260 138 T320 134 V160 H0Z" fill="#14172b"/><path d="M0 148 Q70 141 140 147 T320 145 V160 H0Z" fill="#0c0f1e"/></svg>`;
+}
+function renderSky(){
+  const el = document.getElementById('skyBody');
+  if (!el) return;
+  if (sky === null || (sky && sky.pending)){ el.innerHTML = '<p class="soft">Wird berechnet …</p>'; return; }
+  if (sky === false){ el.innerHTML = '<p class="soft">Für diesen Ort ist gerade keine Einschätzung möglich (zum Beispiel, weil die Sonne dort nicht untergeht oder Wolkendaten fehlen).</p>'; return; }
+  const R = skyCompute(sky, air && typeof air === 'object' ? air : null), sc = Math.round(R.score), [word, cls] = SK_WORD(R.score);
+  const dirName = SK_DIRS[Math.round(sky.az / 22.5) % 16], mins = Math.round((new Date(sky.ss.slice(0, 16) + ':00Z') - new Date(fc.d.current.time.slice(0, 16) + ':00Z')) / 60000);
+  const lead = { kaum: 'Es sieht nach kaum Farben am Himmel aus.', maessig: 'Eher ein blasser Sonnenuntergang.', toll: 'Ein schöner, farbiger Sonnenuntergang ist wahrscheinlich.', super: 'Gute Chancen auf einen besonders farbenprächtigen Sonnenuntergang.' }[cls];
+  const why = R.rain ? 'Regen zur Sonnenuntergangszeit dämpft die Farben stark.'
+    : R.g < .6 ? 'Tiefe Wolken am Horizont in Richtung Sonne verdecken das Licht.'
+    : R.cv >= 75 ? 'Der Himmel ist weitgehend zu, das Licht dringt kaum durch.'
+    : R.cv < 12 ? 'Es gibt kaum Wolken, die das Licht auffangen könnten.'
+    : R.haze ? 'Dunst oder feuchte Luft machen die Farben schwächer.'
+    : 'Hohe und mittlere Wolken können das Abendlicht gut auffangen.';
+  const bars = [['Wolken als Leinwand', R.f], ['Horizont frei', R.g], ['Klare Luft', R.air], ['Nachglühen', R.after ? .8 : .1]];
+  const notes = [R.hasR ? 'Berücksichtigt auch Wolken in Richtung Sonne (bis ca. 200 km).' : 'Nur der Himmel über deinem Ort wurde berücksichtigt (Wolken in Richtung Sonne waren nicht abrufbar).'];
+  if (R.aod != null) notes.push(R.aod > .6 ? 'Dichter Dunst oder Rauch: Sonne wird blass, der Himmel dunkelrot.' : (R.aod > .3 || (R.dust != null && R.dust > 30)) ? 'Staub in der Luft: kräftiges Rot, aber weniger Strahlkraft.' : R.aod >= .05 ? 'Etwas Dunst verstärkt Orange und Rot.' : 'Sehr klare Luft: reine, aber weniger kräftige Farben.');
+  else notes.push('Zur Luftklarheit liegen keine Daten vor (Wert neutral gesetzt).');
+  notes.push(R.after ? 'Nachglühen wahrscheinlich, bis ca. 20 Minuten nach Sonnenuntergang.' : 'Kaum Nachglühen zu erwarten.');
+  el.innerHTML = `<div class="skyArt">${skySVG(R.score, R)}</div>
+    <div class="skyHead"><div><div class="skyWhen">${sky.when === 'heute' ? 'Heute' : 'Morgen'}, ${hm(sky.ss)} Uhr</div><div class="skyDir">Richtung ${esc(dirName)} (${Math.round(sky.az)}°)${mins > 0 && mins < 1440 ? `, in ${Math.floor(mins / 60)} h ${mins % 60} min` : ''}</div></div>
+      <div class="skyVerdict"><b class="sk-${cls}">${esc(word)}</b><small>${sc} von 100</small></div></div>
+    <p class="skyLead">${esc(lead)} ${esc(why)}</p>
+    <div class="skyBars">${bars.map(([l, v]) => `<div class="skyBar"><span>${esc(l)}</span><div class="skyTrack"><i style="width:${Math.round(clamp(v, 0, 1) * 100)}%"></i></div><span>${Math.round(clamp(v, 0, 1) * 100)} %</span></div>`).join('')}</div>
+    <ul class="skyNotes">${notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>
+    <p class="fine">Grobe Einschätzung aus Wetter- und Luftdaten (Open-Meteo), auf deinem Gerät berechnet. Die Schwellen sind Annahmen, nicht an echten Sonnenuntergängen geeicht. „Super“ heißt gute Voraussetzungen, keine Garantie.</p>`;
+}
+
+/* Sprungleiste: markiert den Abschnitt, in dem man gerade liest */
+let jumpBound = false, jumpBusy = false;
+function updateJump(){
+  jumpBusy = false;
+  const order = ['wetter', 'himmel', 'luft', 'pollen', 'wasser'], els = order.map(k => view.querySelector(`[data-sec="${k}"]`));
+  if (!els[0]) return;
+  let cur = 0;
+  els.forEach((e, k) => { if (e && e.getBoundingClientRect().top <= innerHeight * .4) cur = k; });
+  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) cur = els.reduce((a, e, k) => e ? k : a, 0);
+  view.querySelectorAll('[data-go]').forEach(b => b.setAttribute('aria-current', String(b.dataset.go === order[cur])));
+}
+function setupJump(){
+  if (!jumpBound){ jumpBound = true; addEventListener('scroll', () => { if (!jumpBusy){ jumpBusy = true; requestAnimationFrame(updateJump); } }, { passive: true }); }
+  updateJump();
 }
 
 function renderEmpty(){

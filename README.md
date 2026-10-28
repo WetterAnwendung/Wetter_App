@@ -1,6 +1,6 @@
 # Wetter-App
 
-Schlanke, webbasierte Wetter-App mit 5-Tage-Vorhersage, Tageshinweisen (Regenjacke, Sonnenschutz, Frost, Hitze, Böen, Lüften), Temperatur- und Regenverlauf, Luftqualität, Pollenflug, Wassertemperaturen und Pegelständen und bis zu fünf gemerkten Orten. Die ganze App steckt in einer einzigen HTML-Datei, ohne Bibliotheken, ohne Cookies und ohne Tracking. Sie lässt sich als App installieren (PWA) und startet dank Service Worker schnell, auch bei schlechtem Netz.
+Schlanke, webbasierte Wetter-App mit 5-Tage-Vorhersage, Tageshinweisen (Regenjacke, Sonnenschutz, Frost, Hitze, Böen, Lüften), Temperatur- und Regenverlauf, einer Einschätzung des Sonnenuntergangs (mäßig, toll, super), Luftqualität, Pollenflug, Wassertemperaturen und Pegelständen und bis zu fünf gemerkten Orten. Die ganze App steckt in einer einzigen HTML-Datei, ohne Bibliotheken, ohne Cookies und ohne Tracking. Sie lässt sich als App installieren (PWA) und startet dank Service Worker schnell, auch bei schlechtem Netz.
 
 **App öffnen:** https://wetteranwendung.github.io/
 **Repository:** https://github.com/WetterAnwendung/wetteranwendung.github.io
@@ -76,9 +76,9 @@ Die App lädt beim Öffnen nichts von fremden Servern. Erst bei einer Suche, bei
 
 | Dienst | Wofür |
 |---|---|
-| `api.open-meteo.com` | Wettervorhersage |
+| `api.open-meteo.com` | Wettervorhersage, Wolkenschichten (auch an zwei Punkten in Richtung des Sonnenuntergangs, ca. 80 und 200 km, auf 0,1° gerundet) |
 | `geocoding-api.open-meteo.com` | Ortssuche, Postleitzahlen |
-| `air-quality-api.open-meteo.com` | Luftqualität und Pollenflug |
+| `air-quality-api.open-meteo.com` | Luftqualität (auch Aerosol und Staub) und Pollenflug |
 | `marine-api.open-meteo.com` | Wassertemperatur am Meer |
 | `photon.komoot.io` | Ortsname zum Standort, Postleitzahlen |
 | `www.pegelonline.wsv.de` | Pegel und Wassertemperatur an Flüssen |
