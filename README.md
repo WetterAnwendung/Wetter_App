@@ -79,6 +79,7 @@ Die App lädt beim Öffnen nichts von fremden Servern. Erst bei einer Suche, bei
 |---|---|
 | `api.open-meteo.com` | Wettervorhersage, Wolkenschichten (auch an zwei Punkten in Richtung des Sonnenuntergangs, ca. 80 und 200 km, auf 0,1° gerundet), Regenkarte aus Modelldaten (81 Rasterpunkte im Umkreis von 60 km, auf 0,01° gerundet) samt Höhen für das Relief (lokal gezeichnet) |
 | `api.brightsky.dev` | Gemessenes Regenradar des DWD (nur Orte in Deutschland, erst nach Tippen auf „Jetzt“, gerundete Koordinaten) |
+| `tile.openstreetmap.org` (Bilder, `img-src`) | Kartenhintergrund der Regenkarte (nur nach Einschalten von „Karte“; Kachelnummern, IP-Adresse und App-Adresse ohne Pfad als Referer) |
 | `geocoding-api.open-meteo.com` | Ortssuche, Postleitzahlen |
 | `air-quality-api.open-meteo.com` | Luftqualität (auch Aerosol und Staub) und Pollenflug |
 | `marine-api.open-meteo.com` | Wassertemperatur am Meer |
@@ -89,11 +90,11 @@ GitHub Pages liefert die Seite aus und protokolliert dabei die IP-Adresse. Der S
 
 ## Sicherheit
 
-- Strenge CSP: nur das eigene Skript, Verbindungen nur zu den Diensten oben, Service Worker nur von der eigenen Adresse, keine fremden Bilder, Schriften oder Skripte
+- Strenge CSP: nur das eigene Skript, Verbindungen nur zu den Diensten oben, Service Worker nur von der eigenen Adresse, keine fremden Schriften oder Skripte, Bilder nur als Kartenkacheln von tile.openstreetmap.org nach Einschalten von „Karte“
 - Keine externen Dateien; die Schrift *Bricolage Grotesque* (SIL Open Font License 1.1) ist eingebettet
 - Startet nicht, wenn sie in eine fremde Seite eingebettet wird (Schutz vor Clickjacking); eingebettet wird auch kein Service Worker registriert
 - Prüft gespeicherte Daten und Antworten der Dienste, bevor sie angezeigt werden
-- Kein Referer, keine Cookies; der Service Worker speichert keine Wetter- oder Ortsdaten
+- Kein Referer (Ausnahme: Kartenkacheln, dort nur die App-Adresse ohne Pfad), keine Cookies; der Service Worker speichert keine Wetter- oder Ortsdaten
 - In der Organisation WetterAnwendung liegt nur diese App: Alle Pages-Projekte einer Organisation teilen sich Adresse und Browser-Speicher
 
 ## Umzug

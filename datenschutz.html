@@ -54,7 +54,7 @@
   <ul>
     <li>Die App hat <strong>keinen eigenen Server</strong>, keine Konten, keine Cookies, kein Tracking und keine Werbung.</li>
     <li>Damit sie Wetterdaten anzeigen kann, fragt dein Gerät <strong>direkt</strong> bei den unten genannten Diensten an. Dabei sehen diese deine IP-Adresse und den Inhalt der Anfrage (Ort bzw. Suchbegriff).</li>
-    <li>Das gemessene Regenradar (Bright Sky) wird <strong>nur geladen, wenn du in der Regenkarte auf „Jetzt“ tippst</strong>.</li>
+    <li>Das gemessene Regenradar (Bright Sky) wird <strong>nur geladen, wenn du in der Regenkarte auf „Jetzt“ tippst</strong>, der Kartenhintergrund (OpenStreetMap) <strong>nur, wenn du „Karte“ einschaltest</strong>.</li>
     <li>Dein <strong>Standort</strong> wird nur abgefragt, wenn du auf den Standort-Knopf tippst, und vor dem Senden auf etwa 2 km gerundet.</li>
     <li>Gespeichert wird nur <strong>auf deinem Gerät</strong>: der zuletzt gewählte Ort und bis zu 5 gemerkte Orte.</li>
   </ul>
@@ -62,17 +62,19 @@
   <h2>3. Welche Daten verarbeitet werden</h2>
   <ul>
     <li><strong>Ort der Wetterabfrage:</strong> Koordinaten des gewählten Orts. Für die Einschätzung des Sonnenuntergangs zusätzlich zwei Punkte in Richtung der untergehenden Sonne (etwa 80 und 200 km entfernt, auf 0,1° gerundet). Für die Regenkarte 81 Rasterpunkte im Umkreis von 60 km um den Ort (auf 0,01° gerundet); die Antwort enthält auch die Höhe dieser Punkte, aus denen die App lokal das Relief unter der Regenkarte zeichnet. Tippst du bei einem Ort in Deutschland auf „Jetzt“ (gemessenes Regenradar), zusätzlich die auf 0,01° gerundeten Koordinaten des Orts.</li>
+    <li><strong>Kartenkacheln (nur bei eingeschaltetem „Karte“):</strong> Nummern der Kartenkacheln für die Umgebung des Orts (etwa 9 bis 16 Bilder). Sie zeigen den ungefähren Ort (Kachelgröße im Bereich von rund 25 bis 100 km), nicht die genauen Koordinaten.</li>
     <li><strong>Suchbegriffe:</strong> was du in die Ortssuche eingibst (Postleitzahl oder Ortsname, höchstens 80 Zeichen).</li>
     <li><strong>Standort (optional):</strong> nur nach Tippen auf den Standort-Knopf, einmalig, nie im Hintergrund. Die genaue Position verlässt dein Gerät nicht; gesendet wird nur der auf etwa 2 km gerundete Wert.</li>
     <li><strong>IP-Adresse:</strong> wird technisch bei jeder Verbindung übertragen.</li>
   </ul>
-  <p>Hinweise, Diagramme und die Sonnenuntergangs-Einschätzung berechnet die App auf deinem Gerät, ohne weitere Anfragen. Die App sendet keine Seitenadresse (Referer) mit und lädt keine Schriften, Skripte oder Bilder von fremden Servern.</p>
+  <p>Hinweise, Diagramme und die Sonnenuntergangs-Einschätzung berechnet die App auf deinem Gerät, ohne weitere Anfragen. Die App sendet keine Seitenadresse (Referer) mit und lädt keine Schriften oder Skripte von fremden Servern. Bilder lädt sie nur als Kartenkacheln, wenn du in der Regenkarte „Karte“ einschaltest; der Kartenserver erhält dabei nur die Adresse der App ohne Pfad (technisch nötig, weil OpenStreetMap das verlangt).</p>
 
   <h2>4. Empfänger</h2>
   <ul>
     <li><strong>GitHub</strong> (GitHub, Inc., USA) stellt die App-Dateien bereit, auch für die Android-App, und speichert nach eigener Angabe die IP-Adresse der Besucher zu Sicherheitszwecken. GitHub ist nach eigener Angabe unter dem EU-US Data Privacy Framework zertifiziert.</li>
     <li><strong>Open-Meteo</strong> (OpenMeteo GmbH, Schweiz) liefert Wetter, Pollen, Luftqualität, Meerestemperatur und Ortsvorschläge. Erhält Koordinaten bzw. Suchbegriffe. Server-Protokolle werden nach eigener Angabe nach 90 Tagen gelöscht. Für die Schweiz besteht ein Angemessenheitsbeschluss der EU.</li>
     <li><strong>Bright Sky</strong> (api.brightsky.dev) liefert für Orte in Deutschland das gemessene Regenradar des Deutschen Wetterdienstes. Bright Sky ist ein Open-Source-Projekt von Jakob de Maeyer, das Daten des Deutschen Wetterdienstes über eine öffentliche Schnittstelle bereitstellt. Die Verbindung wird erst hergestellt, wenn du in der Regenkarte auf „Jetzt“ tippst. Dabei erhält der Betreiber der Schnittstelle technisch bedingt Daten wie deine IP-Adresse sowie die gerundeten Koordinaten des Orts, damit die Datenübertragung möglich ist. Verbindliche Angaben zu Serverstandort und zur Speicherung von Server-Protokollen liegen uns nicht vor; nähere Informationen stehen in der Dokumentation des Projekts (brightsky.dev/docs) und im GitHub-Repository des Entwicklers (github.com/jdemaeyer/brightsky). Auf die Verarbeitung dort haben wir keinen Einfluss.</li>
+    <li><strong>OpenStreetMap-Kartenkacheln</strong> (tile.openstreetmap.org, OpenStreetMap Foundation, Großbritannien) liefern den Kartenhintergrund der Regenkarte. Die Verbindung wird erst hergestellt, wenn du in der Regenkarte „Karte“ einschaltest. Dabei erhält der Server technisch bedingt deine IP-Adresse, die Nummern der angefragten Kartenkacheln und die Adresse der App ohne Pfad. Für die Verarbeitung dort gilt die Datenschutzerklärung der OpenStreetMap Foundation; auf sie haben wir keinen Einfluss. Kartendaten © OpenStreetMap-Mitwirkende (openstreetmap.org/copyright).</li>
     <li><strong>Photon</strong> (komoot GmbH, Deutschland) liefert Ortsvorschläge und den Namen deines Standorts. Erhält Suchbegriffe bzw. gerundete Koordinaten.</li>
     <li><strong>PEGELONLINE</strong> (Wasserstraßen- und Schifffahrtsverwaltung des Bundes, Deutschland) liefert Flusstemperaturen. Erhält die Koordinaten des Orts.</li>
     <li><strong>Google</strong>: Installation und Updates der Android-App laufen über Google Play, die Android-App öffnet die Seite in Chrome. Dafür gelten die Datenschutzbestimmungen von Google.</li>
@@ -80,7 +82,7 @@
   <p>Für die Verarbeitung bei diesen Diensten gelten deren eigene Datenschutzerklärungen.</p>
 
   <h2>5. Zweck und Rechtsgrundlage</h2>
-  <p>Die Daten werden ausschließlich verarbeitet, um dir die angefragten Wetterinformationen anzuzeigen. Rechtsgrundlage ist das berechtigte Interesse an der Bereitstellung dieser Funktionen (Art. 6 Abs. 1 lit. f DSGVO). Die Anfragen löst du selbst aus; beim gemessenen Regenradar (Bright Sky) erst durch Tippen auf „Jetzt“. Das berechtigte Interesse liegt in einer funktionalen Darstellung des Angebots mit möglichst aktuellen Regeninformationen.</p>
+  <p>Die Daten werden ausschließlich verarbeitet, um dir die angefragten Wetterinformationen anzuzeigen. Rechtsgrundlage ist das berechtigte Interesse an der Bereitstellung dieser Funktionen (Art. 6 Abs. 1 lit. f DSGVO). Die Anfragen löst du selbst aus; beim gemessenen Regenradar (Bright Sky) erst durch Tippen auf „Jetzt“, beim Kartenhintergrund (OpenStreetMap) erst durch Einschalten von „Karte“. Das berechtigte Interesse liegt in einer funktionalen Darstellung des Angebots mit möglichst aktuellen Regeninformationen und einer besseren Orientierung in der Regenkarte.</p>
 
   <h2>6. Speicherung und Löschung</h2>
   <ul>

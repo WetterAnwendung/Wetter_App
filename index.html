@@ -5,7 +5,7 @@
 <!-- Sicherheitsregel (CSP): nur das eigene Skript (per Hash), Daten nur von den genannten Diensten.
      WICHTIG: Wer das Skript unten ändert, muss den sha256-Hash neu berechnen, sonst startet die App nicht.
      Befehl: python3 csp-hash.py index.html -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-+SOmVmQt9TEmHcBqjlN7+ZFi6nUcd7yT+CSr7vTjWos='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data:; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de https://api.brightsky.dev; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-vfphVLvqqcBMcJ1bRkMOGZEzA+hj0IWMaIle+Wha8vQ='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data: https://tile.openstreetmap.org; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de https://api.brightsky.dev; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#2a3f7a">
@@ -308,7 +308,9 @@ dialog.info{position:fixed}
 .rtag{font-style:normal;font-size:.7rem;padding:3px 9px;border-radius:99px;background:#7CC4FF;color:#0b1f44;font-weight:650;margin-left:8px;vertical-align:middle}
 .rtag.f{background:rgba(255,255,255,.18);color:#fff}
 .rleg i{width:12px;height:12px;border-radius:4px}
-.rlay{display:flex;gap:8px;margin:0 2px 10px}
+.rlay{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 2px 10px}
+.rlay .rattr{margin-left:auto;font-size:.72rem;color:var(--soft);text-decoration:underline;text-underline-offset:2px}
+.rmerr{margin:-4px 4px 10px}
 .rlay button{font:inherit;font-size:.82rem;color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:99px;padding:6px 14px;min-height:36px;cursor:pointer}
 .rlay button[aria-pressed=true]{background:#fff;color:#16305c;font-weight:650;border-color:#fff}
 .rsum{margin:10px 4px 0;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.1);font-size:.92rem}
@@ -422,10 +424,11 @@ dialog.info{position:fixed}
       <li><strong>GitHub</strong> (GitHub Inc., USA) liefert die Webversion aus und speichert nach eigener Angabe die IP-Adresse jedes Besuchers zu Sicherheitszwecken.</li>
       <li><strong>Open-Meteo</strong> (OpenMeteo GmbH, Schweiz) liefert Wetter, Pollen, Luftqualität, Meerestemperatur und Ortsvorschläge. Der Dienst erhält die Koordinaten des Orts bzw. deinen Suchbegriff; für die Einschätzung des Sonnenuntergangs zusätzlich die Koordinaten zweier Punkte in Richtung der untergehenden Sonne (etwa 80 und 200 km entfernt, auf 0,1° gerundet), für die Regenkarte 81 Rasterpunkte im Umkreis von 60 km um den Ort (auf 0,01° gerundet; die Antwort enthält auch die Höhe dieser Punkte für die Relief-Darstellung) und löscht seine Server-Protokolle nach eigener Angabe nach 90 Tagen.</li>
       <li><strong>Bright Sky</strong> (api.brightsky.dev, Open-Source-Projekt von Jakob de Maeyer) liefert für Orte in Deutschland das gemessene Regenradar des Deutschen Wetterdienstes. Die Verbindung entsteht erst, wenn du in der Regenkarte auf „Jetzt“ tippst. Der Betreiber erhält dabei technisch bedingt deine IP-Adresse und die gerundeten Koordinaten des Orts. Verbindliche Angaben zu Serverstandort und Speicherung von Server-Protokollen liegen nicht vor (brightsky.dev/docs).</li>
+      <li><strong>OpenStreetMap-Kartenkacheln</strong> (tile.openstreetmap.org, OpenStreetMap Foundation, Großbritannien) liefern den Kartenhintergrund der Regenkarte. Die Verbindung entsteht erst, wenn du in der Regenkarte „Karte“ einschaltest. Dein Gerät lädt dann etwa 9 bis 16 Kartenbilder für die Umgebung des Orts; der Server erhält technisch bedingt deine IP-Adresse, die Kachelnummern (sie zeigen den ungefähren Ort) und die Adresse der App ohne Pfad. Für die Verarbeitung dort gilt die Datenschutzerklärung der OpenStreetMap Foundation. Kartendaten © OpenStreetMap-Mitwirkende.</li>
       <li><strong>Photon</strong> (komoot GmbH, Deutschland) liefert Ortsvorschläge und den Namen deines Standorts. Der Dienst erhält deinen Suchbegriff bzw. die gerundeten Koordinaten.</li>
       <li><strong>PEGELONLINE</strong> (Wasserstraßen- und Schifffahrtsverwaltung des Bundes) liefert Flusstemperaturen und erhält die Koordinaten des Orts.</li>
     </ul>
-    <p>Die App sendet keine Seitenadresse (Referer) mit und lädt keine Schriften, Skripte oder Bilder von fremden Servern. Tageshinweise (z. B. Regenjacke, Sonnenschutz) und Verlaufsdiagramm berechnet die App auf deinem Gerät aus diesen Daten, ohne weitere Anfragen.</p>
+    <p>Die App sendet keine Seitenadresse (Referer) mit und lädt keine Schriften oder Skripte von fremden Servern. Bilder lädt sie nur als Kartenkacheln, wenn du in der Regenkarte „Karte“ einschaltest; der Kartenserver erhält dabei nur die Adresse der App ohne Pfad. Tageshinweise (z. B. Regenjacke, Sonnenschutz) und Verlaufsdiagramm berechnet die App auf deinem Gerät aus diesen Daten, ohne weitere Anfragen.</p>
 
     <h3>Standort</h3>
     <p>Nur wenn du auf den Standort-Knopf tippst, fragt die App deinen Standort über die Browser-Berechtigung ab, einmalig und nie im Hintergrund. Er wird vor dem Senden auf etwa 2 km gerundet. Browser merken sich die Freigabe für die ganze Internetadresse, unter der die App liegt, also auch für andere Seiten dort. Du kannst sie jederzeit in den Browser-Einstellungen entziehen. In der Android-App fragt stattdessen Android nach und du entziehst sie unter Einstellungen › Apps › Wetter App › Berechtigungen.</p>
@@ -1448,10 +1451,11 @@ function renderSky(){
    „Jetzt“ (Echtzeit, nur in Deutschland): gemessenes DWD-Radar (RV-Komposit, 5 Minuten, 1 km) über Bright Sky,
      1 Stunde zurück bis 2 Stunden voraus (Zugbahn-Extrapolation des DWD).
    12 / 24 / 48 h: Modell-Regenkarte, 9 × 9 Punkte (ca. 15 km, 60 km Umkreis) in EINEM Aufruf bei Open-Meteo.
+   Karte (optional, Schalter „Karte“): OpenStreetMap-Rasterkacheln (tile.openstreetmap.org), erst nach Tippen geladen, als dunkler Untergrund unter Relief und Regen.
    Relief: die Höhen (elevation) dieser 81 Punkte aus demselben Aufruf, als Schummerung unter dem Regen (kein zusätzlicher Abruf, außer im Modus „Jetzt“ ohne geladene Modell-Karte).
    Geladen wird erst, wenn der Bereich in die Nähe des Bildschirms kommt. */
 const RAD_N = 9, RAD_KM = 60;
-let radar = null, radarL = null, radarRange = null, radarFrame = 0, radarTimer = null, radarObs = null, radarPlace = null, radarSeq = 0, radarElev = null, radarRelief = true, radarReliefCan = null;
+let radar = null, radarL = null, radarRange = null, radarFrame = 0, radarTimer = null, radarObs = null, radarPlace = null, radarSeq = 0, radarElev = null, radarRelief = true, radarReliefCan = null, radarMap = false, radarMapSt = null, radarTiles = null, radarMapCan = null;
 const rSrc = () => radarRange === 0 ? radarL : radar;
 const rReady = () => { const s = rSrc(); return s && typeof s === 'object'; };
 const rIsDE = p => p && p.lat > 47.1 && p.lat < 55.2 && p.lon > 5.7 && p.lon < 15.2;
@@ -1477,7 +1481,7 @@ function radarSync(){
   });
 }
 function radarSetup(p, my){
-  radarStop(); radar = null; radarL = null; radarElev = null; radarReliefCan = null; radarFrame = 0; radarPlace = p; radarSeq++;
+  radarStop(); radar = null; radarL = null; radarElev = null; radarReliefCan = null; radarMapSt = null; radarTiles = null; radarMapCan = null; radarFrame = 0; radarPlace = p; radarSeq++;
   /* Start immer mit der Modell-Karte (Open-Meteo). Das gemessene Radar (Bright Sky) wird erst nach Tippen auf „Jetzt“ geladen. */
   if (radarRange === null || (radarRange === 0 && !rIsDE(p))) radarRange = 12;
   radarSync(); renderRadar();
@@ -1612,7 +1616,8 @@ function renderRadar(){
   if (S === 'err'){ el.innerHTML = `<p class="soft">${live ? 'Das gemessene Radarbild ist gerade nicht verfügbar.' : 'Die Regenkarte konnte nicht geladen werden.'}</p><div style="padding:0 4px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-rretry>Erneut versuchen</button>${live ? '<button class="btn" data-rr="12">Modell-Karte (12 h)</button>' : ''}</div>`; return; }
   el.innerHTML = `<div class="rread" id="rRead" aria-live="polite"></div>
     <div class="rmap"><canvas id="rCan" role="img" aria-label="Regenkarte"></canvas>${rOverlay()}</div>
-    ${radarElev ? `<div class="rlay"><button type="button" id="rRelief" aria-pressed="${radarRelief}">Relief</button></div>` : ''}
+    <div class="rlay">${radarElev ? `<button type="button" id="rRelief" aria-pressed="${radarRelief}">Relief</button>` : ''}<button type="button" id="rKarte" aria-pressed="${radarMap}"${radarMap && radarMapSt === 'load' ? ' aria-busy="true"' : ''}>${radarMap && radarMapSt === 'load' ? 'Karte …' : 'Karte'}</button>${radarMap && radarMapSt !== 'err' ? '<a class="rattr" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap-Mitwirkende</a>' : ''}</div>
+    ${radarMapSt === 'err' ? '<p class="soft rmerr" role="status">Die Karte ist gerade nicht verfügbar.</p>' : ''}
     <div class="rbar"><button type="button" class="rplay" id="rPlay" aria-pressed="false" aria-label="Abspielen">${R_PLAY}</button><div class="rstrip" id="rStrip"></div></div>
     <div class="legend rleg"><span><i style="background:rgba(124,196,255,.7)"></i>leicht</span><span><i style="background:rgb(70,140,255)"></i>mäßig</span><span><i style="background:rgb(98,92,255)"></i>kräftig</span><span><i style="background:rgb(255,96,200)"></i>stark</span></div>
     <p class="rsum" id="rSum"></p>
@@ -1623,6 +1628,8 @@ function renderRadar(){
   if (radarTimer){ const pb = document.getElementById('rPlay'); pb.setAttribute('aria-pressed', 'true'); pb.setAttribute('aria-label', 'Anhalten'); pb.innerHTML = R_PAUSE; }
   const rb = document.getElementById('rRelief');
   if (rb) rb.addEventListener('click', () => { radarRelief = !radarRelief; rb.setAttribute('aria-pressed', String(radarRelief)); drawRadar(); });
+  document.getElementById('rKarte').addEventListener('click', () => { radarMap = !radarMap; if (radarMap && radarMapSt === 'err') radarMapSt = null; if (radarMap) radarMapEnsure(); renderRadar(); });
+  if (radarMap && !radarMapSt) radarMapEnsure();
   bindRadarStrip();
   renderRadarStrip(); renderRadarSum(); drawRadar();
 }
@@ -1648,6 +1655,36 @@ function radarToggle(){
     if (radarFrame >= rMax()){ radarStop(); return; }
     radarFrame++; drawRadar();
   }, radarRange === 0 ? 170 : radarRange === 12 ? 520 : radarRange === 24 ? 340 : 210);
+}
+/* Karte: OSM-Kacheln um den Ort. Web-Mercator ist lokal winkeltreu, die 120 km × 120 km der Regenkarte liegen daher linear auf den Kachel-Pixeln. */
+function rTileImg(z, x, y){
+  return new Promise(res => { const im = new Image(); im.referrerPolicy = 'origin'; im.onload = () => res(im); im.onerror = () => res(null); im.src = `https://tile.openstreetmap.org/${z}/${x}/${y}.png`; });
+}
+async function radarMapEnsure(){
+  if (radarMapSt === 'load' || radarMapSt === 'ok' || !radarPlace) return;
+  radarMapSt = 'load'; const my = radarSeq, p = radarPlace;
+  const phi = p.lat * Math.PI / 180, z = Math.max(6, Math.min(10, Math.round(Math.log2(156543.03 * Math.max(Math.cos(phi), .2) / 200)))), N = 2 ** z;
+  const res = 156543.03 * Math.cos(phi) / N, wx = (p.lon + 180) / 360 * N * 256, wy = (1 - Math.log(Math.tan(phi) + 1 / Math.cos(phi)) / Math.PI) / 2 * N * 256, half = RAD_KM * 1000 / res;
+  const x0 = Math.floor((wx - half) / 256), x1 = Math.floor((wx + half) / 256), y0 = Math.max(0, Math.floor((wy - half) / 256)), y1 = Math.min(N - 1, Math.floor((wy + half) / 256)), jobs = [];
+  for (let ty = y0; ty <= y1; ty++) for (let tx = x0; tx <= x1; tx++) jobs.push({ x: tx, y: ty, n: ((tx % N) + N) % N });
+  if (!jobs.length || jobs.length > 36){ radarMapSt = 'err'; radarMap = false; renderRadar(); return; }
+  await Promise.all(jobs.map(async j => { j.img = await rTileImg(z, j.n, j.y); }));
+  if (my !== radarSeq) return;
+  if (jobs.filter(j => j.img).length < jobs.length / 2){ radarMapSt = 'err'; radarMap = false; renderRadar(); return; }
+  radarTiles = { z, jobs, wx, wy, scale: 1 }; radarMapCan = null; radarMapSt = 'ok'; renderRadar();
+}
+function rMapCan(W){
+  if (!radarTiles) return null;
+  if (radarMapCan && radarMapCan.width === W) return radarMapCan;
+  const { jobs, wx, wy } = radarTiles, k = W / (2 * RAD_KM * 1000) * (156543.03 * Math.cos(radarPlace.lat * Math.PI / 180) / 2 ** radarTiles.z), cv = document.createElement('canvas'); cv.width = cv.height = W;
+  const cx = cv.getContext('2d');
+  cx.fillStyle = '#0d1c3d'; cx.fillRect(0, 0, W, W);
+  let dark = false; try { cx.filter = 'invert(1) hue-rotate(180deg) brightness(.82) contrast(.9) saturate(.55)'; dark = cx.filter !== 'none'; } catch {}
+  cx.imageSmoothingEnabled = true; cx.imageSmoothingQuality = 'high';
+  for (const j of jobs) if (j.img) cx.drawImage(j.img, W / 2 + (j.x * 256 - wx) * k, W / 2 + (j.y * 256 - wy) * k, 256 * k + .6, 256 * k + .6);
+  try { cx.filter = 'none'; } catch {}
+  if (!dark){ cx.fillStyle = 'rgba(8,18,46,.62)'; cx.fillRect(0, 0, W, W); }   // ohne Canvas-Filter: einfach abdunkeln
+  return (radarMapCan = cv);
 }
 /* Relief: Höhen (9 × 9) glatt (Catmull-Rom) auf 120 × 120 hochrechnen, Schummerung mit Licht aus Nordwest */
 function rRelief(){
@@ -1696,8 +1733,10 @@ function drawRadar(){
   ctx.clearRect(0, 0, W, W);
   ctx.save(); ctx.beginPath(); ctx.arc(W / 2, W / 2, W / 2, 0, Math.PI * 2); ctx.clip();
   ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  const mp = radarMap ? rMapCan(W) : null;
+  if (mp) ctx.drawImage(mp, 0, 0, W, W);
   const rl = radarRelief ? rRelief() : null;
-  if (rl){ try { ctx.filter = `blur(${Math.max(1, Math.round(W / 160))}px)`; } catch {} ctx.globalAlpha = .85; ctx.drawImage(rl, 0, 0, W, W); ctx.globalAlpha = 1; try { ctx.filter = 'none'; } catch {} }
+  if (rl){ try { ctx.filter = `blur(${Math.max(1, Math.round(W / 160))}px)`; } catch {} ctx.globalAlpha = mp ? .5 : .85; ctx.drawImage(rl, 0, 0, W, W); ctx.globalAlpha = 1; try { ctx.filter = 'none'; } catch {} }
   try { ctx.filter = `blur(${n < 20 ? Math.round(W / 55) : Math.max(1, Math.round(W / 260))}px)`; } catch {}
   ctx.drawImage(off, 0, 0, W, W);
   ctx.restore();
