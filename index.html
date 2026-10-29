@@ -5,7 +5,7 @@
 <!-- Sicherheitsregel (CSP): nur das eigene Skript (per Hash), Daten nur von den genannten Diensten.
      WICHTIG: Wer das Skript unten ändert, muss den sha256-Hash neu berechnen, sonst startet die App nicht.
      Befehl: python3 csp-hash.py index.html -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-I6vdw946u3ZZ8lcimEhC+rtofEvps4p/zEEqU+DYFt4='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data:; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de https://api.brightsky.dev; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-+SOmVmQt9TEmHcBqjlN7+ZFi6nUcd7yT+CSr7vTjWos='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data:; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de https://api.brightsky.dev; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#2a3f7a">
@@ -308,6 +308,9 @@ dialog.info{position:fixed}
 .rtag{font-style:normal;font-size:.7rem;padding:3px 9px;border-radius:99px;background:#7CC4FF;color:#0b1f44;font-weight:650;margin-left:8px;vertical-align:middle}
 .rtag.f{background:rgba(255,255,255,.18);color:#fff}
 .rleg i{width:12px;height:12px;border-radius:4px}
+.rlay{display:flex;gap:8px;margin:0 2px 10px}
+.rlay button{font:inherit;font-size:.82rem;color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:99px;padding:6px 14px;min-height:36px;cursor:pointer}
+.rlay button[aria-pressed=true]{background:#fff;color:#16305c;font-weight:650;border-color:#fff}
 .rsum{margin:10px 4px 0;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.1);font-size:.92rem}
 @media (prefers-reduced-motion:no-preference){.rpulse{transform-origin:50px 50px;animation:rpulse 2.4s ease-out infinite}
   @keyframes rpulse{0%{transform:scale(.6);opacity:.35}100%{transform:scale(2.2);opacity:0}}}
@@ -417,7 +420,7 @@ dialog.info{position:fixed}
     <p>Damit die App etwas anzeigen kann, fragt dein Browser direkt bei diesen Stellen an. Jede sieht dabei deine IP-Adresse und den Inhalt der Anfrage:</p>
     <ul>
       <li><strong>GitHub</strong> (GitHub Inc., USA) liefert die Webversion aus und speichert nach eigener Angabe die IP-Adresse jedes Besuchers zu Sicherheitszwecken.</li>
-      <li><strong>Open-Meteo</strong> (OpenMeteo GmbH, Schweiz) liefert Wetter, Pollen, Luftqualität, Meerestemperatur und Ortsvorschläge. Der Dienst erhält die Koordinaten des Orts bzw. deinen Suchbegriff; für die Einschätzung des Sonnenuntergangs zusätzlich die Koordinaten zweier Punkte in Richtung der untergehenden Sonne (etwa 80 und 200 km entfernt, auf 0,1° gerundet), für die Regenkarte 81 Rasterpunkte im Umkreis von 60 km um den Ort (auf 0,01° gerundet) und löscht seine Server-Protokolle nach eigener Angabe nach 90 Tagen.</li>
+      <li><strong>Open-Meteo</strong> (OpenMeteo GmbH, Schweiz) liefert Wetter, Pollen, Luftqualität, Meerestemperatur und Ortsvorschläge. Der Dienst erhält die Koordinaten des Orts bzw. deinen Suchbegriff; für die Einschätzung des Sonnenuntergangs zusätzlich die Koordinaten zweier Punkte in Richtung der untergehenden Sonne (etwa 80 und 200 km entfernt, auf 0,1° gerundet), für die Regenkarte 81 Rasterpunkte im Umkreis von 60 km um den Ort (auf 0,01° gerundet; die Antwort enthält auch die Höhe dieser Punkte für die Relief-Darstellung) und löscht seine Server-Protokolle nach eigener Angabe nach 90 Tagen.</li>
       <li><strong>Bright Sky</strong> (api.brightsky.dev, Open-Source-Projekt von Jakob de Maeyer) liefert für Orte in Deutschland das gemessene Regenradar des Deutschen Wetterdienstes. Die Verbindung entsteht erst, wenn du in der Regenkarte auf „Jetzt“ tippst. Der Betreiber erhält dabei technisch bedingt deine IP-Adresse und die gerundeten Koordinaten des Orts. Verbindliche Angaben zu Serverstandort und Speicherung von Server-Protokollen liegen nicht vor (brightsky.dev/docs).</li>
       <li><strong>Photon</strong> (komoot GmbH, Deutschland) liefert Ortsvorschläge und den Namen deines Standorts. Der Dienst erhält deinen Suchbegriff bzw. die gerundeten Koordinaten.</li>
       <li><strong>PEGELONLINE</strong> (Wasserstraßen- und Schifffahrtsverwaltung des Bundes) liefert Flusstemperaturen und erhält die Koordinaten des Orts.</li>
@@ -1445,9 +1448,10 @@ function renderSky(){
    „Jetzt“ (Echtzeit, nur in Deutschland): gemessenes DWD-Radar (RV-Komposit, 5 Minuten, 1 km) über Bright Sky,
      1 Stunde zurück bis 2 Stunden voraus (Zugbahn-Extrapolation des DWD).
    12 / 24 / 48 h: Modell-Regenkarte, 9 × 9 Punkte (ca. 15 km, 60 km Umkreis) in EINEM Aufruf bei Open-Meteo.
+   Relief: die Höhen (elevation) dieser 81 Punkte aus demselben Aufruf, als Schummerung unter dem Regen (kein zusätzlicher Abruf, außer im Modus „Jetzt“ ohne geladene Modell-Karte).
    Geladen wird erst, wenn der Bereich in die Nähe des Bildschirms kommt. */
 const RAD_N = 9, RAD_KM = 60;
-let radar = null, radarL = null, radarRange = null, radarFrame = 0, radarTimer = null, radarObs = null, radarPlace = null, radarSeq = 0;
+let radar = null, radarL = null, radarRange = null, radarFrame = 0, radarTimer = null, radarObs = null, radarPlace = null, radarSeq = 0, radarElev = null, radarRelief = true, radarReliefCan = null;
 const rSrc = () => radarRange === 0 ? radarL : radar;
 const rReady = () => { const s = rSrc(); return s && typeof s === 'object'; };
 const rIsDE = p => p && p.lat > 47.1 && p.lat < 55.2 && p.lon > 5.7 && p.lon < 15.2;
@@ -1473,7 +1477,7 @@ function radarSync(){
   });
 }
 function radarSetup(p, my){
-  radarStop(); radar = null; radarL = null; radarFrame = 0; radarPlace = p; radarSeq++;
+  radarStop(); radar = null; radarL = null; radarElev = null; radarReliefCan = null; radarFrame = 0; radarPlace = p; radarSeq++;
   /* Start immer mit der Modell-Karte (Open-Meteo). Das gemessene Radar (Bright Sky) wird erst nach Tippen auf „Jetzt“ geladen. */
   if (radarRange === null || (radarRange === 0 && !rIsDE(p))) radarRange = 12;
   radarSync(); renderRadar();
@@ -1488,11 +1492,11 @@ function radarSetup(p, my){
 }
 function radarEnsure(my){
   if (!radarPlace) return;
-  if (radarRange === 0) loadRadarLive(radarPlace, my); else loadRadar(radarPlace, my);
+  if (radarRange === 0){ loadRadarLive(radarPlace, my); if (!radarElev) loadRadar(radarPlace, my); } else loadRadar(radarPlace, my);
 }
 async function loadRadar(p, my){
   if (radar && radar !== 'err') return;
-  radar = 'load'; renderRadar();
+  radar = 'load'; if (radarRange !== 0) renderRadar();
   const pts = radarGrid(p);
   try {
     const j = await getJSON('https://api.open-meteo.com/v1/forecast'
@@ -1516,6 +1520,10 @@ async function loadRadar(p, my){
       frames.push(f);
     }
     radar = { n: RAD_N, frames, times: times.slice(s, s + H), H };
+    // Höhen der 81 Punkte (Meter); nur verwenden, wenn die meisten Werte plausibel sind, Lücken mit dem Mittel füllen
+    const el = new Float32Array(pts.length); let ok = 0, sum = 0;
+    arr.forEach((q, k) => { const e = num(q && q.elevation); if (e != null && e > -500 && e < 9000){ el[k] = e; ok++; sum += e; } else el[k] = NaN; });
+    if (ok >= pts.length * .8){ const m = sum / ok; for (let k = 0; k < el.length; k++) if (isNaN(el[k])) el[k] = m; radarElev = el; radarReliefCan = null; }
   } catch { if (my !== loadSeq) return; radar = 'err'; }
   renderRadar();
 }
@@ -1604,13 +1612,17 @@ function renderRadar(){
   if (S === 'err'){ el.innerHTML = `<p class="soft">${live ? 'Das gemessene Radarbild ist gerade nicht verfügbar.' : 'Die Regenkarte konnte nicht geladen werden.'}</p><div style="padding:0 4px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-rretry>Erneut versuchen</button>${live ? '<button class="btn" data-rr="12">Modell-Karte (12 h)</button>' : ''}</div>`; return; }
   el.innerHTML = `<div class="rread" id="rRead" aria-live="polite"></div>
     <div class="rmap"><canvas id="rCan" role="img" aria-label="Regenkarte"></canvas>${rOverlay()}</div>
+    ${radarElev ? `<div class="rlay"><button type="button" id="rRelief" aria-pressed="${radarRelief}">Relief</button></div>` : ''}
     <div class="rbar"><button type="button" class="rplay" id="rPlay" aria-pressed="false" aria-label="Abspielen">${R_PLAY}</button><div class="rstrip" id="rStrip"></div></div>
     <div class="legend rleg"><span><i style="background:rgba(124,196,255,.7)"></i>leicht</span><span><i style="background:rgb(70,140,255)"></i>mäßig</span><span><i style="background:rgb(98,92,255)"></i>kräftig</span><span><i style="background:rgb(255,96,200)"></i>stark</span></div>
     <p class="rsum" id="rSum"></p>
     <p class="fine">${live
       ? 'Gemessenes Radarbild des Deutschen Wetterdienstes (RV-Komposit, über Bright Sky), 5-Minuten-Schritte, Raster 1 km. Die Vorhersage der nächsten 2 Stunden schreibt die Zugbahn fort – einzelne Schauer können sich schnell ändern.'
-      : 'Regenkarte aus Wettermodellen (Open-Meteo, in Mitteleuropa u. a. DWD ICON), stündliche Mengen im Umkreis von 60 km, Raster ca. 15 km. Kein gemessenes Radarbild – einzelne Schauer können anders ziehen.'}</p>`;
+      : 'Regenkarte aus Wettermodellen (Open-Meteo, in Mitteleuropa u. a. DWD ICON), stündliche Mengen im Umkreis von 60 km, Raster ca. 15 km. Kein gemessenes Radarbild – einzelne Schauer können anders ziehen.'}${radarElev ? ' Das Relief (Höhenmodell über Open-Meteo, grob gerastert) dient nur der Orientierung.' : ''}</p>`;
   document.getElementById('rPlay').addEventListener('click', radarToggle);
+  if (radarTimer){ const pb = document.getElementById('rPlay'); pb.setAttribute('aria-pressed', 'true'); pb.setAttribute('aria-label', 'Anhalten'); pb.innerHTML = R_PAUSE; }
+  const rb = document.getElementById('rRelief');
+  if (rb) rb.addEventListener('click', () => { radarRelief = !radarRelief; rb.setAttribute('aria-pressed', String(radarRelief)); drawRadar(); });
   bindRadarStrip();
   renderRadarStrip(); renderRadarSum(); drawRadar();
 }
@@ -1637,6 +1649,30 @@ function radarToggle(){
     radarFrame++; drawRadar();
   }, radarRange === 0 ? 170 : radarRange === 12 ? 520 : radarRange === 24 ? 340 : 210);
 }
+/* Relief: Höhen (9 × 9) glatt (Catmull-Rom) auf 120 × 120 hochrechnen, Schummerung mit Licht aus Nordwest */
+function rRelief(){
+  if (!radarElev) return null;
+  if (radarReliefCan) return radarReliefCan;
+  const n = RAD_N, n1 = n - 1, G = 120, e = radarElev, h = new Float32Array(G * G);
+  const at = (i, j) => e[Math.max(0, Math.min(n1, j)) * n + Math.max(0, Math.min(n1, i))];
+  const cr = (p0, p1, p2, p3, t) => p1 + .5 * t * (p2 - p0 + t * (2 * p0 - 5 * p1 + 4 * p2 - p3 + t * (3 * (p1 - p2) + p3 - p0)));
+  let lo = 1e9, hi = -1e9; e.forEach(v => { if (v < lo) lo = v; if (v > hi) hi = v; });
+  for (let y = 0; y < G; y++) for (let x = 0; x < G; x++){
+    const gx = x / (G - 1) * n1, gy = y / (G - 1) * n1, i0 = Math.min(Math.floor(gx), n1 - 1), j0 = Math.min(Math.floor(gy), n1 - 1), tx = gx - i0, ty = gy - j0, c = [];
+    for (let m = -1; m <= 2; m++) c.push(cr(at(i0 - 1, j0 + m), at(i0, j0 + m), at(i0 + 1, j0 + m), at(i0 + 2, j0 + m), tx));
+    h[y * G + x] = Math.max(lo, Math.min(hi, cr(c[0], c[1], c[2], c[3], ty)));
+  }
+  const sp = RAD_KM * 2 / (G - 1), rng = Math.max(hi - lo, 250), cv = document.createElement('canvas'); cv.width = G; cv.height = G;
+  const cx = cv.getContext('2d'), img = cx.createImageData(G, G);
+  for (let y = 0; y < G; y++) for (let x = 0; x < G; x++){
+    const xe = Math.min(G - 1, x + 1), xw = Math.max(0, x - 1), ys = Math.min(G - 1, y + 1), yn = Math.max(0, y - 1);
+    const dx = (h[y * G + xe] - h[y * G + xw]) / ((xe - xw) * sp), dn = (h[yn * G + x] - h[ys * G + x]) / ((ys - yn) * sp);   // m/km, Ost bzw. Nord positiv
+    const sh = Math.max(-1, Math.min(1, (dx - dn) * .7 / 11)), t = (h[y * G + x] - lo) / rng, o = (y * G + x) * 4;
+    img.data[o] = 32 + 62 * t + sh * 36; img.data[o + 1] = 54 + 64 * t + sh * 38; img.data[o + 2] = 88 + 38 * t + sh * 34; img.data[o + 3] = 255;
+  }
+  cx.putImageData(img, 0, 0);
+  return (radarReliefCan = cv);
+}
 function drawRadar(){
   const can = document.getElementById('rCan');
   if (!can || !rReady()) return;
@@ -1660,6 +1696,8 @@ function drawRadar(){
   ctx.clearRect(0, 0, W, W);
   ctx.save(); ctx.beginPath(); ctx.arc(W / 2, W / 2, W / 2, 0, Math.PI * 2); ctx.clip();
   ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  const rl = radarRelief ? rRelief() : null;
+  if (rl){ try { ctx.filter = `blur(${Math.max(1, Math.round(W / 160))}px)`; } catch {} ctx.globalAlpha = .85; ctx.drawImage(rl, 0, 0, W, W); ctx.globalAlpha = 1; try { ctx.filter = 'none'; } catch {} }
   try { ctx.filter = `blur(${n < 20 ? Math.round(W / 55) : Math.max(1, Math.round(W / 260))}px)`; } catch {}
   ctx.drawImage(off, 0, 0, W, W);
   ctx.restore();

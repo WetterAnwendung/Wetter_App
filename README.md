@@ -77,7 +77,7 @@ Die App lädt beim Öffnen nichts von fremden Servern. Erst bei einer Suche, bei
 
 | Dienst | Wofür |
 |---|---|
-| `api.open-meteo.com` | Wettervorhersage, Wolkenschichten (auch an zwei Punkten in Richtung des Sonnenuntergangs, ca. 80 und 200 km, auf 0,1° gerundet), Regenkarte aus Modelldaten (81 Rasterpunkte im Umkreis von 60 km, auf 0,01° gerundet) |
+| `api.open-meteo.com` | Wettervorhersage, Wolkenschichten (auch an zwei Punkten in Richtung des Sonnenuntergangs, ca. 80 und 200 km, auf 0,1° gerundet), Regenkarte aus Modelldaten (81 Rasterpunkte im Umkreis von 60 km, auf 0,01° gerundet) samt Höhen für das Relief (lokal gezeichnet) |
 | `api.brightsky.dev` | Gemessenes Regenradar des DWD (nur Orte in Deutschland, erst nach Tippen auf „Jetzt“, gerundete Koordinaten) |
 | `geocoding-api.open-meteo.com` | Ortssuche, Postleitzahlen |
 | `air-quality-api.open-meteo.com` | Luftqualität (auch Aerosol und Staub) und Pollenflug |
