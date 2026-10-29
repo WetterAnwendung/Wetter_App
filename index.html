@@ -5,7 +5,7 @@
 <!-- Sicherheitsregel (CSP): nur das eigene Skript (per Hash), Daten nur von den genannten Diensten.
      WICHTIG: Wer das Skript unten ändert, muss den sha256-Hash neu berechnen, sonst startet die App nicht.
      Befehl: python3 csp-hash.py index.html -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-vfphVLvqqcBMcJ1bRkMOGZEzA+hj0IWMaIle+Wha8vQ='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data: https://tile.openstreetmap.org; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de https://api.brightsky.dev; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Y73CZlj0R3Xbwlbz6Z/XuvNgPindWpUlD2rrBLedolo='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data: https://tile.openstreetmap.org; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de https://api.brightsky.dev; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#2a3f7a">
@@ -202,6 +202,7 @@ dialog.info::backdrop{background:rgba(4,8,24,.6)}
 .info-in .notice{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12)}
 .info-in .notice p{color:#fff}
 .info-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12)}
+.info-actions .ask{flex:1 1 100%;margin:0;text-align:right;color:#fff;font-weight:600}
 .info-x{position:absolute;top:10px;right:10px;width:42px;height:42px;border-radius:50%;border:0;cursor:pointer;
   display:grid;place-items:center;background:rgba(255,255,255,.1);color:#fff}
 .info-x:hover{background:rgba(255,255,255,.2)}
@@ -443,8 +444,11 @@ dialog.info{position:fixed}
     <p>Wetter-, Pollen-, Luftqualitäts- und Meeresdaten: Open-Meteo.com (CC BY 4.0). Flusstemperaturen: WSV, PEGELONLINE (dl-de/by-2-0). Ortsdaten: © OpenStreetMap-Mitwirkende (ODbL) über Photon und GeoNames (CC BY 4.0) über Open-Meteo. Schrift: Bricolage Grotesque (SIL Open Font License 1.1).</p>
 
     <div class="info-actions">
+      <p class="ask" id="forgetMsg" role="alert" hidden>Wirklich alle gespeicherten Orte löschen? Das lässt sich nicht rückgängig machen.</p>
       <button type="button" class="ghost danger" id="forget">Gespeicherte Orte löschen</button>
       <button type="button" class="ghost" id="infoClose">Schließen</button>
+      <button type="button" class="ghost danger" id="forgetYes" hidden>Ja, löschen</button>
+      <button type="button" class="ghost" id="forgetNo" hidden>Nein</button>
     </div>
   </div>
 </dialog>
@@ -1880,11 +1884,17 @@ document.getElementById('infoLink').addEventListener('click', openInfo);
 document.getElementById('infoClose').addEventListener('click', () => info.close());
 document.getElementById('infoX').addEventListener('click', () => info.close());
 info.addEventListener('click', e => { if (e.target === info) info.close(); });
-document.getElementById('forget').addEventListener('click', e => {
+/* Löschen mit Rückfrage: erst „Wirklich löschen?“, dann Ja / Nein */
+const fgBtn = document.getElementById('forget'), fgYes = document.getElementById('forgetYes'), fgNo = document.getElementById('forgetNo'), fgMsg = document.getElementById('forgetMsg'), fgClose = document.getElementById('infoClose');
+const forgetAsk = on => { fgMsg.hidden = fgYes.hidden = fgNo.hidden = !on; fgBtn.hidden = fgClose.hidden = on; };
+fgBtn.addEventListener('click', () => { forgetAsk(true); fgNo.focus(); });
+fgNo.addEventListener('click', () => { forgetAsk(false); fgBtn.focus(); });
+fgYes.addEventListener('click', () => {
   try { localStorage.removeItem('wetter:last'); localStorage.removeItem(FAV_KEY); } catch {}
   favs = []; renderFavs(); updateStar();
-  e.target.textContent = 'Gelöscht';
+  forgetAsk(false); fgBtn.textContent = 'Gelöscht'; fgBtn.focus();
 });
+info.addEventListener('close', () => { forgetAsk(false); fgBtn.textContent = 'Gespeicherte Orte löschen'; });
 favs = cleanFavs(store.get(FAV_KEY));
 if (favs.length) store.set(FAV_KEY, favs); else { try { localStorage.removeItem(FAV_KEY); } catch {} }
 renderFavs();
