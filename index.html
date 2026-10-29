@@ -5,7 +5,7 @@
 <!-- Sicherheitsregel (CSP): nur das eigene Skript (per Hash), Daten nur von den genannten Diensten.
      WICHTIG: Wer das Skript unten ändert, muss den sha256-Hash neu berechnen, sonst startet die App nicht.
      Befehl: python3 csp-hash.py index.html -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-xa8DURSELIZ7w1svSv5dmXLd1Crn1eHshz2lOctq6/c='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data:; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-I6vdw946u3ZZ8lcimEhC+rtofEvps4p/zEEqU+DYFt4='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data:; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de https://api.brightsky.dev; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#2a3f7a">
@@ -284,6 +284,34 @@ dialog.info{position:fixed}
 .pols .dot{width:12px;height:12px;border-radius:50%}
 .pols small{color:var(--soft)}
 
+/* Regenradar */
+.rmap{position:relative;width:min(100%,420px);aspect-ratio:1/1;margin:0 auto 12px;border-radius:50%;
+  background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.08),rgba(255,255,255,.03) 62%,rgba(255,255,255,.015) 70%),rgba(4,12,34,.32);
+  box-shadow:inset 0 0 0 1px var(--line)}
+.rmap canvas,.rmap svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.rwait{opacity:.6}
+.rtx{font-size:3.1px;fill:rgba(255,255,255,.85);font-weight:600}
+.rmut{fill:rgba(255,255,255,.42);font-weight:500;font-size:2.5px}
+.rdir{fill:rgba(255,255,255,.5);font-size:2.9px;font-weight:600}
+.rme{font-size:3.4px;fill:#fff;paint-order:stroke;stroke:rgba(10,20,50,.55);stroke-width:.7px}
+.rread{height:4.6rem;padding:0 4px 8px;font-variant-numeric:tabular-nums;overflow:hidden}
+.rread b{display:block;font-size:1.25rem;font-weight:650;white-space:nowrap;line-height:1.3}
+.rread span{display:block;color:var(--soft);font-size:.88rem;line-height:1.35;margin-top:2px}
+.rbar{display:flex;align-items:center;gap:10px;padding:0 2px}
+.rplay{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;display:grid;place-items:center;cursor:pointer}
+.rplay:hover{background:rgba(255,255,255,.22)}
+.rplay[aria-pressed=true]{background:#fff;color:#16305c;border-color:#fff}
+.rstrip{flex:1;min-width:0}
+.rstrip svg{display:block;width:100%;height:auto;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:pointer}
+.rstrip svg:focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:8px}
+[data-sec=radar] .seg button{white-space:nowrap;padding-left:11px;padding-right:11px}
+.rtag{font-style:normal;font-size:.7rem;padding:3px 9px;border-radius:99px;background:#7CC4FF;color:#0b1f44;font-weight:650;margin-left:8px;vertical-align:middle}
+.rtag.f{background:rgba(255,255,255,.18);color:#fff}
+.rleg i{width:12px;height:12px;border-radius:4px}
+.rsum{margin:10px 4px 0;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.1);font-size:.92rem}
+@media (prefers-reduced-motion:no-preference){.rpulse{transform-origin:50px 50px;animation:rpulse 2.4s ease-out infinite}
+  @keyframes rpulse{0%{transform:scale(.6);opacity:.35}100%{transform:scale(2.2);opacity:0}}}
+
 /* Wetter-Icons */
 .wi{display:block;width:100%;height:auto;overflow:visible}
 .wi.sm{width:32px}
@@ -334,6 +362,7 @@ dialog.info{position:fixed}
 .skyTrack{height:8px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
 .skyTrack i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#ffd34d,#ff7a8a)}
 .skyNotes{margin:10px 4px 0 22px;color:var(--soft);font-size:.86rem}.skyNotes li{margin:2px 0}
+@media (max-width:400px){.jump{gap:2px;padding:5px}.jump button{padding:7px 6px;font-size:.86rem}}
 </style>
 </head>
 <body data-sky="start">
@@ -388,7 +417,8 @@ dialog.info{position:fixed}
     <p>Damit die App etwas anzeigen kann, fragt dein Browser direkt bei diesen Stellen an. Jede sieht dabei deine IP-Adresse und den Inhalt der Anfrage:</p>
     <ul>
       <li><strong>GitHub</strong> (GitHub Inc., USA) liefert die Webversion aus und speichert nach eigener Angabe die IP-Adresse jedes Besuchers zu Sicherheitszwecken.</li>
-      <li><strong>Open-Meteo</strong> (OpenMeteo GmbH, Schweiz) liefert Wetter, Pollen, Luftqualität, Meerestemperatur und Ortsvorschläge. Der Dienst erhält die Koordinaten des Orts bzw. deinen Suchbegriff; für die Einschätzung des Sonnenuntergangs zusätzlich die Koordinaten zweier Punkte in Richtung der untergehenden Sonne (etwa 80 und 200 km entfernt, auf 0,1° gerundet) und löscht seine Server-Protokolle nach eigener Angabe nach 90 Tagen.</li>
+      <li><strong>Open-Meteo</strong> (OpenMeteo GmbH, Schweiz) liefert Wetter, Pollen, Luftqualität, Meerestemperatur und Ortsvorschläge. Der Dienst erhält die Koordinaten des Orts bzw. deinen Suchbegriff; für die Einschätzung des Sonnenuntergangs zusätzlich die Koordinaten zweier Punkte in Richtung der untergehenden Sonne (etwa 80 und 200 km entfernt, auf 0,1° gerundet), für die Regenkarte 81 Rasterpunkte im Umkreis von 60 km um den Ort (auf 0,01° gerundet) und löscht seine Server-Protokolle nach eigener Angabe nach 90 Tagen.</li>
+      <li><strong>Bright Sky</strong> (api.brightsky.dev, Open-Source-Projekt von Jakob de Maeyer) liefert für Orte in Deutschland das gemessene Regenradar des Deutschen Wetterdienstes. Die Verbindung entsteht erst, wenn du in der Regenkarte auf „Jetzt“ tippst. Der Betreiber erhält dabei technisch bedingt deine IP-Adresse und die gerundeten Koordinaten des Orts. Verbindliche Angaben zu Serverstandort und Speicherung von Server-Protokollen liegen nicht vor (brightsky.dev/docs).</li>
       <li><strong>Photon</strong> (komoot GmbH, Deutschland) liefert Ortsvorschläge und den Namen deines Standorts. Der Dienst erhält deinen Suchbegriff bzw. die gerundeten Koordinaten.</li>
       <li><strong>PEGELONLINE</strong> (Wasserstraßen- und Schifffahrtsverwaltung des Bundes) liefert Flusstemperaturen und erhält die Koordinaten des Orts.</li>
     </ul>
@@ -751,7 +781,7 @@ function choose(raw){
 }
 async function loadWeather(p){
   const my = ++loadSeq;
-  curPlace = p; renderFavs();
+  curPlace = p; renderFavs(); radarStop();
   view.innerHTML = `<div class="loading"><span class="spin big" aria-hidden="true"></span><p>Wetter für <b>${esc(p.title)}</b> wird geladen …</p></div>`;
   const url = 'https://api.open-meteo.com/v1/forecast'
     + `?latitude=${p.lat}&longitude=${p.lon}`
@@ -837,7 +867,7 @@ function render(p, d, my){
       <p class="hilo">Heute höchstens ${T(dl.temperature_2m_max[0])}, tiefstens ${T(dl.temperature_2m_min[0])}</p>
       <p class="stamp">Ortszeit ${hm(c.time)} Uhr</p>
     </section>
-    <nav class="jump" aria-label="Zu Abschnitt springen"><button type="button" data-go="wetter" aria-current="true">Wetter</button><button type="button" data-go="himmel">Himmel</button><button type="button" data-go="luft">Luft</button><button type="button" data-go="pollen">Pollen</button><button type="button" data-go="wasser">Wasser</button></nav>
+    <nav class="jump" aria-label="Zu Abschnitt springen"><button type="button" data-go="wetter" aria-current="true">Wetter</button><button type="button" data-go="radar">Radar</button><button type="button" data-go="himmel">Himmel</button><button type="button" data-go="luft">Luft</button><button type="button" data-go="pollen">Pollen</button><button type="button" data-go="wasser">Wasser</button></nav>
     <section class="panel"><h2>Nächste 24 Stunden</h2><div class="hourly" tabindex="0" role="region" aria-label="Stündliche Vorhersage">${hours}</div></section>
     <section class="panel"><h2>Vorhersage für 5 Tage</h2><ul class="days">${days}</ul></section>
     <div class="tiles">
@@ -851,6 +881,9 @@ function render(p, d, my){
       <span class="seg" role="group" aria-label="Zeitraum"><button type="button" data-r="24" aria-pressed="true">24 h</button><button type="button" data-r="48" aria-pressed="false">48 h</button></span></h2>
       <div class="readout" id="readout" aria-live="polite"></div><div id="trendChart"></div>
       <div class="legend"><span><i style="background:#ffd166"></i>Temperatur</span><span><i style="background:#7CC4FF"></i>Niederschlag je Stunde</span></div></section>
+    <section class="panel" data-sec="radar" aria-labelledby="h-radar"><h2 class="hrow" id="h-radar"><span>Regenradar</span>
+      <span class="seg" role="group" aria-label="Zeitraum der Regenkarte"><button type="button" data-rr="0" aria-pressed="${radarRange === 0}" hidden>Jetzt</button><button type="button" data-rr="12" aria-pressed="${radarRange === 12}">12 h</button><button type="button" data-rr="24" aria-pressed="${radarRange === 24}">24 h</button><button type="button" data-rr="48" aria-pressed="${radarRange === 48}">48 h</button></span></h2>
+      <div id="radarBody"></div></section>
     <section class="panel" data-sec="himmel" aria-labelledby="h-sky"><h2 id="h-sky">Sonnenuntergang</h2><div id="skyBody"><p class="soft">Wird berechnet …</p></div></section>
     <section class="panel" data-sec="luft" aria-labelledby="h-air"><h2 id="h-air">Luftqualität</h2><div id="airBody"><p class="soft">Wird geladen …</p></div></section>
     <section class="panel" data-sec="pollen" aria-labelledby="h-pollen"><h2 id="h-pollen">Pollenflug</h2><div id="pollenBody"><p class="soft">Wird geladen …</p></div></section>
@@ -861,6 +894,7 @@ function render(p, d, my){
   setTrendRange(trendRange);
   skySetup(p, d, my);
   setupJump();
+  radarSetup(p, my);
   loadAir(p, my);
   pollen = null; pollenDay = 0;
   loadPollen(p, my);
@@ -876,6 +910,9 @@ view.addEventListener('click', e => {
     return;
   }
   if (e.target.closest('#star')){ toggleFav(); return; }
+  const rr = e.target.closest('[data-rr]');
+  if (rr){ setRadarRange(+rr.dataset.rr); return; }
+  if (e.target.closest('[data-rretry]')){ radarEnsure(loadSeq); return; }
   const rb = e.target.closest('[data-r]');
   if (rb){ setTrendRange(+rb.dataset.r); return; }
   const row = e.target.closest('.day-row');
@@ -1403,16 +1440,339 @@ function renderSky(){
     <p class="fine">Grobe Einschätzung aus Wetter- und Luftdaten (Open-Meteo), auf deinem Gerät berechnet. Die Schwellen sind Annahmen, nicht an echten Sonnenuntergängen geeicht. „Super“ heißt gute Voraussetzungen, keine Garantie.</p>`;
 }
 
+/* ---------- Regenradar ---------- */
+/* Zwei Quellen, gleiche Karte:
+   „Jetzt“ (Echtzeit, nur in Deutschland): gemessenes DWD-Radar (RV-Komposit, 5 Minuten, 1 km) über Bright Sky,
+     1 Stunde zurück bis 2 Stunden voraus (Zugbahn-Extrapolation des DWD).
+   12 / 24 / 48 h: Modell-Regenkarte, 9 × 9 Punkte (ca. 15 km, 60 km Umkreis) in EINEM Aufruf bei Open-Meteo.
+   Geladen wird erst, wenn der Bereich in die Nähe des Bildschirms kommt. */
+const RAD_N = 9, RAD_KM = 60;
+let radar = null, radarL = null, radarRange = null, radarFrame = 0, radarTimer = null, radarObs = null, radarPlace = null, radarSeq = 0;
+const rSrc = () => radarRange === 0 ? radarL : radar;
+const rReady = () => { const s = rSrc(); return s && typeof s === 'object'; };
+const rIsDE = p => p && p.lat > 47.1 && p.lat < 55.2 && p.lon > 5.7 && p.lon < 15.2;
+function rCen(f, n){
+  const c = (n - 1) / 2;
+  if (n < 20) return f[c * n + c];
+  let s = 0; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) s += f[(c + dy) * n + c + dx];
+  return s / 9;
+}
+function radarGrid(p){
+  const dLat = RAD_KM / 111.32, dLon = RAD_KM / (111.32 * Math.max(Math.cos(p.lat * Math.PI / 180), .2)), pts = [];
+  for (let j = 0; j < RAD_N; j++) for (let i = 0; i < RAD_N; i++){
+    const fy = 1 - 2 * j / (RAD_N - 1), fx = -1 + 2 * i / (RAD_N - 1);   // j = 0 ist Norden
+    pts.push({ lat: Math.max(-89.99, Math.min(89.99, +(p.lat + fy * dLat).toFixed(2))), lon: +(((p.lon + fx * dLon + 540) % 360) - 180).toFixed(2) });
+  }
+  return pts;
+}
+function radarStop(){ clearInterval(radarTimer); radarTimer = null; const b = document.getElementById('rPlay'); if (b){ b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', 'Abspielen'); b.innerHTML = R_PLAY; } }
+function radarSync(){
+  view.querySelectorAll('[data-rr]').forEach(b => {
+    b.setAttribute('aria-pressed', String(+b.dataset.rr === radarRange));
+    if (b.dataset.rr === '0') b.hidden = !rIsDE(radarPlace);
+  });
+}
+function radarSetup(p, my){
+  radarStop(); radar = null; radarL = null; radarFrame = 0; radarPlace = p; radarSeq++;
+  /* Start immer mit der Modell-Karte (Open-Meteo). Das gemessene Radar (Bright Sky) wird erst nach Tippen auf „Jetzt“ geladen. */
+  if (radarRange === null || (radarRange === 0 && !rIsDE(p))) radarRange = 12;
+  radarSync(); renderRadar();
+  if (radarObs){ radarObs.disconnect(); radarObs = null; }
+  const sec = view.querySelector('[data-sec="radar"]');
+  if (!sec) return;
+  if (!('IntersectionObserver' in window)) return radarEnsure(my);
+  radarObs = new IntersectionObserver(es => {
+    if (es.some(e => e.isIntersecting)){ radarObs.disconnect(); radarObs = null; radarEnsure(my); }
+  }, { rootMargin: '400px 0px' });
+  radarObs.observe(sec);
+}
+function radarEnsure(my){
+  if (!radarPlace) return;
+  if (radarRange === 0) loadRadarLive(radarPlace, my); else loadRadar(radarPlace, my);
+}
+async function loadRadar(p, my){
+  if (radar && radar !== 'err') return;
+  radar = 'load'; renderRadar();
+  const pts = radarGrid(p);
+  try {
+    const j = await getJSON('https://api.open-meteo.com/v1/forecast'
+      + `?latitude=${pts.map(q => q.lat).join(',')}&longitude=${pts.map(q => q.lon).join(',')}`
+      + '&hourly=precipitation&timezone=auto&forecast_days=3');
+    if (my !== loadSeq) return;
+    const arr = Array.isArray(j) ? j : [];
+    if (arr.length !== pts.length) throw new Error('Raster');
+    const times = (arr[0] && arr[0].hourly && Array.isArray(arr[0].hourly.time)) ? arr[0].hourly.time.map(String) : [];
+    const nowH = fc && fc.d && fc.d.current ? String(fc.d.current.time).slice(0, 13) : '';
+    let s = times.findIndex(t => t.slice(0, 13) === nowH); if (s < 0) s = 0;
+    const H = Math.min(49, times.length - s);
+    if (H < 2) throw new Error('Zeit');
+    const frames = [];
+    for (let h = 0; h < H; h++){
+      const f = new Float32Array(RAD_N * RAD_N);
+      arr.forEach((r, k) => {
+        const pr = r && r.hourly && Array.isArray(r.hourly.precipitation) ? r.hourly.precipitation : [];
+        const v = num(pr[s + h]); f[k] = v == null ? 0 : Math.max(0, Math.min(v, 50));
+      });
+      frames.push(f);
+    }
+    radar = { n: RAD_N, frames, times: times.slice(s, s + H), H };
+  } catch { if (my !== loadSeq) return; radar = 'err'; }
+  renderRadar();
+}
+/* Gemessenes Radar (Bright Sky /radar): Werte in 0,01 mm je 5 Minuten, 2-Byte-Ganzzahlen, zlib-komprimiert, Base64 */
+async function rDecode(b64){
+  const bin = atob(String(b64)), u = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+  const ab = await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate'))).arrayBuffer();
+  const dv = new DataView(ab), len = ab.byteLength >> 1, out = new Float32Array(len); let bad = 0;
+  for (let i = 0; i < len; i++){ const v = dv.getUint16(i * 2, true); if (v > 20000){ bad++; out[i] = 0; } else out[i] = v * .12; }   // 0,01 mm/5 min → mm/h
+  if (len < 400 || bad > len * .03) throw new Error('Werte');   // unplausible Daten (z. B. falsche Byte-Reihenfolge) nicht anzeigen
+  return out;
+}
+async function loadRadarLive(p, my){
+  if (radarL && radarL !== 'err') return;
+  radarL = 'load'; renderRadar();
+  try {
+    if (typeof DecompressionStream !== 'function') throw new Error('Browser');
+    const tz = encodeURIComponent((Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Europe/Berlin');
+    const j = await getJSON(`https://api.brightsky.dev/radar?lat=${p.lat.toFixed(2)}&lon=${p.lon.toFixed(2)}&distance=${RAD_KM * 1000}&format=compressed&tz=${tz}`);
+    if (my !== loadSeq) return;
+    const arr = (j && Array.isArray(j.radar) ? j.radar : []).slice(0, 48);
+    if (arr.length < 2) throw new Error('leer');
+    const frames = [], times = [];
+    for (const r of arr){
+      const f = await rDecode(r && r.precipitation_5);
+      if (my !== loadSeq) return;
+      frames.push(f); times.push(String(r.timestamp));
+    }
+    const n = Math.round(Math.sqrt(frames[0].length));
+    if (n < 21 || n > 401 || n * n !== frames[0].length || frames.some(f => f.length !== n * n)) throw new Error('Raster');
+    let now = 0; const t0 = Date.now(); times.forEach((t, k) => { const ms = Date.parse(t); if (isFinite(ms) && ms <= t0 + 150000) now = k; });
+    radarL = { n, frames, times, H: frames.length, now };
+    if (radarRange === 0) radarFrame = now;
+  } catch { if (my !== loadSeq) return; radarL = 'err'; }
+  renderRadar();
+}
+const R_PLAY = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>';
+const R_PAUSE = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z" fill="currentColor"/></svg>';
+const R_STOPS = [[.1, [124,196,255,.38]], [.5, [124,196,255,.62]], [1.5, [70,140,255,.74]], [4, [98,92,255,.82]], [8, [170,96,255,.88]], [15, [255,96,200,.92]]];
+function rCol(v){
+  if (!(v >= .05)) return null;
+  if (v < .2){ const c = R_STOPS[0][1]; return [c[0], c[1], c[2], c[3] * (v - .05) / .15]; }
+  if (v >= R_STOPS[R_STOPS.length - 1][0]) return R_STOPS[R_STOPS.length - 1][1];
+  for (let k = 1; k < R_STOPS.length; k++){
+    const [v1, c1] = R_STOPS[k]; if (v > v1) continue;
+    const [v0, c0] = R_STOPS[k - 1], t = v <= v0 ? 0 : (Math.log(v) - Math.log(v0)) / (Math.log(v1) - Math.log(v0));
+    return c0.map((x, n) => x + (c1[n] - x) * t);
+  }
+  return R_STOPS[0][1];
+}
+const rInt = v => v < .1 ? 'trocken' : v < .5 ? 'leichter Regen' : v < 2 ? 'mäßiger Regen' : v < 5 ? 'kräftiger Regen' : 'starker Regen';
+function rLabel(k){
+  const S = rSrc();
+  if (S.now != null){
+    if (k === S.now) return 'Jetzt';
+    return `${hm(S.times[k], 11, 16)} Uhr`;
+  }
+  if (k === 0) return 'Jetzt';
+  const t = S.times[k], d0 = S.times[0].slice(0, 10), dd = t.slice(0, 10);
+  const day = dd === d0 ? 'Heute' : (new Date(dd + 'T12:00') - new Date(d0 + 'T12:00')) / 864e5 === 1 ? 'Morgen'
+    : new Date(dd + 'T12:00').toLocaleDateString('de-DE', { weekday: 'short' });
+  return `${day} ${hm(t, 11, 13)} Uhr`;
+}
+function rOverlay(){
+  const p = radarPlace || {}, R = 50, ring = km => (km / RAD_KM * R).toFixed(2);
+  const dLat = RAD_KM / 111.32, dLon = RAD_KM / (111.32 * Math.max(Math.cos((p.lat || 0) * Math.PI / 180), .2));
+  const others = favs.filter(f => !(Math.abs(f.lat - p.lat) < 1e-6 && Math.abs(f.lon - p.lon) < 1e-6)).map(f => {
+    const x = 50 + (f.lon - p.lon) / dLon * R, y = 50 - (f.lat - p.lat) / dLat * R;
+    return (x > 4 && x < 96 && y > 4 && y < 96) ? `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r=".9" fill="#fff" opacity=".85"/><text x="${(x + 1.8).toFixed(1)}" y="${(y + 1).toFixed(1)}" class="rtx">${esc(txt(f.title, 24))}</text>` : '';
+  }).join('');
+  return `<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+    <g fill="none" stroke="rgba(255,255,255,.16)" stroke-width=".25" stroke-dasharray=".8 1.2"><circle cx="50" cy="50" r="${ring(20)}"/><circle cx="50" cy="50" r="${ring(40)}"/></g>
+    <circle cx="50" cy="50" r="${ring(60)}" fill="none" stroke="rgba(255,255,255,.22)" stroke-width=".3"/>
+    <g class="rtx rmut"><text x="50" y="${(50 - ring(20) - 1).toFixed(1)}" text-anchor="middle">20 km</text><text x="50" y="${(50 - ring(40) - 1).toFixed(1)}" text-anchor="middle">40 km</text></g>
+    <g class="rtx rdir" text-anchor="middle"><text x="50" y="4.6">N</text><text x="50" y="98.4">S</text><text x="2.6" y="51.3">W</text><text x="97.4" y="51.3">O</text></g>
+    ${others}
+    <circle cx="50" cy="50" r="3.2" fill="#fff" opacity=".18" class="rpulse"/><circle cx="50" cy="50" r="1.35" fill="#fff" stroke="#1d2c58" stroke-width=".5"/>
+    <text x="50" y="56.4" text-anchor="middle" class="rtx rme">${esc(txt(p.title, 28))}</text></svg>`;
+}
+function renderRadar(){
+  const el = document.getElementById('radarBody');
+  if (!el) return;
+  const S = rSrc(), live = radarRange === 0;
+  if (S === null || S === 'load'){ el.innerHTML = `<div class="rmap rwait">${rOverlay()}</div><p class="soft">Regenkarte wird geladen …</p>`; return; }
+  if (S === 'err'){ el.innerHTML = `<p class="soft">${live ? 'Das gemessene Radarbild ist gerade nicht verfügbar.' : 'Die Regenkarte konnte nicht geladen werden.'}</p><div style="padding:0 4px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-rretry>Erneut versuchen</button>${live ? '<button class="btn" data-rr="12">Modell-Karte (12 h)</button>' : ''}</div>`; return; }
+  el.innerHTML = `<div class="rread" id="rRead" aria-live="polite"></div>
+    <div class="rmap"><canvas id="rCan" role="img" aria-label="Regenkarte"></canvas>${rOverlay()}</div>
+    <div class="rbar"><button type="button" class="rplay" id="rPlay" aria-pressed="false" aria-label="Abspielen">${R_PLAY}</button><div class="rstrip" id="rStrip"></div></div>
+    <div class="legend rleg"><span><i style="background:rgba(124,196,255,.7)"></i>leicht</span><span><i style="background:rgb(70,140,255)"></i>mäßig</span><span><i style="background:rgb(98,92,255)"></i>kräftig</span><span><i style="background:rgb(255,96,200)"></i>stark</span></div>
+    <p class="rsum" id="rSum"></p>
+    <p class="fine">${live
+      ? 'Gemessenes Radarbild des Deutschen Wetterdienstes (RV-Komposit, über Bright Sky), 5-Minuten-Schritte, Raster 1 km. Die Vorhersage der nächsten 2 Stunden schreibt die Zugbahn fort – einzelne Schauer können sich schnell ändern.'
+      : 'Regenkarte aus Wettermodellen (Open-Meteo, in Mitteleuropa u. a. DWD ICON), stündliche Mengen im Umkreis von 60 km, Raster ca. 15 km. Kein gemessenes Radarbild – einzelne Schauer können anders ziehen.'}</p>`;
+  document.getElementById('rPlay').addEventListener('click', radarToggle);
+  bindRadarStrip();
+  renderRadarStrip(); renderRadarSum(); drawRadar();
+}
+function rMax(){ const S = rSrc(); return S.now != null ? S.H - 1 : Math.min(radarRange, S.H - 1); }
+function setRadarRange(r){
+  const was = radarRange;
+  radarRange = r === 48 ? 48 : r === 24 ? 24 : r === 12 ? 12 : 0;
+  radarStop(); radarSync();
+  const S = rSrc();
+  if (S === null || S === 'err'){ radarFrame = 0; renderRadar(); radarEnsure(loadSeq); return; }
+  if (S === 'load'){ renderRadar(); return; }
+  radarFrame = radarRange === 0 ? S.now : was === 0 ? 0 : Math.min(radarFrame, rMax());
+  renderRadar();
+}
+function radarToggle(){
+  const b = document.getElementById('rPlay');
+  if (radarTimer){ radarStop(); return; }
+  if (radarFrame >= rMax()) radarFrame = 0;
+  b.setAttribute('aria-pressed', 'true'); b.setAttribute('aria-label', 'Anhalten'); b.innerHTML = R_PAUSE;
+  drawRadar();
+  radarTimer = setInterval(() => {
+    if (!document.getElementById('rCan')){ radarStop(); return; }
+    if (radarFrame >= rMax()){ radarStop(); return; }
+    radarFrame++; drawRadar();
+  }, radarRange === 0 ? 170 : radarRange === 12 ? 520 : radarRange === 24 ? 340 : 210);
+}
+function drawRadar(){
+  const can = document.getElementById('rCan');
+  if (!can || !rReady()) return;
+  const S = rSrc(), n = S.n, k = Math.min(radarFrame, rMax()), f = S.frames[k], n1 = n - 1;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2), W = Math.max(1, Math.round(can.clientWidth * dpr));
+  if (can.width !== W){ can.width = W; can.height = W; }
+  const G = n < 20 ? 72 : n, off = document.createElement('canvas'); off.width = G; off.height = G;
+  const oc = off.getContext('2d'), img = oc.createImageData(G, G);
+  for (let y = 0; y < G; y++) for (let x = 0; x < G; x++){
+    let v;
+    if (n >= 20) v = f[y * n + x];
+    else {
+      const gx = x / (G - 1) * n1, gy = y / (G - 1) * n1, i0 = Math.min(Math.floor(gx), n1 - 1), j0 = Math.min(Math.floor(gy), n1 - 1), sx0 = gx - i0, sy0 = gy - j0, tx = sx0 * sx0 * (3 - 2 * sx0), ty = sy0 * sy0 * (3 - 2 * sy0);
+      v = f[j0 * n + i0] * (1 - tx) * (1 - ty) + f[j0 * n + i0 + 1] * tx * (1 - ty) + f[(j0 + 1) * n + i0] * (1 - tx) * ty + f[(j0 + 1) * n + i0 + 1] * tx * ty;
+    }
+    const c = rCol(v), o = (y * G + x) * 4;
+    if (c){ img.data[o] = c[0]; img.data[o + 1] = c[1]; img.data[o + 2] = c[2]; img.data[o + 3] = Math.round(c[3] * 255); }
+  }
+  oc.putImageData(img, 0, 0);
+  const ctx = can.getContext('2d');
+  ctx.clearRect(0, 0, W, W);
+  ctx.save(); ctx.beginPath(); ctx.arc(W / 2, W / 2, W / 2, 0, Math.PI * 2); ctx.clip();
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  try { ctx.filter = `blur(${n < 20 ? Math.round(W / 55) : Math.max(1, Math.round(W / 260))}px)`; } catch {}
+  ctx.drawImage(off, 0, 0, W, W);
+  ctx.restore();
+  // Ablesen
+  const me = rCen(f, n), area = Math.round(f.reduce((a, v) => a + (v >= .1 ? 1 : 0), 0) / f.length * 100);
+  const live = S.now != null, tag = live ? `<em class="rtag${k > S.now ? ' f' : ''}">${k > S.now ? 'Vorhersage' : 'gemessen'}</em>` : '';
+  let tail;
+  if (me >= .1) tail = `Bei dir ${esc(rInt(me))}, ${nf(me)} mm/h`;
+  else if (live){
+    let best = null; const c = n1 / 2;
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (f[y * n + x] >= .1){ const d = Math.hypot(x - c, y - c); if (!best || d < best.d) best = { d, x, y }; }
+    tail = best && best.d <= 59 ? `Bei dir trocken, Regen ${Math.max(1, Math.round(best.d))} km ${rDirName(best.x - c, c - best.y)}` : 'Bei dir trocken, im Umkreis kein Regen';
+  } else tail = 'Bei dir trocken';
+  const rd = document.getElementById('rRead');
+  if (rd) rd.innerHTML = `<b>${esc(rLabel(k))}${tag}</b><span>${esc(tail)}${live ? '' : ` · ${area ? `Regen auf ${area} % der Fläche` : 'im ganzen Umkreis trocken'}`}</span>`;
+  can.setAttribute('aria-label', `Regenkarte ${rLabel(k)}: ${tail}`);
+  const ind = document.getElementById('rInd'), st = document.getElementById('rStripSvg');
+  if (ind && st){ const x = +st.dataset.x0 + k * +st.dataset.step; ind.setAttribute('transform', `translate(${x.toFixed(1)} 0)`); st.setAttribute('aria-valuenow', k); }
+}
+const R_DIRN = { N: 'nördlich', NO: 'nordöstlich', O: 'östlich', SO: 'südöstlich', S: 'südlich', SW: 'südwestlich', W: 'westlich', NW: 'nordwestlich' };
+const R_FROM = { N: 'Norden', NO: 'Nordosten', O: 'Osten', SO: 'Südosten', S: 'Süden', SW: 'Südwesten', W: 'Westen', NW: 'Nordwesten' };
+const rDir8 = (dx, dy) => DIRS[Math.round(((Math.atan2(dx, dy) * 180 / Math.PI) + 360) % 360 / 45) % 8];
+const rDirName = (dx, dy) => R_DIRN[rDir8(dx, dy)];
+function renderRadarStrip(){
+  const el = document.getElementById('rStrip'), S = rSrc();
+  if (!el) return;
+  const live = S.now != null, n = rMax() + 1, W = 320, H = 58, x0 = 8, step = (W - 16) / Math.max(n - 1, 1), base = 38, top = 6, c = (S.n - 1) / 2;
+  const every = live ? 0 : radarRange === 12 ? 3 : radarRange === 24 ? 6 : 12;
+  let bars = '', area = '', axis = '', seps = '', shade = '';
+  for (let k = 0; k < n; k++){
+    const f = S.frames[k], x = x0 + k * step, me = rCen(f, S.n), fr = f.reduce((a, v) => a + (v >= .1 ? 1 : 0), 0) / f.length;
+    area += `${k ? 'L' : 'M'}${x.toFixed(1)},${(base - Math.min(1, fr * (live ? 1.6 : 1)) * (base - top)).toFixed(1)}`;
+    if (me >= .1){ const h = Math.max(3, Math.min(me, 4) / 4 * (base - top)); bars += `<rect x="${(x - Math.max(step * .32, 1.2)).toFixed(1)}" y="${(base - h).toFixed(1)}" width="${Math.max(step * .64, 1.6).toFixed(1)}" height="${h.toFixed(1)}" rx="1.2" fill="#7CC4FF"/>`; }
+    const t = S.times[k], hh = +t.slice(11, 13), mm = +t.slice(14, 16);
+    if (live){
+      if (k === S.now) axis += `<text x="${x.toFixed(1)}" y="${base + 15}" font-size="10" fill="rgba(255,255,255,.9)" text-anchor="middle">Jetzt</text>`;
+      else if (mm === 0 && Math.abs(k - S.now) > 3 && k > 1 && k < n - 2 && hh % 1 === 0 && (k - S.now) % 12 === 0) axis += `<text x="${x.toFixed(1)}" y="${base + 15}" font-size="10" fill="rgba(255,255,255,.72)" text-anchor="middle">${pad2(hh)}</text>`;
+    } else {
+      if (k && hh === 0) seps += `<line x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="${top - 2}" y2="${base}" stroke="rgba(255,255,255,.3)" stroke-dasharray="2 3"/>`;
+      if (k === 0) axis += `<text x="${x.toFixed(1)}" y="${base + 15}" font-size="10" fill="rgba(255,255,255,.8)" text-anchor="start">Jetzt</text>`;
+      else if (k % every === 0) axis += `<text x="${x.toFixed(1)}" y="${base + 15}" font-size="10" fill="rgba(255,255,255,.72)" text-anchor="${k === n - 1 ? 'end' : 'middle'}">${hh === 0 ? esc(new Date(t.slice(0, 10) + 'T12:00').toLocaleDateString('de-DE', { weekday: 'short' })) : pad2(hh)}</text>`;
+    }
+  }
+  if (live){
+    const xn = x0 + S.now * step, xe = x0 + (n - 1) * step;
+    shade = `<rect x="${x0}" y="${top - 4}" width="${(xn - x0).toFixed(1)}" height="${base - top + 4}" fill="rgba(255,255,255,.05)"/>`
+      + `<text x="${x0 + 3}" y="${top + 5}" font-size="8" fill="rgba(255,255,255,.55)">gemessen</text><text x="${(xn + 5).toFixed(1)}" y="${top + 5}" font-size="8" fill="rgba(255,255,255,.55)">Vorhersage</text>`;
+    void xe;
+  }
+  const xe = x0 + (n - 1) * step;
+  el.innerHTML = `<svg id="rStripSvg" viewBox="0 0 ${W} ${H}" data-x0="${x0}" data-step="${step.toFixed(3)}" role="slider" tabindex="0" aria-label="Zeitpunkt der Regenkarte" aria-valuemin="0" aria-valuemax="${n - 1}" aria-valuenow="${radarFrame}">
+    ${shade}<line x1="${x0}" x2="${xe.toFixed(1)}" y1="${base}" y2="${base}" stroke="rgba(255,255,255,.22)"/>
+    ${seps}<path d="${area}L${xe.toFixed(1)},${base}L${x0},${base}Z" fill="rgba(124,196,255,.16)" stroke="rgba(124,196,255,.45)" stroke-width="1"/>${bars}${axis}
+    <g id="rInd" pointer-events="none"><rect x="-7" y="${top - 4}" width="14" height="${base - top + 6}" rx="5" fill="rgba(255,255,255,.1)"/><line x1="0" x2="0" y1="${top - 4}" y2="${base + 2}" stroke="#fff" stroke-width="1.5" opacity=".85"/><circle cx="0" cy="${base}" r="3.6" fill="#fff"/></g></svg>`;
+  void c;
+}
+function bindRadarStrip(){
+  const el = document.getElementById('rStrip');
+  if (!el) return;
+  const pick = ev => {
+    const svg = document.getElementById('rStripSvg'); if (!svg) return;
+    const r = svg.getBoundingClientRect(), sx = (ev.clientX - r.left) / r.width * 320;
+    const k = Math.round((sx - +svg.dataset.x0) / +svg.dataset.step);
+    radarFrame = Math.max(0, Math.min(rMax(), k)); drawRadar();
+  };
+  el.addEventListener('pointerdown', ev => { ev.preventDefault(); radarStop(); try { el.setPointerCapture(ev.pointerId); } catch {} pick(ev); });
+  el.addEventListener('pointermove', ev => { if (ev.buttons) pick(ev); });
+  el.addEventListener('keydown', ev => {
+    const d = ev.key === 'ArrowRight' ? 1 : ev.key === 'ArrowLeft' ? -1 : 0; if (!d) return;
+    ev.preventDefault(); radarStop(); radarFrame = Math.max(0, Math.min(rMax(), radarFrame + d)); drawRadar();
+  });
+}
+function renderRadarSum(){
+  const el = document.getElementById('rSum'), S = rSrc();
+  if (!el) return;
+  const live = S.now != null, n0 = live ? S.now : 0, n = rMax() + 1, N = S.n, ctr = (N - 1) / 2;
+  const idx = []; for (let k = n0; k < n; k++) idx.push(k);
+  const me = idx.map(k => rCen(S.frames[k], N));
+  const span = live ? 'den nächsten 2 Stunden' : radarRange === 12 ? 'den nächsten 12 Stunden' : radarRange === 24 ? 'den nächsten 24 Stunden' : 'den nächsten zwei Tagen';
+  const anyArea = idx.some(k => S.frames[k].some(v => v >= .1));
+  const first = me.findIndex(v => v >= .1);
+  const at = j => { const k = idx[j]; return live ? `gegen ${hm(S.times[k], 11, 16)} Uhr` : rLabel(k).replace(/^Jetzt$/, 'jetzt').replace(/^Heute /, 'heute ').replace(/^Morgen /, 'morgen '); };
+  let s;
+  if (first < 0) s = `In ${span} bleibt es bei dir trocken.${anyArea ? ' Im Umkreis gibt es zeitweise Regen.' : ' Auch im Umkreis ist kein Regen in Sicht.'}`;
+  else {
+    let pk = first; me.forEach((v, j) => { if (v > me[pk]) pk = j; });
+    if (first === 0){
+      const dry = me.findIndex((v, j) => j > 0 && v < .1);
+      s = `Bei dir regnet es gerade${dry > 0 ? `, trocken voraussichtlich ${live ? '' : 'ab '}${at(dry)}` : ` und hört in ${span} kaum auf`}.`;
+    } else {
+      // Woher kommt der Regen? Schwerpunkt des Regens kurz vorher, vom Ort aus gesehen
+      const f = S.frames[idx[Math.max(0, first - (live ? 6 : 2))]]; let sx = 0, sy = 0, sw = 0;
+      for (let j = 0; j < N; j++) for (let i = 0; i < N; i++){ const v = f[j * N + i]; if (v >= .1){ sx += (i - ctr) * v; sy += (ctr - j) * v; sw += v; } }
+      const from = sw > 0 && Math.hypot(sx, sy) / sw > .1 * ctr ? rDir8(sx, sy) : '';
+      s = `Regen bei dir ${live ? '' : 'ab '}${at(first)}${from ? `, er zieht von ${R_FROM[from]} heran` : ''}.`;
+    }
+    if (me[pk] >= .1) s += ` Am stärksten ${at(pk)} (${rInt(me[pk])}, ${nf(me[pk])} mm/h).`;
+  }
+  el.textContent = s;
+}
+
 /* Sprungleiste: markiert den Abschnitt, in dem man gerade liest */
 let jumpBound = false, jumpBusy = false;
 function updateJump(){
   jumpBusy = false;
-  const order = ['wetter', 'himmel', 'luft', 'pollen', 'wasser'], els = order.map(k => view.querySelector(`[data-sec="${k}"]`));
+  const order = ['wetter', 'radar', 'himmel', 'luft', 'pollen', 'wasser'], els = order.map(k => view.querySelector(`[data-sec="${k}"]`));
   if (!els[0]) return;
   let cur = 0;
   els.forEach((e, k) => { if (e && e.getBoundingClientRect().top <= innerHeight * .4) cur = k; });
   if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) cur = els.reduce((a, e, k) => e ? k : a, 0);
   view.querySelectorAll('[data-go]').forEach(b => b.setAttribute('aria-current', String(b.dataset.go === order[cur])));
+  const a = view.querySelector('.jump [aria-current="true"]'), j = a && a.parentElement;
+  if (j && j.scrollWidth > j.clientWidth + 2) j.scrollLeft = a.offsetLeft - (j.clientWidth - a.offsetWidth) / 2;
 }
 function setupJump(){
   if (!jumpBound){ jumpBound = true; addEventListener('scroll', () => { if (!jumpBusy){ jumpBusy = true; requestAnimationFrame(updateJump); } }, { passive: true }); }
