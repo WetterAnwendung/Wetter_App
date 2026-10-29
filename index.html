@@ -5,7 +5,7 @@
 <!-- Sicherheitsregel (CSP): nur das eigene Skript (per Hash), Daten nur von den genannten Diensten.
      WICHTIG: Wer das Skript unten ändert, muss den sha256-Hash neu berechnen, sonst startet die App nicht.
      Befehl: python3 csp-hash.py index.html -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-xZTYmo/g2AcQIUvtAre0GWnsFtTp7RAp5u/3gJRI4g4='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data: https://tile.openstreetmap.org; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de https://api.brightsky.dev; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-7z2+j4IBkFBLRVJ+Dp8CfbZz3FIhy4JAKizs55c+c7s='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data: https://tile.openstreetmap.org; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de https://api.brightsky.dev; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#2a3f7a">
@@ -13,7 +13,7 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="Wetter">
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="dark light">
 <title>Wetter</title>
 <style>
 /* Schrift Bricolage Grotesque, Copyright 2022 The Bricolage Grotesque Project Authors, SIL Open Font License 1.1 (https://openfontlicense.org). Eingebettet statt Google Fonts, Quelle: @fontsource-variable/bricolage-grotesque 5.3.0 */
@@ -28,7 +28,7 @@
 [hidden]{display:none!important}
 html{background:#1d2c58;-webkit-text-size-adjust:100%}
 body{
-  --ink:#fff;--soft:rgba(255,255,255,.76);--glass:rgba(6,18,44,.3);--line:rgba(255,255,255,.16);
+  --fgc:255,255,255;--ink:#fff;--inkon:#16305c;--soft:rgba(var(--fgc),.76);--glass:rgba(6,18,44,.3);--line:rgba(var(--fgc),.16);--dlg:#101c3c;--pop:rgba(14,24,50,.95);--wl:84%;
   font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   color:var(--ink);min-height:100vh;min-height:100dvh;line-height:1.4;
   transition:--sky1 .9s ease,--sky2 .9s ease,--shade .9s ease;
@@ -52,37 +52,37 @@ body.night{--shade:.38}
 .app{max-width:760px;margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 16px max(40px,env(safe-area-inset-bottom))}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 button{font:inherit;color:inherit}
-:focus-visible{outline:2px solid #fff;outline-offset:3px}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 
 /* Suche */
 .search{position:relative;z-index:20}
 .field{
   display:flex;align-items:center;gap:4px;height:56px;padding:0 8px 0 18px;
-  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:999px;
+  background:rgba(var(--fgc),.18);border:1px solid rgba(var(--fgc),.3);border-radius:999px;
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
 }
-.field:focus-within{background:rgba(255,255,255,.26);border-color:rgba(255,255,255,.6)}
+.field:focus-within{background:rgba(var(--fgc),.26);border-color:rgba(var(--fgc),.6)}
 .field>svg{flex:none;opacity:.85}
 .field input{
-  flex:1;min-width:0;height:100%;background:none;border:0;outline:0;color:#fff;
+  flex:1;min-width:0;height:100%;background:none;border:0;outline:0;color:var(--ink);
   font:inherit;font-size:1.08rem;padding:0 6px;
 }
-.field input::placeholder{color:rgba(255,255,255,.72)}
+.field input::placeholder{color:rgba(var(--fgc),.72)}
 .icon-btn{
   flex:none;width:42px;height:42px;border-radius:50%;border:0;background:transparent;
   display:grid;place-items:center;cursor:pointer;
 }
-.icon-btn:hover{background:rgba(255,255,255,.16)}
+.icon-btn:hover{background:rgba(var(--fgc),.16)}
 .spin{
   flex:none;width:18px;height:18px;border-radius:50%;
-  border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .8s linear infinite;
+  border:2px solid rgba(var(--fgc),.35);border-top-color:var(--ink);animation:spin .8s linear infinite;
 }
 .spin.big{width:34px;height:34px;border-width:3px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 #sug{
   position:absolute;left:0;right:0;top:64px;list-style:none;max-height:min(62vh,440px);overflow:auto;
-  background:rgba(14,24,50,.95);border:1px solid rgba(255,255,255,.18);border-radius:22px;
+  background:var(--pop);border:1px solid rgba(var(--fgc),.18);border-radius:22px;
   backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
   box-shadow:0 18px 40px rgba(0,0,0,.28);padding:6px;
 }
@@ -90,17 +90,17 @@ button{font:inherit;color:inherit}
   display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:11px 12px;border-radius:16px;cursor:pointer;
 }
-#sug li[role=option]:hover,#sug li[aria-selected=true]{background:rgba(255,255,255,.12)}
+#sug li[role=option]:hover,#sug li[aria-selected=true]{background:rgba(var(--fgc),.12)}
 #sug .msg{cursor:default;color:var(--soft);font-size:.95rem;display:block}
 .s-main{display:flex;flex-direction:column;min-width:0}
 .s-title{font-weight:600;font-size:1.02rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .s-sub{font-size:.85rem;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.s-plz{flex:none;font-size:.82rem;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.14);font-variant-numeric:tabular-nums}
+.s-plz{flex:none;font-size:.82rem;padding:3px 10px;border-radius:999px;background:rgba(var(--fgc),.14);font-variant-numeric:tabular-nums}
 mark{background:none;color:#ffd97a;font-weight:800}
 
 .note{
   margin:12px 4px 0;padding:10px 14px;border-radius:14px;font-size:.92rem;
-  background:rgba(255,255,255,.16);border:1px solid var(--line);
+  background:rgba(var(--fgc),.16);border:1px solid var(--line);
 }
 
 /* Hero */
@@ -126,7 +126,7 @@ mark{background:none;color:#ffd97a;font-weight:800}
   flex:none;width:60px;padding:10px 4px;text-align:center;border-radius:18px;scroll-snap-align:start;
   display:flex;flex-direction:column;align-items:center;gap:4px;font-variant-numeric:tabular-nums;
 }
-.hour.now{background:rgba(255,255,255,.16)}
+.hour.now{background:rgba(var(--fgc),.16)}
 .hour small{color:var(--soft);font-size:.82rem}
 .hour b{font-weight:600}
 .hour .pp{font-size:.74rem;color:#9fdcff;min-height:1em}
@@ -138,14 +138,14 @@ mark{background:none;color:#ffd97a;font-weight:800}
   display:grid;grid-template-columns:minmax(96px,1.6fr) 32px 38px 28px minmax(24px,1fr) 28px;
   align-items:center;column-gap:4px;padding:10px 4px;font-variant-numeric:tabular-nums;
 }
-.day-row:hover{background:rgba(255,255,255,.06)}
+.day-row:hover{background:rgba(var(--fgc),.06)}
 .dname{display:flex;flex-direction:column;min-width:0}
 .dname strong{font-weight:600;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dname small{color:var(--soft);font-size:.8rem}
 .drain{font-size:.8rem;color:#9fdcff;text-align:right}
 .dmin{color:var(--soft);text-align:right}
 .dmax{font-weight:600;text-align:right}
-.bar{position:relative;height:6px;border-radius:9px;background:rgba(255,255,255,.2);margin:0 4px}
+.bar{position:relative;height:6px;border-radius:9px;background:rgba(var(--fgc),.2);margin:0 4px}
 .bar i{position:absolute;top:0;bottom:0;border-radius:9px;background:linear-gradient(90deg,#7fd1ff,#ffd166 65%,#ff9f6b)}
 .dd{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
 .day.open .dd{grid-template-rows:1fr}
@@ -168,14 +168,14 @@ mark{background:none;color:#ffd97a;font-weight:800}
 .empty p{color:var(--soft);max-width:34ch;margin:12px auto 0}
 .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:22px}
 .chip{
-  border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);border-radius:999px;
+  border:1px solid rgba(var(--fgc),.3);background:rgba(var(--fgc),.12);border-radius:999px;
   padding:9px 16px;cursor:pointer;
 }
-.chip:hover{background:rgba(255,255,255,.22)}
+.chip:hover{background:rgba(var(--fgc),.22)}
 .loading{display:flex;flex-direction:column;align-items:center;gap:14px;padding:70px 8px;color:var(--soft);text-align:center}
 .btn{
   margin-top:12px;border:0;border-radius:999px;padding:11px 20px;font-weight:600;cursor:pointer;
-  background:#fff;color:#16305c;
+  background:var(--ink);color:var(--inkon);
 }
 .err p{color:var(--soft);padding:0 4px}
 .boot{opacity:0;animation:bootshow 0s 4s forwards;text-align:center;padding:60px 12px;color:var(--soft)}
@@ -184,46 +184,46 @@ mark{background:none;color:#ffd97a;font-weight:800}
 .top{display:flex;align-items:flex-start;gap:8px}
 .top .search{flex:1;min-width:0}
 .info-btn{flex:none;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
-  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.info-btn:hover{background:rgba(255,255,255,.26)}
+  background:rgba(var(--fgc),.18);border:1px solid rgba(var(--fgc),.3);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.info-btn:hover{background:rgba(var(--fgc),.26)}
 /* Info- und Datenschutz-Dialog */
 dialog.info{width:min(580px,calc(100% - 24px));max-height:calc(100dvh - 32px);margin:auto;padding:0;
-  border:1px solid rgba(255,255,255,.18);border-radius:26px;background:#101c3c;color:#fff;font:inherit;
+  border:1px solid rgba(var(--fgc),.18);border-radius:26px;background:var(--dlg);color:var(--ink);font:inherit;
   box-shadow:0 30px 80px rgba(0,0,0,.45)}
 dialog.info::backdrop{background:rgba(4,8,24,.6)}
 .info-in{padding:22px 20px 16px;overflow-y:auto;max-height:calc(100dvh - 34px);overscroll-behavior:contain}
 .info-in .eyebrow{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
 .info-in h2{font-size:1.6rem;font-weight:650;letter-spacing:-.02em;margin:2px 0 14px}
 .info-in h3{font-size:1rem;font-weight:650;margin:18px 0 6px}
-.info-in p,.info-in li{font-size:.92rem;line-height:1.5;color:rgba(255,255,255,.8)}
+.info-in p,.info-in li{font-size:.92rem;line-height:1.5;color:rgba(var(--fgc),.8)}
 .info-in ul{padding-left:20px;display:flex;flex-direction:column;gap:6px}
-.info-in strong{color:#fff;font-weight:600}
-.info-in a{color:#fff}
-.info-in .notice{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12)}
-.info-in .notice p{color:#fff}
-.info-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12)}
-.info-actions .ask{flex:1 1 100%;margin:0;text-align:right;color:#fff;font-weight:600}
+.info-in strong{color:var(--ink);font-weight:600}
+.info-in a{color:var(--ink)}
+.info-in .notice{padding:12px 14px;border-radius:16px;background:rgba(var(--fgc),.09);border:1px solid rgba(var(--fgc),.12)}
+.info-in .notice p{color:var(--ink)}
+.info-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid rgba(var(--fgc),.12)}
+.info-actions .ask{flex:1 1 100%;margin:0;text-align:right;color:var(--ink);font-weight:600}
 .info-x{position:absolute;top:10px;right:10px;width:42px;height:42px;border-radius:50%;border:0;cursor:pointer;
-  display:grid;place-items:center;background:rgba(255,255,255,.1);color:#fff}
-.info-x:hover{background:rgba(255,255,255,.2)}
+  display:grid;place-items:center;background:rgba(var(--fgc),.1);color:var(--ink)}
+.info-x:hover{background:rgba(var(--fgc),.2)}
 dialog.info{position:fixed}
-.ghost{border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:10px 18px;cursor:pointer;font-weight:600}
+.ghost{border:1px solid rgba(var(--fgc),.3);background:rgba(var(--fgc),.08);color:var(--ink);border-radius:999px;padding:10px 18px;cursor:pointer;font-weight:600}
 .ghost:disabled{opacity:.55;cursor:default}
 .ghost.danger{border-color:rgba(255,140,140,.55);color:#ffc2c2}
 .linkbtn{background:none;border:0;padding:0;text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-size:inherit}
 /* Pollen */
 .pchips{display:flex;gap:6px;overflow-x:auto;padding:0 2px 10px;scrollbar-width:none}
 .pchips::-webkit-scrollbar{display:none}
-.pchip{flex:none;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);border-radius:999px;padding:7px 14px;font-size:.9rem;cursor:pointer}
-.pchip[aria-pressed=true]{background:#fff;color:#16305c;border-color:#fff;font-weight:600}
+.pchip{flex:none;border:1px solid rgba(var(--fgc),.28);background:rgba(var(--fgc),.08);border-radius:999px;padding:7px 14px;font-size:.9rem;cursor:pointer}
+.pchip[aria-pressed=true]{background:var(--ink);color:var(--inkon);border-color:var(--ink);font-weight:600}
 .psum{padding:0 4px 8px;color:var(--soft)}
-.psum b{color:#fff;font-weight:600}
+.psum b{color:var(--ink);font-weight:600}
 .plist,.wlist{list-style:none}
 .pol{display:grid;grid-template-columns:1fr auto 104px;align-items:center;gap:10px;padding:10px 4px;border-top:1px solid var(--line)}
 .plist .pol:first-child{border-top:0}
 .pn{font-weight:600}
 .pm{display:flex;gap:3px}
-.pm i{width:14px;height:8px;border-radius:4px;background:rgba(255,255,255,.2)}
+.pm i{width:14px;height:8px;border-radius:4px;background:rgba(var(--fgc),.2)}
 .pm[data-l="1"] .on{background:#8be28f}
 .pm[data-l="2"] .on{background:#f2d75b}
 .pm[data-l="3"] .on{background:#ffa94d}
@@ -246,26 +246,26 @@ dialog.info{position:fixed}
 /* Gemerkte Orte */
 .favs{display:flex;gap:8px;overflow-x:auto;padding:12px 2px 2px;scrollbar-width:none}
 .favs::-webkit-scrollbar{display:none}
-.fav{flex:none;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.1);border-radius:999px;padding:7px 15px;cursor:pointer;font-size:.92rem;max-width:60vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fav:hover{background:rgba(255,255,255,.2)}
-.fav[aria-pressed=true]{background:#fff;color:#16305c;border-color:#fff;font-weight:600}
+.fav{flex:none;border:1px solid rgba(var(--fgc),.28);background:rgba(var(--fgc),.1);border-radius:999px;padding:7px 15px;cursor:pointer;font-size:.92rem;max-width:60vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fav:hover{background:rgba(var(--fgc),.2)}
+.fav[aria-pressed=true]{background:var(--ink);color:var(--inkon);border-color:var(--ink);font-weight:600}
 .hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.star{flex:none;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);display:grid;place-items:center;cursor:pointer;margin-top:2px}
-.star:hover{background:rgba(255,255,255,.22)}
+.star{flex:none;width:46px;height:46px;border-radius:50%;border:1px solid rgba(var(--fgc),.3);background:rgba(var(--fgc),.12);display:grid;place-items:center;cursor:pointer;margin-top:2px}
+.star:hover{background:rgba(var(--fgc),.22)}
 .star svg{width:22px;height:22px}
 .star[aria-pressed=true]{background:#ffd34d;border-color:#ffd34d;color:#4a3500}
 /* Tageshinweise */
 .hints{list-style:none;display:grid;gap:8px}
-.hint{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;padding:10px 12px 10px 10px;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid var(--line)}
+.hint{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;padding:10px 12px 10px 10px;border-radius:18px;background:rgba(var(--fgc),.08);border:1px solid var(--line)}
 .hi{width:44px;height:44px;border-radius:14px;display:grid;place-items:center}
 .hi svg{width:24px;height:24px}
 .hint b{display:block;font-weight:650}
 .hint span span,.hint div>span{display:block;color:var(--soft);font-size:.9rem}
 /* Verlauf */
 .panel h2.hrow{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.seg{display:inline-flex;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:3px;gap:2px}
+.seg{display:inline-flex;border:1px solid rgba(var(--fgc),.28);border-radius:999px;padding:3px;gap:2px}
 .seg button{border:0;background:none;border-radius:999px;padding:5px 14px;font-size:.85rem;cursor:pointer}
-.seg button[aria-pressed=true]{background:#fff;color:#16305c;font-weight:600}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--inkon);font-weight:600}
 .readout{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;padding:0 4px 6px;min-height:2.2em;font-variant-numeric:tabular-nums}
 .readout b{font-size:1.3rem;font-weight:650}
 .readout span{color:var(--soft);font-size:.9rem}
@@ -278,44 +278,44 @@ dialog.info{position:fixed}
 .aqiLbl{font-size:1.1rem;font-weight:600}
 .gauge{position:relative;margin:14px 4px 6px;height:10px;border-radius:6px;
   background:linear-gradient(90deg,#50f0e6 0 16.66%,#50ccaa 16.66% 33.33%,#f0e641 33.33% 50%,#ff5050 50% 66.66%,#960032 66.66% 83.33%,#7d2181 83.33%)}
-.gauge i{position:absolute;top:-5px;width:6px;height:20px;border-radius:3px;background:#fff;box-shadow:0 0 0 2px rgba(0,0,0,.35);transform:translateX(-3px)}
+.gauge i{position:absolute;top:-5px;width:6px;height:20px;border-radius:3px;background:var(--ink);box-shadow:0 0 0 2px rgba(0,0,0,.35);transform:translateX(-3px)}
 .gscale{display:grid;grid-template-columns:repeat(6,1fr);padding:0 4px;font-size:.72rem;color:var(--soft)}
-.aqiAdvice{margin:12px 4px 4px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.1);font-size:.92rem}
+.aqiAdvice{margin:12px 4px 4px;padding:10px 12px;border-radius:14px;background:rgba(var(--fgc),.1);font-size:.92rem}
 .pols{list-style:none;margin-top:8px}
 .pols li{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:center;padding:9px 4px;border-top:1px solid var(--line)}
 .pols .dot{width:12px;height:12px;border-radius:50%}
 .pols small{color:var(--soft)}
 
 /* Regenradar */
-.rmap{position:relative;width:min(100%,420px);aspect-ratio:1/1;margin:0 auto 12px;border-radius:50%;
-  background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.08),rgba(255,255,255,.03) 62%,rgba(255,255,255,.015) 70%),rgba(4,12,34,.32);
+.rmap{--fgc:255,255,255;--ink:#fff;position:relative;width:min(100%,420px);aspect-ratio:1/1;margin:0 auto 12px;border-radius:50%;
+  background:radial-gradient(circle at 50% 50%,rgba(var(--fgc),.08),rgba(var(--fgc),.03) 62%,rgba(var(--fgc),.015) 70%),rgba(4,12,34,.32);
   box-shadow:inset 0 0 0 1px var(--line)}
 .rmap canvas,.rmap svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .rwait{opacity:.6}
-.rtx{font-size:3.1px;fill:rgba(255,255,255,.85);font-weight:600}
-.rmut{fill:rgba(255,255,255,.42);font-weight:500;font-size:2.5px}
-.rdir{fill:rgba(255,255,255,.5);font-size:2.9px;font-weight:600}
-.rme{font-size:3.4px;fill:#fff;paint-order:stroke;stroke:rgba(10,20,50,.55);stroke-width:.7px}
+.rtx{font-size:3.1px;fill:rgba(var(--fgc),.85);font-weight:600}
+.rmut{fill:rgba(var(--fgc),.42);font-weight:500;font-size:2.5px}
+.rdir{fill:rgba(var(--fgc),.5);font-size:2.9px;font-weight:600}
+.rme{font-size:3.4px;fill:var(--ink);paint-order:stroke;stroke:rgba(10,20,50,.55);stroke-width:.7px}
 .rread{height:4.6rem;padding:0 4px 8px;font-variant-numeric:tabular-nums;overflow:hidden}
 .rread b{display:block;font-size:1.25rem;font-weight:650;white-space:nowrap;line-height:1.3}
 .rread span{display:block;color:var(--soft);font-size:.88rem;line-height:1.35;margin-top:2px}
 .rbar{display:flex;align-items:center;gap:10px;padding:0 2px}
-.rplay{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;display:grid;place-items:center;cursor:pointer}
-.rplay:hover{background:rgba(255,255,255,.22)}
-.rplay[aria-pressed=true]{background:#fff;color:#16305c;border-color:#fff}
+.rplay{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid rgba(var(--fgc),.3);background:rgba(var(--fgc),.12);color:var(--ink);display:grid;place-items:center;cursor:pointer}
+.rplay:hover{background:rgba(var(--fgc),.22)}
+.rplay[aria-pressed=true]{background:var(--ink);color:var(--inkon);border-color:var(--ink)}
 .rstrip{flex:1;min-width:0}
 .rstrip svg{display:block;width:100%;height:auto;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:pointer}
-.rstrip svg:focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:8px}
+.rstrip svg:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:8px}
 [data-sec=radar] .seg button{white-space:nowrap;padding-left:11px;padding-right:11px}
 .rtag{font-style:normal;font-size:.7rem;padding:3px 9px;border-radius:99px;background:#7CC4FF;color:#0b1f44;font-weight:650;margin-left:8px;vertical-align:middle}
-.rtag.f{background:rgba(255,255,255,.18);color:#fff}
+.rtag.f{background:rgba(var(--fgc),.18);color:var(--ink)}
 .rleg i{width:12px;height:12px;border-radius:4px}
 .rlay{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 2px 10px}
 .rlay .rattr{margin-left:auto;font-size:.72rem;color:var(--soft);text-decoration:underline;text-underline-offset:2px}
 .rmerr{margin:-4px 4px 10px}
-.rlay button{font:inherit;font-size:.82rem;color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:99px;padding:6px 14px;min-height:36px;cursor:pointer}
-.rlay button[aria-pressed=true]{background:#fff;color:#16305c;font-weight:650;border-color:#fff}
-.rsum{margin:10px 4px 0;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.1);font-size:.92rem}
+.rlay button{font:inherit;font-size:.82rem;color:var(--ink);background:rgba(var(--fgc),.12);border:1px solid rgba(var(--fgc),.25);border-radius:99px;padding:6px 14px;min-height:36px;cursor:pointer}
+.rlay button[aria-pressed=true]{background:var(--ink);color:var(--inkon);font-weight:650;border-color:var(--ink)}
+.rsum{margin:10px 4px 0;padding:10px 12px;border-radius:14px;background:rgba(var(--fgc),.1);font-size:.92rem}
 @media (prefers-reduced-motion:no-preference){.rpulse{transform-origin:50px 50px;animation:rpulse 2.4s ease-out infinite}
   @keyframes rpulse{0%{transform:scale(.6);opacity:.35}100%{transform:scale(2.2);opacity:0}}}
 
@@ -354,7 +354,7 @@ dialog.info{position:fixed}
   background:rgba(8,20,48,.9);border:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);scrollbar-width:none;justify-content:space-between}
 .jump::-webkit-scrollbar{display:none}
 .jump button{flex:none;border:1px solid transparent;background:transparent;border-radius:999px;padding:7px 11px;font-size:.9rem;font-weight:500;cursor:pointer;color:var(--soft)}
-.jump button[aria-current="true"]{background:#fff;color:#1d2c58;font-weight:700}
+.jump button[aria-current="true"]{background:var(--ink);color:var(--inkon);font-weight:700}
 [data-sec]{scroll-margin-top:72px}
 .skyArt{border-radius:18px;overflow:hidden;margin:0 0 12px;line-height:0}
 .skyArt svg{display:block;width:100%;height:auto}
@@ -366,10 +366,74 @@ dialog.info{position:fixed}
 .skyBars{display:grid;gap:7px;margin:10px 4px 0}
 .skyBar{display:grid;grid-template-columns:minmax(110px,150px) 1fr 44px;align-items:center;gap:8px;font-size:.85rem;color:var(--soft)}
 .skyBar span:last-child{text-align:right}
-.skyTrack{height:8px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+.skyTrack{height:8px;border-radius:99px;background:rgba(var(--fgc),.12);overflow:hidden}
 .skyTrack i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#ffd34d,#ff7a8a)}
 .skyNotes{margin:10px 4px 0 22px;color:var(--soft);font-size:.86rem}.skyNotes li{margin:2px 0}
 @media (max-width:400px){.jump{gap:2px;padding:5px}.jump button{padding:7px 6px;font-size:.86rem}}
+
+/* ---------- Darstellung: Hell/Dunkel und Farbschemata ---------- */
+html[data-mode=dark]{color-scheme:dark}
+html[data-mode=light]{color-scheme:light;background:#dbe6f5}
+html[data-mode=light] body{--fgc:18,32,64;--ink:#12203f;--inkon:#fff;--glass:rgba(255,255,255,.52);--dlg:#f4f7fc;--pop:rgba(250,252,255,.97);--shade:0;--wl:28%}
+html[data-mode=light] .wi{filter:drop-shadow(0 0 1px rgba(20,40,80,.7)) drop-shadow(0 2px 5px rgba(20,40,80,.3))}
+html[data-mode=light] mark{color:#7a4b00;background:rgba(255,200,60,.45)}
+html[data-mode=light] .hour .pp,html[data-mode=light] .drain{color:#0a5a9c}
+html[data-mode=light] .jump{background:rgba(255,255,255,.93)}
+html[data-mode=light] .ghost.danger{border-color:rgba(190,40,40,.6);color:#a32222}
+html[data-mode=light] .sk-kaum{color:#4a5668}
+html[data-mode=light] .sk-maessig{color:#8a5200}
+html[data-mode=light] .sk-toll{color:#a1420a}
+html[data-mode=light] .sk-super{color:#b0203a}
+html[data-mode=light] #sug,html[data-mode=light] dialog.info{box-shadow:0 18px 50px rgba(20,40,90,.22)}
+html[data-mode=light] .hero{text-shadow:none}
+html[data-mode=light] .foot{text-shadow:none}
+html[data-mode=light] dialog.info::backdrop{background:rgba(30,45,80,.35)}
+html[data-mode=light] .spin{border-color:rgba(var(--fgc),.25);border-top-color:var(--ink)}
+html[data-mode=light] body[data-theme=wetter][data-sky="start"]{--sky1:#8fb4e8;--sky2:#d4e4f7}
+html[data-mode=light] body[data-theme=wetter][data-sky="clear-day"]{--sky1:#7fbaf2;--sky2:#d9ecfb}
+html[data-mode=light] body[data-theme=wetter][data-sky="clear-night"]{--sky1:#a9b5dc;--sky2:#dde3f4}
+html[data-mode=light] body[data-theme=wetter][data-sky="cloudy"]{--sky1:#b9c6d3;--sky2:#e2e8ee}
+html[data-mode=light] body[data-theme=wetter][data-sky="fog"]{--sky1:#c7cdd3;--sky2:#e8ebee}
+html[data-mode=light] body[data-theme=wetter][data-sky="rain"]{--sky1:#aab9c8;--sky2:#d9e2ea}
+html[data-mode=light] body[data-theme=wetter][data-sky="snow"]{--sky1:#c3d3e4;--sky2:#eaf1f8}
+html[data-mode=light] body[data-theme=wetter][data-sky="thunder"]{--sky1:#b5aed0;--sky2:#e2dff0}
+body[data-theme=blau],.sw[data-t=blau]{--d1:#1f3f86;--d2:#3c69b2;--l1:#9cc4f2;--l2:#e2effc}
+body[data-theme=grau],.sw[data-t=grau]{--d1:#2b3038;--d2:#555e69;--l1:#c9ced5;--l2:#eceef1}
+body[data-theme=gruen],.sw[data-t=gruen]{--d1:#1b4a3a;--d2:#37785b;--l1:#a8d8bf;--l2:#e4f4ea}
+body[data-theme=orange],.sw[data-t=orange]{--d1:#8a3b12;--d2:#a85726;--l1:#f5c19a;--l2:#fdeadb}
+body[data-theme=rot],.sw[data-t=rot]{--d1:#7a1f2b;--d2:#aa3d49;--l1:#f2adb3;--l2:#fbe3e5}
+body[data-theme=gelb],.sw[data-t=gelb]{--d1:#6e5008;--d2:#876208;--l1:#f2dc8a;--l2:#fcf3d0}
+body[data-theme=braun],.sw[data-t=braun]{--d1:#4a2e1c;--d2:#764d31;--l1:#d6bda5;--l2:#f1e6dc}
+body[data-theme=violett],.sw[data-t=violett]{--d1:#3d2a7a;--d2:#664cae;--l1:#c9bcee;--l2:#ece7fa}
+html[data-mode=dark] body:not([data-theme=wetter]){--sky1:var(--d1);--sky2:var(--d2)}
+html[data-mode=light] body:not([data-theme=wetter]){--sky1:var(--l1);--sky2:var(--l2)}
+/* Kacheln: abgesetzt vom Hintergrund, schwebend, im Wechsel dunkler/kräftiger und heller/durchlässiger */
+html[data-mode=dark] body{--pcD:color-mix(in srgb,var(--sky1) 88%,#7d92cc);--pcL:color-mix(in srgb,var(--sky1) 60%,#b4c6f5);--psh:rgba(0,4,16,.5);--phl:rgba(255,255,255,.14)}
+html[data-mode=light] body{--pcD:color-mix(in srgb,var(--sky1) 95%,#ffffff);--pcL:#ffffff;--psh:rgba(22,42,92,.36);--phl:rgba(255,255,255,.5)}
+.panel{--pcol:var(--pcD);--pa:70%;margin-top:30px;background:rgba(6,18,44,.8);background:color-mix(in srgb,var(--pcol) var(--pa),transparent);box-shadow:10px 12px 18px -5px var(--psh),inset 0 1px 0 var(--phl)}
+body::before{background:linear-gradient(rgba(255,255,255,var(--veil)),rgba(255,255,255,var(--veil))),linear-gradient(rgba(4,8,24,var(--shade)),rgba(4,8,24,var(--shade))),linear-gradient(175deg,var(--sky1),var(--sky2))}
+html[data-mode=dark] body{--veil:.13}
+html[data-mode=light] body{--veil:.22}
+.panel:nth-of-type(even){--pcol:var(--pcL);--pa:62%;border-color:rgba(var(--fgc),.3)}
+html[data-mode=dark] .panel{--soft:rgba(var(--fgc),.86)}
+html[data-mode=light] .legend i,html[data-mode=light] .rleg i,html[data-mode=light] .rstrip svg,html[data-mode=light] #trendChart svg rect{filter:saturate(1.5) brightness(.74)}
+.tiles{margin-top:30px}
+/* Einstellungen */
+.set-btn{margin-left:0}
+.top{gap:8px}
+@media (max-width:430px){.info-btn{width:48px;height:48px}.info-btn svg{width:22px;height:22px}}
+.info-in .setgrp{display:grid;gap:8px;margin-top:6px}
+.modes{grid-template-columns:repeat(3,1fr)}
+.themes{grid-template-columns:repeat(3,1fr);gap:10px}
+.modes button,.themes button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:11px 6px 9px;border-radius:16px;border:1px solid var(--line);background:rgba(var(--fgc),.06);color:var(--ink);cursor:pointer;font-size:.9rem}
+.modes button[aria-checked=true],.themes button[aria-checked=true]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);font-weight:650}
+.sw{width:100%;height:42px;border-radius:11px;background:linear-gradient(175deg,var(--s1),var(--s2))}
+html[data-mode=dark] .sw{--s1:var(--d1);--s2:var(--d2)}
+html[data-mode=light] .sw{--s1:var(--l1);--s2:var(--l2)}
+.sw[data-t=wetter]{background:linear-gradient(150deg,#1a5fd0 0%,#3b9de0 34%,#8aa0b4 66%,#2a3b4d 100%)}
+html[data-mode=light] .sw[data-t=wetter]{background:linear-gradient(150deg,#7fbaf2 0%,#d9ecfb 34%,#b9c6d3 66%,#aab9c8 100%)}
+.modes svg{width:22px;height:22px}
+.info-in .hintp{margin-top:8px;font-size:.86rem}
 </style>
 </head>
 <body data-sky="start">
@@ -391,6 +455,9 @@ dialog.info{position:fixed}
     </div>
     <ul id="sug" role="listbox" aria-label="Ortsvorschläge" hidden></ul>
   </form>
+  <button type="button" class="info-btn set-btn" id="setBtn" aria-label="Einstellungen: Darstellung und Farben" title="Einstellungen" aria-haspopup="dialog">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M19.25 10.53 L21.93 10.80 L21.93 13.20 L19.25 13.47 L18.17 16.09 L19.87 18.17 L18.17 19.87 L16.09 18.17 L13.47 19.25 L13.20 21.93 L10.80 21.93 L10.53 19.25 L7.91 18.17 L5.83 19.87 L4.13 18.17 L5.83 16.09 L4.75 13.47 L2.07 13.20 L2.07 10.80 L4.75 10.53 L5.83 7.91 L4.13 5.83 L5.83 4.13 L7.91 5.83 L10.53 4.75 L10.80 2.07 L13.20 2.07 L13.47 4.75 L16.09 5.83 L18.17 4.13 L19.87 5.83 L18.17 7.91Z"/><circle cx="12" cy="12" r="3"/></svg>
+  </button>
   <button type="button" class="info-btn" id="infoBtn" aria-label="Über die App und Datenschutz" title="Über die App und Datenschutz" aria-haspopup="dialog">
     <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg>
   </button>
@@ -403,6 +470,30 @@ dialog.info{position:fixed}
   <p class="foot">Daten: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a> (CC BY 4.0), <a href="https://www.pegelonline.wsv.de/" target="_blank" rel="noopener">PEGELONLINE</a> (WSV, dl-de/by-2-0), Ortsdaten © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>-Mitwirkende und GeoNames.
     <br><a href="datenschutz.html">Datenschutzerklärung</a> · <button type="button" class="linkbtn" id="infoLink">Info</button></p>
 </main>
+<dialog class="info" id="prefs" aria-labelledby="prefsTitle">
+  <button type="button" class="info-x" id="prefsX" aria-label="Schließen">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+  </button>
+  <div class="info-in">
+    <div class="eyebrow">Einstellungen</div>
+    <h2 id="prefsTitle">Darstellung</h2>
+    <h3>Helligkeit</h3>
+    <div class="setgrp modes" role="radiogroup" aria-label="Helligkeit">
+      <button type="button" role="radio" aria-checked="false" data-mode="auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17A8.5 8.5 0 0 1 12 3.5z" fill="currentColor"/></svg>Auto</button>
+      <button type="button" role="radio" aria-checked="false" data-mode="light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>Hell</button>
+      <button type="button" role="radio" aria-checked="false" data-mode="dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>Dunkel</button>
+    </div>
+    <p class="hintp">„Auto“ folgt der Einstellung deines Geräts.</p>
+    <h3>Farbschema</h3>
+    <div class="setgrp themes" role="radiogroup" aria-label="Farbschema"><button type="button" role="radio" aria-checked="false" data-theme="wetter"><span class="sw" data-t="wetter"></span>Wetter</button><button type="button" role="radio" aria-checked="false" data-theme="blau"><span class="sw" data-t="blau"></span>Blau</button><button type="button" role="radio" aria-checked="false" data-theme="grau"><span class="sw" data-t="grau"></span>Grau</button><button type="button" role="radio" aria-checked="false" data-theme="gruen"><span class="sw" data-t="gruen"></span>Grün</button><button type="button" role="radio" aria-checked="false" data-theme="orange"><span class="sw" data-t="orange"></span>Orange</button><button type="button" role="radio" aria-checked="false" data-theme="rot"><span class="sw" data-t="rot"></span>Rot</button><button type="button" role="radio" aria-checked="false" data-theme="gelb"><span class="sw" data-t="gelb"></span>Gelb</button><button type="button" role="radio" aria-checked="false" data-theme="braun"><span class="sw" data-t="braun"></span>Braun</button><button type="button" role="radio" aria-checked="false" data-theme="violett"><span class="sw" data-t="violett"></span>Violett</button></div>
+    <p class="hintp">„Wetter“ passt die Farben dem aktuellen Wetter an. Die anderen Schemata behalten ihre Farbe.</p>
+    <p class="hintp">Deine Auswahl wird nur auf diesem Gerät gespeichert (Schlüssel „wetter:prefs“), nie gesendet.</p>
+    <div class="info-actions">
+      <button type="button" class="ghost" id="prefsReset">Zurücksetzen</button>
+      <button type="button" class="ghost" id="prefsClose">Schließen</button>
+    </div>
+  </div>
+</dialog>
 <dialog class="info" id="info" aria-labelledby="infoTitle">
   <button type="button" class="info-x" id="infoX" aria-label="Schließen">
     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -417,6 +508,7 @@ dialog.info{position:fixed}
 
     <h3>Was die App speichert</h3>
     <p>Nur auf deinem Gerät, im Speicher des Browsers: den zuletzt gewählten Ort sowie die Orte, die du mit dem Stern gemerkt hast (höchstens 5; jeweils Name, Postleitzahl, Koordinaten). Es gibt keine Konten, keine Cookies, kein Tracking, keine Werbung und keinen eigenen Server.</p>
+    <p>Außerdem merkt sich die App, wenn du es änderst, deine Darstellung (Hell/Dunkel/Auto und Farbschema, Zahnrad-Knopf). Auch das bleibt nur auf deinem Gerät.</p>
     <p>Damit die App schnell und auch ohne Verbindung startet, legt sie außerdem eine Kopie ihrer eigenen Dateien (Oberfläche, Symbole, Hinweisseite für fehlende Verbindung) im Cache des Browsers ab. Wetterdaten, Orte und Suchbegriffe werden darin nicht gespeichert.</p>
     <p>Die Android-Version der App ist nur eine Hülle um diese Webseite und läuft in Chrome. Für sie gilt alles hier Gesagte genauso. Technisch bringt die Hülle die Berechtigungen „Standort“ und „Benachrichtigungen“ mit. Benachrichtigungen fragt die App nie an und sendet keine. Der Standort wird nur nach Tippen auf den Standort-Knopf abgefragt.</p>
 
@@ -439,7 +531,7 @@ dialog.info{position:fixed}
     <p>Die Anfragen löst du selbst aus, um die gewünschten Wetterdaten zu erhalten (Art. 6 Abs. 1 lit. f DSGVO). Da die App selbst nichts auf einem Server speichert, liegen beim Anbieter der App keine Daten über dich vor. Gegenüber den genannten Diensten hast du die Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung und Widerspruch. Außerdem kannst du dich bei einer Datenschutz-Aufsichtsbehörde beschweren.</p>
 
     <h3>Daten löschen</h3>
-    <p>Der Knopf unten löscht den gespeicherten Ort und alle gemerkten Orte. Alles Übrige, auch die zwischengespeicherten App-Dateien, entfernst du in den Browser-Einstellungen unter „Website-Einstellungen“ bzw. „Websitedaten löschen“ für diese Adresse.</p>
+    <p>Der Knopf unten löscht den gespeicherten Ort und alle gemerkten Orte. Die Darstellung setzt du im Einstellungsdialog (Zahnrad) mit „Zurücksetzen“ zurück. Alles Übrige, auch die zwischengespeicherten App-Dateien, entfernst du in den Browser-Einstellungen unter „Website-Einstellungen“ bzw. „Websitedaten löschen“ für diese Adresse.</p>
 
     <h3>Quellen und Lizenzen</h3>
     <p>Wetter-, Pollen-, Luftqualitäts- und Meeresdaten: Open-Meteo.com (CC BY 4.0). Flusstemperaturen: WSV, PEGELONLINE (dl-de/by-2-0). Ortsdaten: © OpenStreetMap-Mitwirkende (ODbL) über Photon und GeoNames (CC BY 4.0) über Open-Meteo. Schrift: Bricolage Grotesque (SIL Open Font License 1.1).</p>
@@ -507,6 +599,28 @@ const store = {
   get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
   set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 };
+
+/* ---------- Darstellung (Hell/Dunkel/Auto, Farbschema) ---------- */
+const PREF_KEY = 'wetter:prefs', P_MODES = ['auto', 'light', 'dark'], P_THEMES = ['wetter', 'blau', 'grau', 'gruen', 'orange', 'rot', 'gelb', 'braun', 'violett'];
+const P_COLOR = { blau: ['#1f3f86', '#9cc4f2'], grau: ['#2b3038', '#c9ced5'], gruen: ['#1b4a3a', '#a8d8bf'], orange: ['#8a3b12', '#f5c19a'], rot: ['#7a1f2b', '#f2adb3'], gelb: ['#6e5008', '#f2dc8a'], braun: ['#4a2e1c', '#d6bda5'], violett: ['#3d2a7a', '#c9bcee'] };
+const THEME_COLOR_LIGHT = { start: '#8fb4e8', 'clear-day': '#7fbaf2', 'clear-night': '#a9b5dc', cloudy: '#b9c6d3', fog: '#c7cdd3', rain: '#aab9c8', snow: '#c3d3e4', thunder: '#b5aed0' };
+const cleanPrefs = o => ({ mode: o && P_MODES.includes(o.mode) ? o.mode : 'dark', theme: o && P_THEMES.includes(o.theme) ? o.theme : 'wetter' });
+let prefs = cleanPrefs(store.get(PREF_KEY)), curMode = 'dark';
+const lightQ = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
+function themeColor(sky){
+  if (prefs.theme === 'wetter') return (curMode === 'light' ? THEME_COLOR_LIGHT : THEME_COLOR)[sky] || (curMode === 'light' ? THEME_COLOR_LIGHT : THEME_COLOR).start;
+  return P_COLOR[prefs.theme][curMode === 'light' ? 1 : 0];
+}
+function applyPrefs(){
+  curMode = prefs.mode === 'auto' ? (lightQ && lightQ.matches ? 'light' : 'dark') : prefs.mode;
+  document.documentElement.dataset.mode = curMode;
+  document.body.dataset.theme = prefs.theme;
+  const cs = document.querySelector('meta[name=color-scheme]'); if (cs) cs.content = curMode;
+  const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = themeColor(document.body.dataset.sky);
+  document.querySelectorAll('#prefs [data-mode]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.mode === prefs.mode)));
+  document.querySelectorAll('#prefs [data-theme]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.theme === prefs.theme)));
+}
+if (lightQ){ const f = () => { if (prefs.mode === 'auto') applyPrefs(); }; try { lightQ.addEventListener('change', f); } catch { try { lightQ.addListener(f); } catch {} } }
 
 /* ---------- Gemerkte Orte ---------- */
 const FAV_KEY = 'wetter:favs', FAV_MAX = 5;
@@ -609,7 +723,7 @@ function applySky(sky, night){
   document.body.dataset.sky = sky;
   document.body.classList.toggle('night', !!night);
   const m = document.querySelector('meta[name=theme-color]');
-  if (m) m.content = THEME_COLOR[sky] || THEME_COLOR.start;
+  if (m) m.content = themeColor(sky);
 }
 
 /* ---------- Ortssuche ---------- */
@@ -1059,9 +1173,9 @@ async function loadWater(p, my){
     const h = Math.round(210 - Math.min(Math.max(r.temp, 0), 28) / 28 * 185);
     const dist = r.dist < 1 ? 'unter 1 km' : `${Math.round(r.dist)} km`;
     return `<li class="wr">
-      <span class="wdot" style="background:hsl(${h} 80% 60% / .26);color:hsl(${h} 90% 82%)"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 3c3 4.2 6 7.4 6 11a6 6 0 0 1-12 0c0-3.6 3-6.8 6-11z"/></svg></span>
+      <span class="wdot" style="background:hsl(${h} 80% 60% / .26);color:hsl(${h} 90% var(--wl))"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 3c3 4.2 6 7.4 6 11a6 6 0 0 1-12 0c0-3.6 3-6.8 6-11z"/></svg></span>
       <span class="wm"><b>${esc(r.name)}</b><small>${esc(r.station)} · ${dist} · ${r.kind === 'river' ? 'gemessen' : 'Modell'} ${esc(r.time)} Uhr</small></span>
-      <span class="wt" style="color:hsl(${h} 90% 84%)">${nf(r.temp, 1)} °C</span></li>`;
+      <span class="wt" style="color:hsl(${h} 90% var(--wl))">${nf(r.temp, 1)} °C</span></li>`;
   }).join('')}</ul>
   <p class="fine">Flüsse: Messwerte der Bundeswasserstraßen (nur Deutschland). Meer: Modelldaten mit grobem Raster. Seen und kleine Gewässer werden nicht erfasst. Baden in Flüssen kann wegen Strömung und Schiffsverkehr gefährlich sein.</p>`;
 }
@@ -1199,25 +1313,25 @@ function chartSVG(tr, hrTimes){
   const lo = Math.floor(Math.min(...Tm) - 1), hi = Math.ceil(Math.max(...Tm) + 1);
   const Y = v => tBot - (v - lo) / (hi - lo) * (tBot - top);
   const maxR = Math.max(2, ...Pr), RH = v => v / maxR * 34;
-  let bars = '', pts = [], axis = '', seps = `<text x="${ml}" y="${top - 12}" font-size="10.5" fill="rgba(255,255,255,.8)">${esc(wdShort(hrTimes[s]))}</text>`;
+  let bars = '', pts = [], axis = '', seps = `<text x="${ml}" y="${top - 12}" font-size="10.5" fill="rgba(var(--fgc),.8)">${esc(wdShort(hrTimes[s]))}</text>`;
   for (let i = 0; i < n; i++){
     pts.push(`${X(i).toFixed(1)},${Y(Tm[i]).toFixed(1)}`);
     if (Pr[i] > 0){ const h = Math.max(2, RH(Pr[i])); bars += `<rect x="${(X(i) - step * .36).toFixed(1)}" y="${(base - h).toFixed(1)}" width="${(step * .72).toFixed(1)}" height="${h.toFixed(1)}" rx="2" fill="#7CC4FF" opacity=".9"/>`; }
     const h24 = +hm(hrTimes[s + i], 11, 13);
-    if (h24 % 6 === 0) axis += `<text x="${X(i).toFixed(1)}" y="${base + 20}" font-size="10.5" fill="rgba(255,255,255,.72)" text-anchor="middle">${pad2(h24)}</text>`;
-    if (h24 === 0 && i > 0) seps += `<line x1="${X(i).toFixed(1)}" y1="${top - 8}" x2="${X(i).toFixed(1)}" y2="${base}" stroke="rgba(255,255,255,.28)" stroke-dasharray="3 4"/><text x="${(X(i) + 5).toFixed(1)}" y="${top - 12}" font-size="10.5" fill="rgba(255,255,255,.8)">${esc(wdShort(hrTimes[s + i]))}</text>`;
+    if (h24 % 6 === 0) axis += `<text x="${X(i).toFixed(1)}" y="${base + 20}" font-size="10.5" fill="rgba(var(--fgc),.72)" text-anchor="middle">${pad2(h24)}</text>`;
+    if (h24 === 0 && i > 0) seps += `<line x1="${X(i).toFixed(1)}" y1="${top - 8}" x2="${X(i).toFixed(1)}" y2="${base}" stroke="rgba(var(--fgc),.28)" stroke-dasharray="3 4"/><text x="${(X(i) + 5).toFixed(1)}" y="${top - 12}" font-size="10.5" fill="rgba(var(--fgc),.8)">${esc(wdShort(hrTimes[s + i]))}</text>`;
   }
   const line = 'M' + pts.join('L'), area = `${line}L${X(n - 1).toFixed(1)},${tBot}L${X(0).toFixed(1)},${tBot}Z`;
   const iMax = Tm.indexOf(Math.max(...Tm)), iMin = Tm.indexOf(Math.min(...Tm));
-  const lab = (i, up) => `<text x="${clamp(X(i), 18, W - 18).toFixed(1)}" y="${(Y(Tm[i]) + (up ? -8 : 17)).toFixed(1)}" font-size="11.5" font-weight="600" fill="#fff" text-anchor="middle">${Math.round(Tm[i])}°</text>`;
-  const grid = [0, .5, 1].map(f => `<line x1="${ml}" x2="${W - mr}" y1="${(top + f * (tBot - top)).toFixed(1)}" y2="${(top + f * (tBot - top)).toFixed(1)}" stroke="rgba(255,255,255,.1)"/>`).join('');
+  const lab = (i, up) => `<text x="${clamp(X(i), 18, W - 18).toFixed(1)}" y="${(Y(Tm[i]) + (up ? -8 : 17)).toFixed(1)}" font-size="11.5" font-weight="600" fill="var(--ink)" text-anchor="middle">${Math.round(Tm[i])}°</text>`;
+  const grid = [0, .5, 1].map(f => `<line x1="${ml}" x2="${W - mr}" y1="${(top + f * (tBot - top)).toFixed(1)}" y2="${(top + f * (tBot - top)).toFixed(1)}" stroke="rgba(var(--fgc),.1)"/>`).join('');
   return `<svg class="chart" id="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Temperatur- und Niederschlagsverlauf der nächsten ${n} Stunden">
     <defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd166" stop-opacity=".5"/><stop offset="1" stop-color="#ffd166" stop-opacity="0"/></linearGradient></defs>
     ${grid}${seps}<path d="${area}" fill="url(#ag)"/>
     <path d="${line}" fill="none" stroke="#ffd166" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
     ${bars}${lab(iMax, true)}${iMax !== iMin ? lab(iMin, false) : ''}
-    <line x1="${ml}" x2="${W - mr}" y1="${base}" y2="${base}" stroke="rgba(255,255,255,.25)"/>${axis}
-    <g id="scrub" hidden pointer-events="none"><rect id="sb" y="${top - 8}" width="${step.toFixed(1)}" height="${base - top + 8}" rx="6" fill="rgba(255,255,255,.07)"/><line id="sl" y1="${top - 8}" y2="${base}" stroke="rgba(255,255,255,.4)" stroke-width="1.2" stroke-linecap="round"/><circle id="sh" r="11" fill="#ffd166" opacity=".3"/><circle id="sc" r="5.5" fill="#fff" stroke="#ffd166" stroke-width="2.4"/><circle id="sa" r="2.5" cy="${base}" fill="rgba(255,255,255,.7)"/><g id="st"><rect id="stb" y="1" height="21" rx="10.5" fill="rgba(8,20,48,.92)" stroke="rgba(255,255,255,.55)"/><text id="stt" y="15.2" font-size="11.5" font-weight="650" fill="#fff" text-anchor="middle"></text></g></g>
+    <line x1="${ml}" x2="${W - mr}" y1="${base}" y2="${base}" stroke="rgba(var(--fgc),.25)"/>${axis}
+    <g id="scrub" hidden pointer-events="none"><rect id="sb" y="${top - 8}" width="${step.toFixed(1)}" height="${base - top + 8}" rx="6" fill="rgba(var(--fgc),.07)"/><line id="sl" y1="${top - 8}" y2="${base}" stroke="rgba(var(--fgc),.4)" stroke-width="1.2" stroke-linecap="round"/><circle id="sh" r="11" fill="#ffd166" opacity=".3"/><circle id="sc" r="5.5" fill="#fff" stroke="#ffd166" stroke-width="2.4"/><circle id="sa" r="2.5" cy="${base}" fill="rgba(var(--fgc),.7)"/><g id="st"><rect id="stb" y="1" height="21" rx="10.5" fill="rgba(8,20,48,.92)" stroke="rgba(var(--fgc),.55)"/><text id="stt" y="15.2" font-size="11.5" font-weight="650" fill="#fff" text-anchor="middle"></text></g></g>
     <rect id="hit" x="0" y="0" width="${W}" height="${H}" fill="transparent"/></svg>`;
 }
 function setReadout(i){
@@ -1605,8 +1719,8 @@ function rOverlay(){
     return (x > 4 && x < 96 && y > 4 && y < 96) ? `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r=".9" fill="#fff" opacity=".85"/><text x="${(x + 1.8).toFixed(1)}" y="${(y + 1).toFixed(1)}" class="rtx">${esc(txt(f.title, 24))}</text>` : '';
   }).join('');
   return `<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-    <g fill="none" stroke="rgba(255,255,255,.16)" stroke-width=".25" stroke-dasharray=".8 1.2"><circle cx="50" cy="50" r="${ring(20)}"/><circle cx="50" cy="50" r="${ring(40)}"/></g>
-    <circle cx="50" cy="50" r="${ring(60)}" fill="none" stroke="rgba(255,255,255,.22)" stroke-width=".3"/>
+    <g fill="none" stroke="rgba(var(--fgc),.16)" stroke-width=".25" stroke-dasharray=".8 1.2"><circle cx="50" cy="50" r="${ring(20)}"/><circle cx="50" cy="50" r="${ring(40)}"/></g>
+    <circle cx="50" cy="50" r="${ring(60)}" fill="none" stroke="rgba(var(--fgc),.22)" stroke-width=".3"/>
     <g class="rtx rmut"><text x="50" y="${(50 - ring(20) - 1).toFixed(1)}" text-anchor="middle">20 km</text><text x="50" y="${(50 - ring(40) - 1).toFixed(1)}" text-anchor="middle">40 km</text></g>
     <g class="rtx rdir" text-anchor="middle"><text x="50" y="4.6">N</text><text x="50" y="98.4">S</text><text x="2.6" y="51.3">W</text><text x="97.4" y="51.3">O</text></g>
     ${others}
@@ -1777,25 +1891,25 @@ function renderRadarStrip(){
     if (me >= .1){ const h = Math.max(3, Math.min(me, 4) / 4 * (base - top)); bars += `<rect x="${(x - Math.max(step * .32, 1.2)).toFixed(1)}" y="${(base - h).toFixed(1)}" width="${Math.max(step * .64, 1.6).toFixed(1)}" height="${h.toFixed(1)}" rx="1.2" fill="#7CC4FF"/>`; }
     const t = S.times[k], hh = +t.slice(11, 13), mm = +t.slice(14, 16);
     if (live){
-      if (k === S.now) axis += `<text x="${x.toFixed(1)}" y="${base + 15}" font-size="10" fill="rgba(255,255,255,.9)" text-anchor="middle">Jetzt</text>`;
-      else if (mm === 0 && Math.abs(k - S.now) > 3 && k > 1 && k < n - 2 && hh % 1 === 0 && (k - S.now) % 12 === 0) axis += `<text x="${x.toFixed(1)}" y="${base + 15}" font-size="10" fill="rgba(255,255,255,.72)" text-anchor="middle">${pad2(hh)}</text>`;
+      if (k === S.now) axis += `<text x="${x.toFixed(1)}" y="${base + 15}" font-size="10" fill="rgba(var(--fgc),.9)" text-anchor="middle">Jetzt</text>`;
+      else if (mm === 0 && Math.abs(k - S.now) > 3 && k > 1 && k < n - 2 && hh % 1 === 0 && (k - S.now) % 12 === 0) axis += `<text x="${x.toFixed(1)}" y="${base + 15}" font-size="10" fill="rgba(var(--fgc),.72)" text-anchor="middle">${pad2(hh)}</text>`;
     } else {
-      if (k && hh === 0) seps += `<line x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="${top - 2}" y2="${base}" stroke="rgba(255,255,255,.3)" stroke-dasharray="2 3"/>`;
-      if (k === 0) axis += `<text x="${x.toFixed(1)}" y="${base + 15}" font-size="10" fill="rgba(255,255,255,.8)" text-anchor="start">Jetzt</text>`;
-      else if (k % every === 0) axis += `<text x="${x.toFixed(1)}" y="${base + 15}" font-size="10" fill="rgba(255,255,255,.72)" text-anchor="${k === n - 1 ? 'end' : 'middle'}">${hh === 0 ? esc(new Date(t.slice(0, 10) + 'T12:00').toLocaleDateString('de-DE', { weekday: 'short' })) : pad2(hh)}</text>`;
+      if (k && hh === 0) seps += `<line x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="${top - 2}" y2="${base}" stroke="rgba(var(--fgc),.3)" stroke-dasharray="2 3"/>`;
+      if (k === 0) axis += `<text x="${x.toFixed(1)}" y="${base + 15}" font-size="10" fill="rgba(var(--fgc),.8)" text-anchor="start">Jetzt</text>`;
+      else if (k % every === 0) axis += `<text x="${x.toFixed(1)}" y="${base + 15}" font-size="10" fill="rgba(var(--fgc),.72)" text-anchor="${k === n - 1 ? 'end' : 'middle'}">${hh === 0 ? esc(new Date(t.slice(0, 10) + 'T12:00').toLocaleDateString('de-DE', { weekday: 'short' })) : pad2(hh)}</text>`;
     }
   }
   if (live){
     const xn = x0 + S.now * step, xe = x0 + (n - 1) * step;
-    shade = `<rect x="${x0}" y="${top - 4}" width="${(xn - x0).toFixed(1)}" height="${base - top + 4}" fill="rgba(255,255,255,.05)"/>`
-      + `<text x="${x0 + 3}" y="${top + 5}" font-size="8" fill="rgba(255,255,255,.55)">gemessen</text><text x="${(xn + 5).toFixed(1)}" y="${top + 5}" font-size="8" fill="rgba(255,255,255,.55)">Vorhersage</text>`;
+    shade = `<rect x="${x0}" y="${top - 4}" width="${(xn - x0).toFixed(1)}" height="${base - top + 4}" fill="rgba(var(--fgc),.05)"/>`
+      + `<text x="${x0 + 3}" y="${top + 5}" font-size="8" fill="rgba(var(--fgc),.55)">gemessen</text><text x="${(xn + 5).toFixed(1)}" y="${top + 5}" font-size="8" fill="rgba(var(--fgc),.55)">Vorhersage</text>`;
     void xe;
   }
   const xe = x0 + (n - 1) * step;
   el.innerHTML = `<svg id="rStripSvg" viewBox="0 0 ${W} ${H}" data-x0="${x0}" data-step="${step.toFixed(3)}" role="slider" tabindex="0" aria-label="Zeitpunkt der Regenkarte" aria-valuemin="0" aria-valuemax="${n - 1}" aria-valuenow="${radarFrame}">
-    ${shade}<line x1="${x0}" x2="${xe.toFixed(1)}" y1="${base}" y2="${base}" stroke="rgba(255,255,255,.22)"/>
+    ${shade}<line x1="${x0}" x2="${xe.toFixed(1)}" y1="${base}" y2="${base}" stroke="rgba(var(--fgc),.22)"/>
     ${seps}<path d="${area}L${xe.toFixed(1)},${base}L${x0},${base}Z" fill="rgba(124,196,255,.16)" stroke="rgba(124,196,255,.45)" stroke-width="1"/>${bars}${axis}
-    <g id="rInd" pointer-events="none"><rect x="-7" y="${top - 4}" width="14" height="${base - top + 6}" rx="5" fill="rgba(255,255,255,.1)"/><line x1="0" x2="0" y1="${top - 4}" y2="${base + 2}" stroke="#fff" stroke-width="1.5" opacity=".85"/><circle cx="0" cy="${base}" r="3.6" fill="#fff"/></g></svg>`;
+    <g id="rInd" pointer-events="none"><rect x="-7" y="${top - 4}" width="14" height="${base - top + 6}" rx="5" fill="rgba(var(--fgc),.1)"/><line x1="0" x2="0" y1="${top - 4}" y2="${base + 2}" stroke="var(--ink)" stroke-width="1.5" opacity=".85"/><circle cx="0" cy="${base}" r="3.6" fill="#fff"/></g></svg>`;
   void c;
 }
 function bindRadarStrip(){
@@ -1878,6 +1992,19 @@ function renderEmpty(){
 }
 
 /* ---------- Start ---------- */
+/* Einstellungsdialog */
+const prefsDlg = document.getElementById('prefs');
+document.getElementById('setBtn').addEventListener('click', () => { applyPrefs(); try { prefsDlg.showModal(); } catch { prefsDlg.setAttribute('open', ''); } });
+document.getElementById('prefsClose').addEventListener('click', () => prefsDlg.close());
+document.getElementById('prefsX').addEventListener('click', () => prefsDlg.close());
+prefsDlg.addEventListener('click', e => {
+  if (e.target === prefsDlg){ prefsDlg.close(); return; }
+  const b = e.target.closest('button[data-mode],button[data-theme]'); if (!b) return;
+  if (b.dataset.mode) prefs.mode = b.dataset.mode; else prefs.theme = b.dataset.theme;
+  prefs = cleanPrefs(prefs); store.set(PREF_KEY, prefs); applyPrefs();
+});
+document.getElementById('prefsReset').addEventListener('click', () => { prefs = cleanPrefs(null); try { localStorage.removeItem(PREF_KEY); } catch {} applyPrefs(); });
+applyPrefs();
 const info = document.getElementById('info');
 const openInfo = () => { forgetSync(false); try { info.showModal(); } catch { info.setAttribute('open', ''); } };
 document.getElementById('infoBtn').addEventListener('click', openInfo);

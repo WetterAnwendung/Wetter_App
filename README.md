@@ -1,6 +1,6 @@
 # Wetter-App
 
-Schlanke, webbasierte Wetter-App mit 5-Tage-Vorhersage, Tageshinweisen (Regenjacke, Sonnenschutz, Frost, Hitze, Böen, Lüften), Temperatur- und Regenverlauf, Regenradar (gemessen und aus Modelldaten), einer Einschätzung des Sonnenuntergangs (mäßig, toll, super), Luftqualität, Pollenflug, Wassertemperaturen und Pegelständen und bis zu fünf gemerkten Orten. Die ganze App steckt in einer einzigen HTML-Datei, ohne Bibliotheken, ohne Cookies und ohne Tracking. Sie lässt sich als App installieren (PWA) und startet dank Service Worker schnell, auch bei schlechtem Netz.
+Schlanke, webbasierte Wetter-App mit 5-Tage-Vorhersage, Tageshinweisen (Regenjacke, Sonnenschutz, Frost, Hitze, Böen, Lüften), Temperatur- und Regenverlauf, Regenradar (gemessen und aus Modelldaten), einer Einschätzung des Sonnenuntergangs (mäßig, toll, super), Luftqualität, Pollenflug, Wassertemperaturen und Pegelständen, bis zu fünf gemerkten Orten sowie Hell-, Dunkel- und Auto-Darstellung mit neun Farbschemata (Zahnrad-Knopf). Die ganze App steckt in einer einzigen HTML-Datei, ohne Bibliotheken, ohne Cookies und ohne Tracking. Sie lässt sich als App installieren (PWA) und startet dank Service Worker schnell, auch bei schlechtem Netz.
 
 **App öffnen:** https://wetteranwendung.github.io/
 **Repository:** https://github.com/WetterAnwendung/wetteranwendung.github.io
@@ -86,7 +86,7 @@ Die App lädt beim Öffnen nichts von fremden Servern. Erst bei einer Suche, bei
 | `photon.komoot.io` | Ortsname zum Standort, Postleitzahlen |
 | `www.pegelonline.wsv.de` | Pegel und Wassertemperatur an Flüssen |
 
-GitHub Pages liefert die Seite aus und protokolliert dabei die IP-Adresse. Der Standort wird vor dem Absenden auf etwa 2 km gerundet (Raster 0,02° × 0,03°). Gespeichert werden im Browser nur der zuletzt gewählte Ort (`localStorage`, Schlüssel `wetter:last`), die gemerkten Orte (Schlüssel `wetter:favs`, höchstens 5) und die App-Hülle im Cache des Service Workers. Den Datenschutzhinweis zeigt die App über den ⓘ-Knopf; die vollständige Datenschutzerklärung liegt als eigene Seite ohne Skript unter `datenschutz.html` (öffentliche Adresse für Google Play).
+GitHub Pages liefert die Seite aus und protokolliert dabei die IP-Adresse. Der Standort wird vor dem Absenden auf etwa 2 km gerundet (Raster 0,02° × 0,03°). Gespeichert werden im Browser nur der zuletzt gewählte Ort (`localStorage`, Schlüssel `wetter:last`), die gemerkten Orte (Schlüssel `wetter:favs`, höchstens 5), die Darstellungseinstellungen (Schlüssel `wetter:prefs`, nur nach einer Änderung im Einstellungsdialog: Helligkeit `auto`/`light`/`dark`, Farbschema) und die App-Hülle im Cache des Service Workers. Den Datenschutzhinweis zeigt die App über den ⓘ-Knopf; die vollständige Datenschutzerklärung liegt als eigene Seite ohne Skript unter `datenschutz.html` (öffentliche Adresse für Google Play).
 
 ## Sicherheit
 
