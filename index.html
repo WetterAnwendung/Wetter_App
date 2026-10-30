@@ -5,7 +5,7 @@
 <!-- Sicherheitsregel (CSP): nur das eigene Skript (per Hash), Daten nur von den genannten Diensten.
      WICHTIG: Wer das Skript unten ändert, muss den sha256-Hash neu berechnen, sonst startet die App nicht.
      Befehl: python3 csp-hash.py index.html -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-7z2+j4IBkFBLRVJ+Dp8CfbZz3FIhy4JAKizs55c+c7s='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data: https://tile.openstreetmap.org; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de https://api.brightsky.dev; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WF+/1Hkoa34UGFXx7riCNToClmJPpuQsrx0D+f37imQ='; style-src 'unsafe-inline'; font-src data:; img-src 'self' data: https://tile.openstreetmap.org; connect-src https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://marine-api.open-meteo.com https://photon.komoot.io https://www.pegelonline.wsv.de https://api.brightsky.dev; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'self'; worker-src 'self'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#2a3f7a">
@@ -117,7 +117,6 @@ mark{background:none;color:#ffd97a;font-weight:800}
 /* Panels */
 .panel{
   background:var(--glass);border:1px solid var(--line);border-radius:26px;padding:16px 14px 14px;margin-top:18px;
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
 }
 .panel h2{font-size:.98rem;font-weight:600;color:var(--soft);margin:0 4px 10px}
 
@@ -155,8 +154,7 @@ mark{background:none;color:#ffd97a;font-weight:800}
 .dd-grid b{font-weight:600}
 
 .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
-.tile{background:var(--glass);border:1px solid var(--line);border-radius:20px;padding:14px 16px;
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.tile{background:var(--glass);border:1px solid var(--line);border-radius:20px;padding:14px 16px}
 .tile small{color:var(--soft);font-size:.88rem}
 .tile b{display:block;font-size:1.7rem;font-weight:600;letter-spacing:-.02em;line-height:1.2;margin-top:2px}
 .tile span{font-size:.88rem;color:var(--soft)}
@@ -348,10 +346,12 @@ dialog.info{position:fixed}
   .wi.sm *,.day-row .wi *{animation:none!important}
 }
 @media (prefers-reduced-motion:reduce){body{transition:none}.dd{transition:none}}
+/* Außerhalb des Bildes laufen keine Dauer-Animationen (spart Rechenzeit beim Scrollen) */
+.idle *{animation-play-state:paused!important}
 
 /* Sprungleiste und Himmel */
 .jump{position:sticky;top:8px;z-index:15;display:flex;gap:6px;overflow-x:auto;margin-top:14px;padding:6px;border-radius:999px;
-  background:rgba(8,20,48,.9);border:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);scrollbar-width:none;justify-content:space-between}
+  background:rgba(8,20,48,.95);border:1px solid var(--line);scrollbar-width:none;justify-content:space-between}
 .jump::-webkit-scrollbar{display:none}
 .jump button{flex:none;border:1px solid transparent;background:transparent;border-radius:999px;padding:7px 11px;font-size:.9rem;font-weight:500;cursor:pointer;color:var(--soft)}
 .jump button[aria-current="true"]{background:var(--ink);color:var(--inkon);font-weight:700}
@@ -378,7 +378,7 @@ html[data-mode=light] body{--fgc:18,32,64;--ink:#12203f;--inkon:#fff;--glass:rgb
 html[data-mode=light] .wi{filter:drop-shadow(0 0 1px rgba(20,40,80,.7)) drop-shadow(0 2px 5px rgba(20,40,80,.3))}
 html[data-mode=light] mark{color:#7a4b00;background:rgba(255,200,60,.45)}
 html[data-mode=light] .hour .pp,html[data-mode=light] .drain{color:#0a5a9c}
-html[data-mode=light] .jump{background:rgba(255,255,255,.93)}
+html[data-mode=light] .jump{background:rgba(255,255,255,.96)}
 html[data-mode=light] .ghost.danger{border-color:rgba(190,40,40,.6);color:#a32222}
 html[data-mode=light] .sk-kaum{color:#4a5668}
 html[data-mode=light] .sk-maessig{color:#8a5200}
@@ -1958,7 +1958,7 @@ function renderRadarSum(){
 }
 
 /* Sprungleiste: markiert den Abschnitt, in dem man gerade liest */
-let jumpBound = false, jumpBusy = false;
+let jumpBound = false, jumpBusy = false, jumpCur = -1;
 function updateJump(){
   jumpBusy = false;
   const order = ['wetter', 'radar', 'himmel', 'luft', 'pollen', 'wasser'], els = order.map(k => view.querySelector(`[data-sec="${k}"]`));
@@ -1966,13 +1966,22 @@ function updateJump(){
   let cur = 0;
   els.forEach((e, k) => { if (e && e.getBoundingClientRect().top <= innerHeight * .4) cur = k; });
   if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) cur = els.reduce((a, e, k) => e ? k : a, 0);
+  if (cur === jumpCur) return;
+  jumpCur = cur;
   view.querySelectorAll('[data-go]').forEach(b => b.setAttribute('aria-current', String(b.dataset.go === order[cur])));
   const a = view.querySelector('.jump [aria-current="true"]'), j = a && a.parentElement;
   if (j && j.scrollWidth > j.clientWidth + 2) j.scrollLeft = a.offsetLeft - (j.clientWidth - a.offsetWidth) / 2;
 }
+let idleObs = null;
 function setupJump(){
   if (!jumpBound){ jumpBound = true; addEventListener('scroll', () => { if (!jumpBusy){ jumpBusy = true; requestAnimationFrame(updateJump); } }, { passive: true }); }
-  updateJump();
+  jumpCur = -1; updateJump();
+  // Dauer-Animationen (Wettersymbol, Radar-Puls) nur laufen lassen, solange ihr Abschnitt sichtbar ist
+  if (idleObs) idleObs.disconnect();
+  if ('IntersectionObserver' in window){
+    idleObs = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('idle', !e.isIntersecting)), { rootMargin: '100px 0px' });
+    view.querySelectorAll('.hero, .panel').forEach(el => idleObs.observe(el));
+  }
 }
 
 function renderEmpty(){
